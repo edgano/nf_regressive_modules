@@ -72,3 +72,16 @@ process EASEL_INFO {
      ## the first && is to skip first lines and the last one. The AVG is done -8 all the time execpt for the END print to "erase" the last "//" too.
      '''
 }
+
+process HOMOPLASY_TCOFFEE {
+    tag "HOMOPLASY_TCOFFEE on $id"
+    publishDir "${params.outdir}/homplasy"
+
+    input:
+
+    output:
+
+     shell:
+     '''
+     '''
+}

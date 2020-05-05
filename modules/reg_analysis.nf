@@ -1,13 +1,14 @@
 #!/bin/bash nextflow
 params.outdir = 'results'
 
-include './combineSeqs' params(params)
-include './treeGeneration' params(params)
-include './generateAlignment' params(params)
-include './evaluateAlignment' params(params)
+include COMBINE_SEQS   from './combineSeqs.nf'    params(params)
+include TREE_GENERATION   from './treeGeneration.nf'    params(params)
+include REG_ALIGNER   from './generateAlignment.nf'    params(params)
+include PROG_ALIGNER   from './generateAlignment.nf'    params(params)
+include EVAL_ALIGNMENT   from './evaluateAlignment.nf'    params(params)
 
 workflow REG_ANALYSIS {
-  get:
+  take:
     seqs_ch
     refs_ch
     align_methods
@@ -20,9 +21,8 @@ workflow REG_ANALYSIS {
       TREE_GENERATION (seqs_ch, tree_methods)                                               }else{/*define TREE_GENERATION.out*/}
     if (params.regressive_align){
       REG_ALIGNER (seqs_ch, align_methods, tree_methods, bucket_size, TREE_GENERATION.out)  }else{/*define REG_ALIGNER.out*/}
-      PROG_ALIGNER (seqs_ch, align_methods, tree_methods, TREE_GENERATION.out)
+    PROG_ALIGNER (seqs_ch, align_methods, tree_methods, TREE_GENERATION.out)
     //EVAL_ALIGNMENT (REG_ALIGNER.out, refs_ch, align_methods, tree_methods, bucket_size)
-
     //EASEL_INFO
 
   //emit: 
