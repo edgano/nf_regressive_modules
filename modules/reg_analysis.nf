@@ -1,7 +1,7 @@
 #!/bin/bash nextflow
 params.outdir = 'results'
 
-include COMBINE_SEQS   from './combineSeqs.nf'    params(params)
+include COMBINE_SEQS   from './preprocess.nf'    params(params)
 include TREE_GENERATION   from './treeGeneration.nf'    params(params)
 include REG_ALIGNER   from './generateAlignment.nf'    params(params)
 include PROG_ALIGNER   from './generateAlignment.nf'    params(params)
