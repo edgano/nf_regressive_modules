@@ -64,10 +64,9 @@ log.info """\
          .stripIndent()
 
 // import modules
-include './modules/reg_analysis' params(params)
+include REG_ANALYSIS from './modules/reg_analysis'    params(params)
 
 // Channels containing sequences
-
 seqs_ch = Channel.fromPath( params.seqs, checkIfExists: true ).map { item -> [ item.baseName, item] }
 
 if ( params.refs ) {

@@ -7,14 +7,12 @@ process EVAL_ALIGNMENT {
 
     input:
     file (test_alignment)
-    file (ref_alignment)
+    tuple id, file(ref_alignment)
     val (align_method)
     val (tree_method)
     val (bucket_size)
 
     output:
-    file("*.tc") 
-    file("*.col") 
     file("*.sp") 
 
     script:
@@ -26,24 +24,8 @@ process EVAL_ALIGNMENT {
             -compare_mode sp \
             | grep -v "seq1" | grep -v '*' | \
             awk '{ print \$4}' ORS="\t" \
-            > "${id}.${align_type}.${bucket_size}.${align_method}.${tree_method}.sp"
+            > "${id}.reg_${bucket_size}.${align_method}.with.${tree_method}.tree.sp"
        
-       ## Total Column Score ##	
-       t_coffee -other_pg aln_compare \
-             -al1 ${ref_alignment} \
-             -al2 ${test_alignment} \
-            -compare_mode tc \
-            | grep -v "seq1" | grep -v '*' | \
-            awk '{ print \$4}' ORS="\t" \
-            > "${id}.${align_type}.${bucket_size}.${align_method}.${tree_method}.tc"
-       ## Column Score ##
-       t_coffee -other_pg aln_compare \
-             -al1 ${ref_alignment} \
-             -al2 ${test_alignment} \
-            -compare_mode column \
-            | grep -v "seq1" | grep -v '*' | \
-              awk '{ print \$4}' ORS="\t" \
-            > "${id}.${align_type}.${bucket_size}.${align_method}.${tree_method}.col"
     """
 }
 
