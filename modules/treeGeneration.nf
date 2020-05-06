@@ -15,5 +15,5 @@ process TREE_GENERATION {
     file("${id}.${tree_method}.dnd") 
 
     script:
-    template "tree/tree_${tree_method}.sh"
+    template "${baseDir}/modules/regressive_alignment/templates/tree/tree_${tree_method}.sh"
 }

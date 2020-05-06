@@ -35,7 +35,7 @@ process PROG_ALIGNER {
     file("${id}.prog.${align_method}.with.${tree_method}.tree.aln") 
 
     script:
-    template "progressive_align/prog_${align_method}.sh"
+    template "${baseDir}/modules/regressive_alignment/templates/progressive_align/prog_${align_method}.sh"
 }
 
 process SLAVE_ALIGNER {
@@ -53,7 +53,7 @@ process SLAVE_ALIGNER {
     file("${id}.slave.${align_method}.with.${tree_method}.tree.slave.${slave_method}.aln") 
 
     script:
-    template "slave_align/slave_${align_method}.sh"
+    template "${baseDir}/modules/regressive_alignment/templates/slave_align/slave_${align_method}.sh"
 }
 
 process DYNAMIC_ALIGNER {
@@ -70,5 +70,5 @@ process DYNAMIC_ALIGNER {
     file("${id}.dynamic.${bucket_size}.dynamicSize.${dynamic_size}.${align_method}.with.${tree_method}.tree.aln") 
 
     script:
-    template "dynamic_align/dynamic_${align_method}.sh"
+    template "${baseDir}/modules/regressive_alignment/templates/dynamic_align/dynamic_${align_method}.sh"
 }
