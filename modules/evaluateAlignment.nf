@@ -6,8 +6,9 @@ process EVAL_ALIGNMENT {
     publishDir "${params.outdir}/score"
 
     input:
+    val (id)
     file (test_alignment)
-    tuple id, file(ref_alignment)
+    file (ref_alignment)
     val (align_method)
     val (tree_method)
     val (bucket_size)
