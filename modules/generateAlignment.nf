@@ -1,11 +1,7 @@
 #!/bin/bash nextflow
 params.outdir = 'results'
 
-path_templates = projectDir.name == "nf-benchmark" ? "$projectDir/modules/regressive_alignment/templates" : "$Dir/templates"
-// path_templates = "${moduleDir}/templates"
-// println ("========================module: "+ moduleDir)
-// println ("========================base: "+ baseDir)
-// println ("========================project: "+ projectDir)
+path_templates = "${moduleDir}/templates"
 
 process REG_ALIGNER {
     container 'edgano/homoplasy:latest'

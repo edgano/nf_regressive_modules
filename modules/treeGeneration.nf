@@ -1,7 +1,7 @@
 #!/bin/bash nextflow
 params.outdir = 'results'
 
-path_templates = projectDir.name == "nf-benchmark" ? "$baseDir/modules/regressive_alignment/templates" : "$baseDir/templates"
+path_templates = "${moduleDir}/templates"
 
 process TREE_GENERATION {
     container 'edgano/homoplasy:latest'
