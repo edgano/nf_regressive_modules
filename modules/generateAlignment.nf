@@ -1,7 +1,11 @@
 #!/bin/bash nextflow
 params.outdir = 'results'
 
-path_templates = projectDir.name == "nf-benchmark" ? "$baseDir/modules/regressive_alignment/templates" : "$baseDir/templates"
+path_templates = projectDir.name == "nf-benchmark" ? "$projectDir/modules/regressive_alignment/templates" : "$Dir/templates"
+// path_templates = "${moduleDir}/templates"
+// println ("========================module: "+ moduleDir)
+// println ("========================base: "+ baseDir)
+// println ("========================project: "+ projectDir)
 
 process REG_ALIGNER {
     container 'edgano/homoplasy:latest'
@@ -58,7 +62,7 @@ process SLAVE_ALIGNER {
     file("${id}.slave.${align_method}.with.${tree_method}.tree.slave.${slave_method}.aln") 
 
     script:
-    template "${baseDir}/modules/regressive_alignment/templates/slave_align/slave_${align_method}.sh"
+    template "${path_templates}/slave_align/slave_${align_method}.sh"
 }
 
 process DYNAMIC_ALIGNER {
@@ -76,6 +80,7 @@ process DYNAMIC_ALIGNER {
     file("${id}.dynamic.${bucket_size}.dynamicSize.${dynamic_size}.${align_method}.with.${tree_method}.tree.aln") 
 
     script:
-    // template "${baseDir}/modules/regressive_alignment/templates/dynamic_align/dynamic_${align_method}.sh"
-    template "${baseDir}/modules/regressive_alignment/templates/dynamic_align/dynamic_DEFAULT.sh"
+    // template "${path_templates}/dynamic_align/dynamic_${align_method}.sh"
+    // the above template is not declared yet, thus I call the following one
+    template "${path_templates}/dynamic_align/dynamic_DEFAULT.sh"
 }
