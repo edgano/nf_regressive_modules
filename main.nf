@@ -87,6 +87,10 @@ workflow pipeline {
     REG_ANALYSIS(seqs_ch, refs_ch, align_methods, tree_methods, bucket_list)
 }
 
+workflow {
+  pipeline()
+}
+
 /* 
  * completion handler
  */
