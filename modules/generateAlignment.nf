@@ -1,6 +1,8 @@
 #!/bin/bash nextflow
 params.outdir = 'results'
 
+path_templates = projectDir.name == "nf-benchmark" ? "$baseDir/modules/regressive_alignment/templates" : "$baseDir/templates"
+
 process REG_ALIGNER {
     container 'edgano/homoplasy:latest'
     tag "$align_method - $tree_method on $id"
@@ -19,7 +21,7 @@ process REG_ALIGNER {
     path "${id}.reg_${bucket_size}.${align_method}.with.${tree_method}.tree.aln", emit: alignment
 
     script:
-    template "${baseDir}/modules/regressive_alignment/templates/regressive_align/reg_${align_method}.sh"
+    template "${path_templates}/regressive_align/reg_${align_method}.sh"
 }
 
 process PROG_ALIGNER {
@@ -37,7 +39,7 @@ process PROG_ALIGNER {
     file("${id}.prog.${align_method}.with.${tree_method}.tree.aln") 
 
     script:
-    template "${baseDir}/modules/regressive_alignment/templates/progressive_align/prog_${align_method}.sh"
+    template "${path_templates}/progressive_align/prog_${align_method}.sh"
 }
 
 process SLAVE_ALIGNER {
