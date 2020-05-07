@@ -2,6 +2,7 @@
 params.outdir = 'results'
 
 process TREE_GENERATION {
+    container 'edgano/homoplasy:latest'
     tag "$tree_method on $id"
     publishDir "${params.outdir}/trees"
 

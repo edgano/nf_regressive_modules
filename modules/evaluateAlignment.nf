@@ -2,6 +2,7 @@
 params.outdir = 'results'
 
 process EVAL_ALIGNMENT {
+    container 'edgano/homoplasy:latest'
     tag "EVAL_ALIGNMENT on $id"
     publishDir "${params.outdir}/score"
 

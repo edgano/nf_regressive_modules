@@ -2,6 +2,7 @@
 params.outdir = 'results'
 
 process REG_ALIGNER {
+    container 'edgano/homoplasy:latest'
     tag "$align_method - $tree_method on $id"
     publishDir "${params.outdir}/alignments"
 
@@ -18,10 +19,11 @@ process REG_ALIGNER {
     path "${id}.reg_${bucket_size}.${align_method}.with.${tree_method}.tree.aln", emit: alignment
 
     script:
-    template "regressive_align/reg_${align_method}.sh"
+    template "${baseDir}/modules/regressive_alignment/templates/regressive_align/reg_${align_method}.sh"
 }
 
 process PROG_ALIGNER {
+    container 'edgano/homoplasy:latest'
     tag "$align_method - $tree_method on $id"
     publishDir "${params.outdir}/alignments"
 
@@ -39,6 +41,7 @@ process PROG_ALIGNER {
 }
 
 process SLAVE_ALIGNER {
+    container 'edgano/homoplasy:latest'
     tag "$align_method - $tree_method - $slave_method on $id"
     publishDir "${params.outdir}/alignments"
 
@@ -57,6 +60,7 @@ process SLAVE_ALIGNER {
 }
 
 process DYNAMIC_ALIGNER {
+    container 'edgano/homoplasy:latest'
     tag "$align_method - $tree_method on $id"
     publishDir "${params.outdir}/alignments"
 
@@ -70,5 +74,6 @@ process DYNAMIC_ALIGNER {
     file("${id}.dynamic.${bucket_size}.dynamicSize.${dynamic_size}.${align_method}.with.${tree_method}.tree.aln") 
 
     script:
-    template "${baseDir}/modules/regressive_alignment/templates/dynamic_align/dynamic_${align_method}.sh"
+    // template "${baseDir}/modules/regressive_alignment/templates/dynamic_align/dynamic_${align_method}.sh"
+    template "${baseDir}/modules/regressive_alignment/templates/dynamic_align/dynamic_DEFAULT.sh"
 }
