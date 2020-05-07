@@ -24,6 +24,7 @@
  *
  * @authors
  * Edgar Garriga
+ * Jose Espinosa-Carrasco
  */
 
 //  example         https://github.com/nextflow-io/rnaseq-nf/tree/modules
@@ -37,9 +38,11 @@ nextflow.preview.dsl = 2
  */
 
 // input sequences to align in fasta format
-params.seqs = "$baseDir/data/*.fa"
+//params.seqs = "$baseDir/data/*.fa"
+params.seqs = 'https://raw.githubusercontent.com/edgano/nf_famsa/master/data/seatoxin.fa' //#TODO
 
-params.refs = "$baseDir/data/*.ref"
+//params.refs = "$baseDir/data/*.ref"
+params.refs = 'https://raw.githubusercontent.com/edgano/nf_famsa/master/data/seatoxin.ref' //#TODO
 
 params.align_method = "CLUSTALO"
 
@@ -80,8 +83,12 @@ bucket_list = params.buckets
 /* 
  * main script flow
  */
-workflow {
+workflow pipeline {
     REG_ANALYSIS(seqs_ch, refs_ch, align_methods, tree_methods, bucket_list)
+}
+
+workflow {
+  pipeline()
 }
 
 /* 

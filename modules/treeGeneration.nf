@@ -1,7 +1,10 @@
 #!/bin/bash nextflow
 params.outdir = 'results'
 
+path_templates = "${moduleDir}/templates"
+
 process TREE_GENERATION {
+    container 'edgano/homoplasy:latest'
     tag "$tree_method on $id"
     publishDir "${params.outdir}/trees"
 
@@ -15,5 +18,5 @@ process TREE_GENERATION {
     file("${id}.${tree_method}.dnd") 
 
     script:
-    template "tree/tree_${tree_method}.sh"
+    template "${path_templates}/tree/tree_${tree_method}.sh"
 }

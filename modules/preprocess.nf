@@ -2,6 +2,7 @@
 params.outdir = 'results'
 
 process COMBINE_SEQS {
+    container 'edgano/homoplasy:latest'
     tag "COMBINE SEQ on $id"
     publishDir params.outdir
 

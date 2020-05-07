@@ -1,7 +1,10 @@
 #!/bin/bash nextflow
 params.outdir = 'results'
 
+path_templates = "${moduleDir}/templates"
+
 process REG_ALIGNER {
+    container 'edgano/homoplasy:latest'
     tag "$align_method - $tree_method on $id"
     publishDir "${params.outdir}/alignments"
 
@@ -18,10 +21,11 @@ process REG_ALIGNER {
     path "${id}.reg_${bucket_size}.${align_method}.with.${tree_method}.tree.aln", emit: alignment
 
     script:
-    template "regressive_align/reg_${align_method}.sh"
+    template "${path_templates}/regressive_align/reg_${align_method}.sh"
 }
 
 process PROG_ALIGNER {
+    container 'edgano/homoplasy:latest'
     tag "$align_method - $tree_method on $id"
     publishDir "${params.outdir}/alignments"
 
@@ -35,10 +39,11 @@ process PROG_ALIGNER {
     file("${id}.prog.${align_method}.with.${tree_method}.tree.aln") 
 
     script:
-    template "progressive_align/prog_${align_method}.sh"
+    template "${path_templates}/progressive_align/prog_${align_method}.sh"
 }
 
 process SLAVE_ALIGNER {
+    container 'edgano/homoplasy:latest'
     tag "$align_method - $tree_method - $slave_method on $id"
     publishDir "${params.outdir}/alignments"
 
@@ -53,10 +58,11 @@ process SLAVE_ALIGNER {
     file("${id}.slave.${align_method}.with.${tree_method}.tree.slave.${slave_method}.aln") 
 
     script:
-    template "slave_align/slave_${align_method}.sh"
+    template "${path_templates}/slave_align/slave_${align_method}.sh"
 }
 
 process DYNAMIC_ALIGNER {
+    container 'edgano/homoplasy:latest'
     tag "$align_method - $tree_method on $id"
     publishDir "${params.outdir}/alignments"
 
@@ -70,5 +76,7 @@ process DYNAMIC_ALIGNER {
     file("${id}.dynamic.${bucket_size}.dynamicSize.${dynamic_size}.${align_method}.with.${tree_method}.tree.aln") 
 
     script:
-    template "dynamic_align/dynamic_${align_method}.sh"
+    // template "${path_templates}/dynamic_align/dynamic_${align_method}.sh"
+    // the above template is not declared yet, thus I call the following one
+    template "${path_templates}/dynamic_align/dynamic_DEFAULT.sh"
 }
