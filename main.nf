@@ -39,10 +39,10 @@ nextflow.preview.dsl = 2
 
 // input sequences to align in fasta format
 //params.seqs = "$baseDir/data/*.fa"
-params.seqs = 'https://raw.githubusercontent.com/edgano/nf_famsa/master/data/seatoxin.fa' //#TODO
+params.seqs = 'https://raw.githubusercontent.com/edgano/datasets-test/homfam/seatoxin.fa' //#TODO
 
 //params.refs = "$baseDir/data/*.ref"
-params.refs = 'https://raw.githubusercontent.com/edgano/nf_famsa/master/data/seatoxin.ref' //#TODO
+params.refs = 'https://raw.githubusercontent.com/edgano/datasets-test/homfam/seatoxin.ref' //#TODO
 
 params.align_method = "CLUSTALO"
 
@@ -55,7 +55,6 @@ params.regressive_align = true
 
 // output directory
 params.outdir = "$baseDir/results"
-
 
 log.info """\
          PIPELINE  ~  version 0.1"

@@ -6,6 +6,7 @@ include TREE_GENERATION   from './treeGeneration.nf'
 include REG_ALIGNER   from './generateAlignment.nf'   
 include PROG_ALIGNER   from './generateAlignment.nf'   
 include EVAL_ALIGNMENT   from './evaluateAlignment.nf'  
+include EASEL_INFO   from './evaluateAlignment.nf'  
 
 workflow REG_ANALYSIS {
   take:
@@ -20,9 +21,11 @@ workflow REG_ANALYSIS {
     if (params.trees){
       TREE_GENERATION (seqs_ch, tree_methods) }
       else{/*define TREE_GENERATION.out*/}
+    
     REG_ALIGNER (seqs_ch, align_methods, tree_methods, bucket_size, TREE_GENERATION.out)
-    EVAL_ALIGNMENT (REG_ALIGNER.out.id, REG_ALIGNER.out.alignment, refs_ch, align_methods, tree_methods, bucket_size)
-    //EASEL_INFO
+
+    EVAL_ALIGNMENT ("regressive",REG_ALIGNER.out.id, REG_ALIGNER.out.alignment, refs_ch, align_methods, tree_methods, bucket_size)
+    EASEL_INFO ("regressive",REG_ALIGNER.out.id, REG_ALIGNER.out.alignment, refs_ch, align_methods, tree_methods, bucket_size)
 
   //emit: 
 }

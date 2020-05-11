@@ -1,6 +1,7 @@
 #!/bin/bash nextflow
 params.outdir = 'results'
 
+moduleDir="$baseDir/modules/"
 path_templates = "${moduleDir}/templates"
 
 process TREE_GENERATION {
