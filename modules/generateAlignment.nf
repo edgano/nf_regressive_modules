@@ -37,7 +37,8 @@ process PROG_ALIGNER {
     file (guide_tree)
 
     output:
-    file("${id}.prog.${align_method}.with.${tree_method}.tree.aln") 
+    val id, emit:id
+    path "${id}.prog.${align_method}.with.${tree_method}.tree.aln", emit: alignment
 
     script:
     template "${path_templates}/progressive_align/prog_${align_method}.sh"
