@@ -11,11 +11,12 @@ jobs:
      runs-on: ubuntu-latest
      strategy:
        matrix:
-         paramFlavour2run: [--progressive_align=false --regressive_align=true --slave_align=false --dynamic_align==false]
+         paramFlavour2run: [--progressive_align=false --regressive_align=true \
+                            --slave_align=false --dynamic_align=false]
          paramAlign: [--align_method=CLUSTALO,--align_method=MAFFT-FFTNS1,--align_method=FAMSA]
          paramTreeMethod: [--tree_method=MBED,--tree_method=PARTTREE]
-         paramBucket: [--buckets=1000,--buckets=99]
-     steps:
+         paramBucket: [--buckets=100,--buckets=10]
+         steps:
        - uses: actions/checkout@v2
        - name: Install Nextflow
          run: |
@@ -32,11 +33,11 @@ jobs:
      runs-on: ubuntu-latest
      strategy:
        matrix:
-         paramFlavour2run: [--progressive_align=true --regressive_align=false --slave_align=false --dynamic_align==false]
+         paramFlavour2run: [--progressive_align=true --regressive_align=false \
+                            --slave_align=false --dynamic_align=false]
          paramAlign: [--align_method=CLUSTALO,--align_method=MAFFT-FFTNS1,--align_method=FAMSA]
          paramTreeMethod: [--tree_method=MBED,--tree_method=PARTTREE]
-         paramBucket: [--buckets=1000,--buckets=99]
-     steps:
+         steps:
        - uses: actions/checkout@v2
        - name: Install Nextflow
          run: |
@@ -44,7 +45,7 @@ jobs:
            sudo mv nextflow /usr/local/bin/
        - name: Run pipeline with minimal data to check PROGRESSIVE alignments
          run: |
-           nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{matrix.paramFlavour2run}} ${{matrix.paramAlign}} ${{matrix.paramTreeMethod}} ${{matrix.paramBucket}}
+           nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{matrix.paramFlavour2run}} ${{matrix.paramAlign}} ${{matrix.paramTreeMethod}}
                     
   test_slave:
     env:
@@ -53,10 +54,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        paramFlavour2run: [--progressive_align=false --regressive_align=false --slave_align=true --dynamic_align==false]
+        paramFlavour2run: [--progressive_align=false --regressive_align=false \
+                           --slave_align=true --dynamic_align=false]
         paramAlign: [--align_method=CLUSTALO,--align_method=MAFFT-FFTNS1,--align_method=FAMSA]
         paramTreeMethod: [--tree_method=MBED,--tree_method=PARTTREE]
-        paramBucket: [--buckets=1000,--buckets=99]
+        paramBucket: [--buckets=100,--buckets=10]
         paramsSlaveTree: [--slave_tree_method=mbed,--slave_tree_method=parttree,--slave_tree_method=famsadnd]
     steps:
       - uses: actions/checkout@v2
