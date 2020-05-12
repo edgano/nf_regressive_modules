@@ -2,4 +2,4 @@ t_coffee -other_pg seq_reformat -in ${guide_tree} -input newick -in2 ${seqs} -in
 
 newick2mafft.rb 1.0 ${id}.mafftnewick > ${id}.mafftbinary
 
-/mafft/bin/mafft --retree 1 --anysymbol --treein ${id}.mafftbinary ${seqs} > ${id}.prog.${align_method}.with.${tree_method}.tree.aln
+mafft --retree 1 --anysymbol --treein ${id}.mafftbinary ${seqs} > ${id}.prog.${align_method}.with.${tree_method}.tree.aln
