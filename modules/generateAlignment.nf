@@ -1,5 +1,5 @@
 #!/bin/bash nextflow
-params.outdir = 'results'
+//params.outdir = 'results'
 
 moduleDir="$baseDir/modules/"
 path_templates = "${moduleDir}/templates"
@@ -57,7 +57,7 @@ process SLAVE_ALIGNER {
     file (guide_tree)
 
     output:
-    file("${id}.slave.${align_method}.with.${tree_method}.tree.slave.${slave_method}.aln") 
+    file("${id}.slave_${bucket_size}.${align_method}.with.${tree_method}.tree.slave.${slave_method}.aln") 
 
     script:
     template "${path_templates}/slave_align/slave_${align_method}.sh"
@@ -75,7 +75,7 @@ process DYNAMIC_ALIGNER {
     file (guide_tree)
 
     output:
-    file("${id}.dynamic.${bucket_size}.dynamicSize.${dynamic_size}.${align_method}.with.${tree_method}.tree.aln") 
+    file("${id}.dynamic_${bucket_size}.dynamicSize.${dynamic_size}.${align_method}.with.${tree_method}.tree.aln") 
 
     script:
     // template "${path_templates}/dynamic_align/dynamic_${align_method}.sh"

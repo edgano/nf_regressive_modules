@@ -6,4 +6,4 @@ t_coffee -reg -reg_method dynamic_msa \
          -reg_nseq ${bucket_size} \
          -dynamic ${dynamic_size} \
          -reg_homoplasy \
-         -outfile ${id}.dynamic.${bucket_size}.dynamicSize.${dynamic_size}.${align_method}.with.${tree_method}.tree.aln
+         -outfile ${id}.dynamic_${bucket_size}.dynamicSize.${dynamic_size}.${align_method}.with.${tree_method}.tree.aln

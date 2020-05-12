@@ -7,4 +7,4 @@ t_coffee -reg -reg_method dynamic_msa \
          -dynamic ${dynamic_size} \
          -reg_homoplasy \
          -dynamic_config $PWD/config.txt \
-         -outfile ${id}.dynamic.${bucket_size}.dynamicSize.${dynamic_size}.${align_method}.with.${tree_method}.tree.aln
+         -outfile ${id}.dynamic_${bucket_size}.dynamicSize.${dynamic_size}.${align_method}.with.${tree_method}.tree.aln

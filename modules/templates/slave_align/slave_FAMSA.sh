@@ -1,4 +1,4 @@
-t_coffee -reg -reg_method clustalo_msa \
+t_coffee -reg -reg_method famsa_msa \
      -seq ${seqs} \
      -reg_tree ${guide_tree} \
      -child_tree ${slave_method} \

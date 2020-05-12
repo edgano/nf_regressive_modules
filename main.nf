@@ -46,9 +46,9 @@ params.refs = 'https://raw.githubusercontent.com/edgano/datasets-test/homfam/sea
 
 params.trees = true
 
-params.align_method = "CLUSTALO"
+params.align_method = "MAFFT-FFTNS1"
 
-params.tree_method = "CLUSTALO"
+params.tree_method = "MBED"
 
 params.buckets = '1000'
 
