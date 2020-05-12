@@ -16,7 +16,7 @@ jobs:
          paramAlign: [--align_method=CLUSTALO,--align_method=MAFFT-FFTNS1,--align_method=FAMSA]
          paramTreeMethod: [--tree_method=MBED,--tree_method=PARTTREE]
          paramBucket: [--buckets=100,--buckets=10]
-         steps:
+    steps:
        - uses: actions/checkout@v2
        - name: Install Nextflow
          run: |
@@ -37,7 +37,7 @@ jobs:
                             --slave_align=false --dynamic_align=false]
          paramAlign: [--align_method=CLUSTALO,--align_method=MAFFT-FFTNS1,--align_method=FAMSA]
          paramTreeMethod: [--tree_method=MBED,--tree_method=PARTTREE]
-         steps:
+    steps:
        - uses: actions/checkout@v2
        - name: Install Nextflow
          run: |
