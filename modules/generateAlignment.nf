@@ -5,7 +5,7 @@ moduleDir="$baseDir/modules/"
 path_templates = "${moduleDir}/templates"
 
 process REG_ALIGNER {
-    container 'edgano/homoplasy:latest'
+    container 'edgano/tcoffee:psi'
     tag "$align_method - $tree_method on $id"
     publishDir "${params.outdir}/alignments"
 
@@ -26,7 +26,7 @@ process REG_ALIGNER {
 }
 
 process PROG_ALIGNER {
-    container 'edgano/homoplasy:latest'
+    container 'edgano/tcoffee:psi'
     tag "$align_method - $tree_method on $id"
     publishDir "${params.outdir}/alignments"
 
@@ -45,7 +45,7 @@ process PROG_ALIGNER {
 }
 
 process SLAVE_ALIGNER {
-    container 'edgano/homoplasy:latest'
+    container 'edgano/tcoffee:psi'
     tag "$align_method - $tree_method - $slave_method on $id"
     publishDir "${params.outdir}/alignments"
 
@@ -64,7 +64,7 @@ process SLAVE_ALIGNER {
 }
 
 process DYNAMIC_ALIGNER {
-    container 'edgano/homoplasy:latest'
+    container 'edgano/tcoffee:psi'
     tag "$align_method - $tree_method on $id"
     publishDir "${params.outdir}/alignments"
 
