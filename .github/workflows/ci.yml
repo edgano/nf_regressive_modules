@@ -4,14 +4,15 @@ name: nf_reg_modules CI
 on: [push, pull_request]
 
 jobs:
-  test_regressive_CO:
+  test_regressive:
      env:
        NXF_VER: '20.01.0'
        NXF_ANSI_LOG: false
      runs-on: ubuntu-latest
      strategy:
        matrix:
-         paramAlign: [--align_method=CLUSTALO]
+         paramFlavour2run: [--progressive_align=false --regressive_align=true --slave_align=false --dynamic_align==false]
+         paramAlign: [--align_method=CLUSTALO,--align_method=MAFFT-FFTNS1,--align_method=FAMSA]
          paramTreeMethod: [--tree_method=MBED,--tree_method=PARTTREE]
      steps:
        - uses: actions/checkout@v2
@@ -19,18 +20,19 @@ jobs:
          run: |
            wget -qO- get.nextflow.io | bash
            sudo mv nextflow /usr/local/bin/
-       - name: Run pipeline with minimal data to check regressive alignments on ClustalO
+       - name: Run pipeline with minimal data to check REGRESSIVE alignments
          run: |
-           nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.paramAlign }} ${{ matrix.paramTreeMethod }}
+           nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{matrix.paramFlavour2run}} ${{matrix.paramAlign}} ${{matrix.paramTreeMethod}}
            
-  test_regressive_FFTNS1:
+  test_progressive:
      env:
        NXF_VER: '20.01.0'
        NXF_ANSI_LOG: false
      runs-on: ubuntu-latest
      strategy:
        matrix:
-         paramAlign: [--align_method=MAFFT-FFTNS1]
+         paramFlavour2run: [--progressive_align=true --regressive_align=false --slave_align=false --dynamic_align==false]
+         paramAlign: [--align_method=CLUSTALO,--align_method=MAFFT-FFTNS1,--align_method=FAMSA]
          paramTreeMethod: [--tree_method=MBED,--tree_method=PARTTREE]
      steps:
        - uses: actions/checkout@v2
@@ -38,8 +40,7 @@ jobs:
          run: |
            wget -qO- get.nextflow.io | bash
            sudo mv nextflow /usr/local/bin/
-       - name: Run pipeline with minimal data to check regressive alignments on Mafft-FFTNS1
+       - name: Run pipeline with minimal data to check PROGRESSIVE alignments
          run: |
-           nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.paramAlign }} ${{ matrix.paramTreeMethod }}
+           nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{matrix.paramFlavour2run}} ${{matrix.paramAlign}} ${{matrix.paramTreeMethod}}
            
-
