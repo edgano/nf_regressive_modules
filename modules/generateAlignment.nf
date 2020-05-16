@@ -12,14 +12,16 @@ process REG_ALIGNER {
     input:
     tuple id, path(seqs)
     val (align_method)
-    val (tree_method)
+    //val (tree_method)
     val (bucket_size)
-    file (guide_tree)
+    tuple val(id), val(tree_method), file(guide_tree)
 //  each bucket_size from params.buckets.tokenize(',')
 
     output:
     val id, emit:id
-    path "${id}.reg_${bucket_size}.${align_method}.with.${tree_method}.tree.aln", emit: alignment
+    path "${id}.reg_${bucket_size}.${align_method}.with.${tree_method}.tree.aln", emit: alignmentFile
+    path "${id}.homoplasy", emit: homoplasyFile
+    path ".command.trace", emit: metricFile
 
     script:
     template "${path_templates}/regressive_align/reg_${align_method}.sh"
@@ -33,12 +35,13 @@ process PROG_ALIGNER {
     input:
     tuple id, path(seqs)
     val (align_method)
-    val (tree_method)
-    file (guide_tree)
+    //val (tree_method)
+    tuple val(id), val(tree_method), file(guide_tree)
 
     output:
     val id, emit:id
-    path "${id}.prog.${align_method}.with.${tree_method}.tree.aln", emit: alignment
+    path "${id}.prog.${align_method}.with.${tree_method}.tree.aln", emit: alignmentFile
+    path ".command.trace", emit: metricFile
 
     script:
     template "${path_templates}/progressive_align/prog_${align_method}.sh"
@@ -52,12 +55,14 @@ process SLAVE_ALIGNER {
     input:
     tuple id, path(seqs)
     val (align_method)
-    val (tree_method)
+    //val (tree_method)
+    val (bucket_size)
+    tuple val(id), val(tree_method), file(guide_tree)
     val (slave_method)
-    file (guide_tree)
 
     output:
     file("${id}.slave_${bucket_size}.${align_method}.with.${tree_method}.tree.slave.${slave_method}.aln") 
+    path ".command.trace", emit: metricFile
 
     script:
     template "${path_templates}/slave_align/slave_${align_method}.sh"
@@ -71,14 +76,38 @@ process DYNAMIC_ALIGNER {
     input:
     tuple id, path(seqs)
     val (align_method)
-    val (tree_method)
-    file (guide_tree)
+    //val (tree_method)
+    val (bucket_size)
+    tuple val(id), val(tree_method), file(guide_tree)
 
     output:
     file("${id}.dynamic_${bucket_size}.dynamicSize.${dynamic_size}.${align_method}.with.${tree_method}.tree.aln") 
+    path ".command.trace", emit: metricFile
 
     script:
     // template "${path_templates}/dynamic_align/dynamic_${align_method}.sh"
     // the above template is not declared yet, thus I call the following one
     template "${path_templates}/dynamic_align/dynamic_DEFAULT.sh"
+}
+process POOL_ALIGNER {
+    container 'edgano/tcoffee:psi'
+    tag "$align_method - $tree_method on $id"
+    publishDir "${params.outdir}/alignments"
+
+    input:
+    tuple id, path(seqs)
+    val (align_method)
+    //  val (tree_method)
+    val (bucket_size)
+    //each bucket_size from params.buckets.tokenize(',')
+    tuple val(id), val(tree_method), file(guide_tree)
+
+    output:
+    val id, emit:id
+    path "${id}.pool_${bucket_size}.${align_method}.with.${tree_method}.tree.aln", emit: alignmentFile
+    path "${id}.homoplasy", emit: homoplasyFile
+    path ".command.trace", emit: metricFile
+
+    script:
+    template "${path_templates}/pool_align/pool_${align_method}.sh"
 }

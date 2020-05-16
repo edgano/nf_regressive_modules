@@ -94,7 +94,7 @@ process HOMOPLASY {
     val (align_method)
     val (tree_method)
     val (bucket_size)
-    //TODO  file (homoplasy)        
+    file (homoplasy)        
 
     output:
     file("*.homo")
@@ -102,7 +102,7 @@ process HOMOPLASY {
     file("*.w_homo2")
     file("*.len")
     file("*.ngap")
-    file("*.ngap2") 
+    file("*.ngap2")
 
     script:
   """    
@@ -134,6 +134,7 @@ process METRICS {
         val (align_method)
         val (tree_method)
         val (bucket_size)
+        file (metricsFile)
 
     output:
       file("*.metrics")
@@ -147,17 +148,17 @@ process METRICS {
     script:
     """    
         ## realtime > Task execution time i.e. delta between completion and start timestamp i.e. compute wall-time
-    awk -F = '{ if (\$1=="realtime") print \$2}' ${metricsFile} > ${id}.${mode}.${bucket_size}.${align_method}.with.${tree_method}.tree.realtime
+    awk -F = '{ if (\$1=="realtime") print \$2}' ${metricsFile} > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.realtime
         ## rss > Real memory (resident set) size of the process
-    awk -F = '{ if (\$1=="rss") print \$2}' ${metricsFile}> ${id}.${mode}.${bucket_size}.${align_method}.with.${tree_method}.tree.rss
+    awk -F = '{ if (\$1=="rss") print \$2}' ${metricsFile}> ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.rss
         ## peakRss > Peak of real memory
-    awk -F = '{ if (\$1=="peak_rss") print \$2}' ${metricsFile} > ${id}.${mode}.${bucket_size}.${align_method}.with.${tree_method}.tree.peakRss
+    awk -F = '{ if (\$1=="peak_rss") print \$2}' ${metricsFile} > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.peakRss
         ## vmem > Virtual memory size of the process
-    awk -F = '{ if (\$1=="vmem") print \$2}' ${metricsFile} > ${id}.${mode}.${bucket_size}.${align_method}.with.${tree_method}.tree.vmem
+    awk -F = '{ if (\$1=="vmem") print \$2}' ${metricsFile} > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.vmem
         ## peakVmem > Peak of virtual memory
-    awk -F = '{ if (\$1=="peak_vmem") print \$2}' ${metricsFile} > ${id}.${mode}.${bucket_size}.${align_method}.with.${tree_method}.tree.peakVmem
+    awk -F = '{ if (\$1=="peak_vmem") print \$2}' ${metricsFile} > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.peakVmem
     
-    mv ${metricsFile} ${id}.${mode}.${bucket_size}.${align_method}.with.${tree_method}.tree.metrics
+    mv ${metricsFile} ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.metrics
     """
 }
 
@@ -167,13 +168,12 @@ process GAPS_PROGRESSIVE {
     publishDir "${params.outdir}/metrics"
 
     input:
-        val (align_type)
-        val (id)
-        file (test_alignment)
-        tuple val(id), file (ref_alignment)
-        val (align_method)
-        val (tree_method)
-        val (bucket_size)
+    val (align_type)
+    val (id)
+    file (test_alignment)
+    val (align_method)
+    val (tree_method)
+    val (bucket_size)
 
     output:
         file("*.totGap")
@@ -189,14 +189,14 @@ import os
 gap = '-'
 globalGap = 0
 avgGap = 0
-auxGap = 0
-totGapName= "${id}.${flavour}.${bucket_size}.${aln_method}.with.${tree_method}.tree.totGap"
-numbSeqName= "${id}.${flavour}.${bucket_size}.${aln_method}.with.${tree_method}.tree.numSeq"
-alnLenName= "${id}.${flavour}.${bucket_size}.${aln_method}.with.${tree_method}.tree.alnLen"
+auxGap = 0   
+totGapName= "${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.totGap"
+numbSeqName= "${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.numSeq"
+alnLenName= "${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.alnLen"
 totGapFile= open(totGapName,"w+")
 numSeqFile= open(numbSeqName,"w+")
 alnLenFile= open(alnLenName,"w+")
-record = list(SeqIO.parse("${aln}", "fasta"))
+record = list(SeqIO.parse("${test_alignment}", "fasta"))
 for sequence in record:
     ## print(sequence.seq)
     auxGap = sequence.seq.count(gap)

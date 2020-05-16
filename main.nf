@@ -44,22 +44,25 @@ params.seqs = 'https://raw.githubusercontent.com/edgano/datasets-test/homfam/sea
 //params.refs = "$baseDir/data/*.ref"
 params.refs = 'https://raw.githubusercontent.com/edgano/datasets-test/homfam/seatoxin.ref' //#TODO
 
-params.trees = true
+//params.trees = false
+params.trees ="/Users/edgargarriga/CBCRG/nf_regressive_modules/results/trees/seatoxin.MBED.dnd"
 
-params.align_method = "MAFFT-FFTNS1"
+params.align_method = "CLUSTALO"
 
 params.tree_method = "MBED"
 
 params.buckets = '1000'
 
-params.progressive_align = false
+params.progressive_align = true
 params.regressive_align = true
 params.slave_align=false
 params.slave_tree_method='-'
 params.dynamic_align=false
+params.pool_align=true
 
 params.evaluate=true
 params.homoplasy=true
+params.gapCount=true
 params.metrics=true
 
 // output directory
@@ -80,24 +83,36 @@ log.info """\
          Generate Slave tree alignments                 : ${params.slave_align}
                    Slave Tree methods                   : ${params.slave_tree_method}
          Generate Dynamic alignments                    : ${params.dynamic_align}
+         Generate Pool alignments                       : ${params.pool_align}
          --##--
          Perform evaluation? Requires reference         : ${params.evaluate}
          Check homoplasy? Only for regressive           : ${params.homoplasy}
+         Check gapCount? For progressive                : ${params.gapCount}
          Check metrics?                                 : ${params.metrics}
          --##--
          Output directory (DIRECTORY)                   : ${params.outdir}
          """
          .stripIndent()
 
-// import modules
+// import analysis pipelines
 include REG_ANALYSIS from './modules/reg_analysis'    params(params)
 include PROG_ANALYSIS from './modules/prog_analysis'    params(params)
+include POOL_ANALYSIS from './modules/reg_analysis'    params(params)
+include SLAVE_ANALYSIS from './modules/reg_analysis'    params(params)
 
 // Channels containing sequences
 seqs_ch = Channel.fromPath( params.seqs, checkIfExists: true ).map { item -> [ item.baseName, item] }
 
 if ( params.refs ) {
   refs_ch = Channel.fromPath( params.refs ).map { item -> [ item.baseName, item] }
+}
+
+// Channels for user provided trees or empty channel if trees are to be generated [OPTIONAL]
+if ( params.trees ) {
+  trees = Channel.fromPath(params.trees)
+    .map { item -> [ item.baseName.tokenize('.')[0], item.baseName.tokenize('.')[1], item] }
+}else { 
+  Channel.empty().set { trees }
 }
 
 tree_methods = params.tree_method
@@ -109,10 +124,16 @@ bucket_list = params.buckets
  */
 workflow pipeline {
     if (params.regressive_align){
-      REG_ANALYSIS(seqs_ch, refs_ch, align_methods, tree_methods, bucket_list)
+      REG_ANALYSIS(seqs_ch, refs_ch, align_methods, tree_methods, bucket_list, trees)
     }
     if (params.progressive_align){
-      PROG_ANALYSIS(seqs_ch, refs_ch, align_methods, tree_methods)
+      PROG_ANALYSIS(seqs_ch, refs_ch, align_methods, tree_methods, trees)
+    }
+    if (params.slave_align){
+      SLAVE_ANALYSIS(seqs_ch, refs_ch, align_methods, tree_methods, trees)
+    }
+    if (params.pool_align){
+      POOL_ANALYSIS(seqs_ch, refs_ch, align_methods, tree_methods, bucket_list, trees)
     }
 }
 
