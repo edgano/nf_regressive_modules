@@ -17,7 +17,7 @@ process EVAL_ALIGNMENT {
 
     output:
     file("*.sp")
-    file("*.tc") 
+    path "${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.tc", emit: tcScore
     file("*.col") 
 
     script:

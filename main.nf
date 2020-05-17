@@ -53,12 +53,12 @@ params.tree_method = "MBED"
 
 params.buckets = '1000'
 
-params.progressive_align = true
+params.progressive_align = false
 params.regressive_align = true
-params.slave_align=true
+params.slave_align=false
 params.slave_tree_method="mbed" //need to be lowercase -> direct to tcoffee CommandLine
 params.dynamic_align=false
-params.pool_align=true
+params.pool_align=false
 
 params.evaluate=true
 params.homoplasy=true
