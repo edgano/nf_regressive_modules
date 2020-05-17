@@ -6,6 +6,6 @@ t_coffee -reg -reg_method mafftfftns1_msa \
      -child_tree ${slave_method} \
      -reg_nseq ${bucket_size} \
      -reg_homoplasy \
-     -outfile ${id}.slave_${bucket_size}.${align_method}.with.${tree_method}.tree.slave.${slave_method}.aln
+     -outfile ${id}.slave_${bucket_size}.${align_method}.with.${tree_method}_${slave_method}.tree.aln
 
 

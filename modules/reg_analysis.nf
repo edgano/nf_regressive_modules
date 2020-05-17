@@ -85,9 +85,9 @@ workflow SLAVE_ANALYSIS {
     refs_ch
     align_methods
     tree_methods
-    slave_method
     bucket_size
     trees
+    slave_method
      
   main: 
     //COMBINE_SEQS(seqs_ch, refs_ch) // need to combine seqs and ref by ID

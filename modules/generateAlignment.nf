@@ -61,7 +61,9 @@ process SLAVE_ALIGNER {
     val (slave_method)
 
     output:
-    file("${id}.slave_${bucket_size}.${align_method}.with.${tree_method}.tree.slave.${slave_method}.aln") 
+    val id, emit:id
+    path "${id}.slave_${bucket_size}.${align_method}.with.${tree_method}_${slave_method}.tree.aln", emit: alignmentFile
+    path "${id}.homoplasy", emit: homoplasyFile
     path ".command.trace", emit: metricFile
 
     script:

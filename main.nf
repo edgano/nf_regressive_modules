@@ -55,8 +55,8 @@ params.buckets = '1000'
 
 params.progressive_align = true
 params.regressive_align = true
-params.slave_align=false
-params.slave_tree_method='-'
+params.slave_align=true
+params.slave_tree_method="mbed" //need to be lowercase -> direct to tcoffee CommandLine
 params.dynamic_align=false
 params.pool_align=true
 
@@ -118,6 +118,7 @@ if ( params.trees ) {
 tree_methods = params.tree_method
 align_methods = params.align_method
 bucket_list = params.buckets
+slave_methods = params.slave_tree_method
 
 /* 
  * main script flow
@@ -130,7 +131,7 @@ workflow pipeline {
       PROG_ANALYSIS(seqs_ch, refs_ch, align_methods, tree_methods, trees)
     }
     if (params.slave_align){
-      SLAVE_ANALYSIS(seqs_ch, refs_ch, align_methods, tree_methods, trees)
+      SLAVE_ANALYSIS(seqs_ch, refs_ch, align_methods, tree_methods, bucket_list, trees, slave_methods)
     }
     if (params.pool_align){
       POOL_ANALYSIS(seqs_ch, refs_ch, align_methods, tree_methods, bucket_list, trees)
