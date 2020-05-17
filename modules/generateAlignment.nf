@@ -65,6 +65,7 @@ process SLAVE_ALIGNER {
     path "${id}.slave_${bucket_size}.${align_method}.with.${tree_method}_${slave_method}.tree.aln", emit: alignmentFile
     path "${id}.homoplasy", emit: homoplasyFile
     path ".command.trace", emit: metricFile
+    val "${tree_method}_${slave_method}", emit:tree_method
 
     script:
     template "${path_templates}/slave_align/slave_${align_method}.sh"
