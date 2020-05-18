@@ -13,35 +13,37 @@ workflow REG_ANALYSIS {
   take:
     seqs_ch
     refs_ch
-    align_methods
-    tree_methods
+    align_method
+    tree_method
     bucket_size
     trees
      
   main: 
     //COMBINE_SEQS(seqs_ch, refs_ch) // need to combine seqs and ref by ID
     if (!params.trees){
-        TREE_GENERATION (seqs_ch, tree_methods) 
+        TREE_GENERATION (seqs_ch, tree_method) 
         trees_ch = TREE_GENERATION.out
     }else{
         trees_ch = trees
     }
     
-    REG_ALIGNER (seqs_ch, align_methods, bucket_size, trees_ch)
+    REG_ALIGNER (seqs_ch, align_method, bucket_size, trees_ch)
 
     if (params.evaluate){
-      EVAL_ALIGNMENT ("regressive",REG_ALIGNER.out.id, REG_ALIGNER.out.alignmentFile, refs_ch, align_methods, tree_methods, bucket_size) 
+      EVAL_ALIGNMENT ("regressive",REG_ALIGNER.out.id, REG_ALIGNER.out.alignmentFile, refs_ch, align_method, tree_method, bucket_size) 
       
-      tcScore_csv = EVAL_ALIGNMENT.out.tcScore.collectFile(name: "${REG_ALIGNER.out.id}_tc.csv", newLine: true)
+      tcScore_csv = EVAL_ALIGNMENT.out.tcScore
+                    .collectFile(name: "_tc.csv", newLine: true).view()
     }
     if (params.homoplasy){
-      HOMOPLASY("regressive",REG_ALIGNER.out.id, REG_ALIGNER.out.alignmentFile, refs_ch, align_methods, tree_methods, bucket_size, REG_ALIGNER.out.homoplasyFile)
+      HOMOPLASY("regressive",REG_ALIGNER.out.id, REG_ALIGNER.out.alignmentFile, refs_ch, align_method, tree_method, bucket_size, REG_ALIGNER.out.homoplasyFile)
     }
     if (params.metrics){
-      METRICS("regressive",REG_ALIGNER.out.id, REG_ALIGNER.out.alignmentFile, refs_ch, align_methods, tree_methods, bucket_size, REG_ALIGNER.out.metricFile)
+      METRICS("regressive",REG_ALIGNER.out.id, REG_ALIGNER.out.alignmentFile, refs_ch, align_method, tree_method, bucket_size, REG_ALIGNER.out.metricFile)
     }
-    EASEL_INFO ("regressive",REG_ALIGNER.out.id, REG_ALIGNER.out.alignmentFile, refs_ch, align_methods, tree_methods, bucket_size)
+    EASEL_INFO ("regressive",REG_ALIGNER.out.id, REG_ALIGNER.out.alignmentFile, refs_ch, align_method, tree_method, bucket_size)
 
+    //emmit : tcScore_csv
 }
 
 include POOL_ALIGNER   from './generateAlignment.nf'   

@@ -11,8 +11,7 @@ process TREE_GENERATION {
 
     input:
     tuple id, path(seqs)
-    val (tree_method)
-    //each tree_method from params.tree_method.tokenize(',') 
+    each tree_method
 
     output:
     tuple val(id), val (tree_method), file("${id}.${tree_method}.dnd") 

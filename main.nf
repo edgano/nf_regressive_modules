@@ -44,19 +44,19 @@ params.seqs = 'https://raw.githubusercontent.com/edgano/datasets-test/homfam/sea
 //params.refs = "$baseDir/data/*.ref"
 params.refs = 'https://raw.githubusercontent.com/edgano/datasets-test/homfam/seatoxin.ref' //#TODO
 
-//params.trees = false
-params.trees ="/Users/edgargarriga/CBCRG/nf_regressive_modules/results/trees/seatoxin.MBED.dnd"
+params.trees = false
+//params.trees ="/Users/edgargarriga/CBCRG/nf_regressive_modules/results/trees/seatoxin.MBED.dnd"
 
-params.align_method = "CLUSTALO"
+params.align_methods = "CLUSTALO,MAFFT-FFTNS1"
 
-params.tree_method = "MBED"
+params.tree_methods = "MBED,FAMSA-SLINK"
 
-params.buckets = '1000'
+params.buckets = "1000,2000"
 
 params.progressive_align = false
 params.regressive_align = true
 params.slave_align=false
-params.slave_tree_method="mbed" //need to be lowercase -> direct to tcoffee CommandLine
+params.slave_tree_methods="mbed" //need to be lowercase -> direct to tcoffee CommandLine
 params.dynamic_align=false
 params.pool_align=false
 
@@ -74,14 +74,14 @@ log.info """\
          Input sequences (FASTA)                        : ${params.seqs}
          Input references (Aligned FASTA))              : ${params.refs}
          Input trees (NEWICK)                           : ${params.trees}
-         Alignment methods                              : ${params.align_method}
-         Tree methods                                   : ${params.tree_method}
+         Alignment methods                              : ${params.align_methods}
+         Tree methods                                   : ${params.tree_methods}
          Bucket size                                    : ${params.buckets}
          --##--
          Generate Progressive alignments                : ${params.progressive_align}
          Generate Regressive alignments                 : ${params.regressive_align}
          Generate Slave tree alignments                 : ${params.slave_align}
-                   Slave Tree methods                   : ${params.slave_tree_method}
+                   Slave Tree methods                   : ${params.slave_tree_methods}
          Generate Dynamic alignments                    : ${params.dynamic_align}
          Generate Pool alignments                       : ${params.pool_align}
          --##--
@@ -115,31 +115,34 @@ if ( params.trees ) {
   Channel.empty().set { trees }
 }
 
-tree_methods = params.tree_method
-align_methods = params.align_method
-bucket_list = params.buckets
-slave_methods = params.slave_tree_method
+tree_method = params.tree_methods.tokenize(',')
+align_method = params.align_methods.tokenize(',')
+bucket_list = params.buckets.tokenize(',')
+slave_method = params.slave_tree_methods.tokenize(',')
 
 /* 
  * main script flow
  */
 workflow pipeline {
     if (params.regressive_align){
-      REG_ANALYSIS(seqs_ch, refs_ch, align_methods, tree_methods, bucket_list, trees)
+      REG_ANALYSIS(seqs_ch, refs_ch, align_method, tree_method, bucket_list, trees)
     }
     if (params.progressive_align){
-      PROG_ANALYSIS(seqs_ch, refs_ch, align_methods, tree_methods, trees)
+      PROG_ANALYSIS(seqs_ch, refs_ch, align_method, tree_method, trees)
     }
     if (params.slave_align){
-      SLAVE_ANALYSIS(seqs_ch, refs_ch, align_methods, tree_methods, bucket_list, trees, slave_methods)
+      SLAVE_ANALYSIS(seqs_ch, refs_ch, align_method, tree_method, bucket_list, trees, slave_method)
     }
     if (params.pool_align){
-      POOL_ANALYSIS(seqs_ch, refs_ch, align_methods, tree_methods, bucket_list, trees)
+      POOL_ANALYSIS(seqs_ch, refs_ch, align_method, tree_method, bucket_list, trees)
     }
 }
 
 workflow {
   pipeline()
+  
+  //publish:
+    //REG_ANALYSIS.out.tcScore_csv to: "_tc.csv"
 }
 
 /* 

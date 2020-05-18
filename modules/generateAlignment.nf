@@ -6,16 +6,14 @@ path_templates = "${moduleDir}/templates"
 
 process REG_ALIGNER {
     container 'edgano/tcoffee:psi'
-    tag "$align_method - $tree_method on $id"
+    tag "$align_method - $tree_method - $bucket_size on $id"
     publishDir "${params.outdir}/alignments"
 
     input:
     tuple id, path(seqs)
-    val (align_method)
-    //val (tree_method)
-    val (bucket_size)
+    each align_method
+    each bucket_size
     tuple val(id), val(tree_method), file(guide_tree)
-//  each bucket_size from params.buckets.tokenize(',')
 
     output:
     val id, emit:id
@@ -34,8 +32,7 @@ process PROG_ALIGNER {
 
     input:
     tuple id, path(seqs)
-    val (align_method)
-    //val (tree_method)
+    each (align_method)
     tuple val(id), val(tree_method), file(guide_tree)
 
     output:
@@ -54,9 +51,8 @@ process SLAVE_ALIGNER {
 
     input:
     tuple id, path(seqs)
-    val (align_method)
-    //val (tree_method)
-    val (bucket_size)
+    each (align_method)
+    each bucket_size
     tuple val(id), val(tree_method), file(guide_tree)
     val (slave_method)
 
@@ -78,9 +74,8 @@ process DYNAMIC_ALIGNER {
 
     input:
     tuple id, path(seqs)
-    val (align_method)
-    //val (tree_method)
-    val (bucket_size)
+    each (align_method)
+    each bucket_size
     tuple val(id), val(tree_method), file(guide_tree)
 
     output:
@@ -99,10 +94,8 @@ process POOL_ALIGNER {
 
     input:
     tuple id, path(seqs)
-    val (align_method)
-    //  val (tree_method)
-    val (bucket_size)
-    //each bucket_size from params.buckets.tokenize(',')
+    each (align_method)
+    each bucket_size
     tuple val(id), val(tree_method), file(guide_tree)
 
     output:

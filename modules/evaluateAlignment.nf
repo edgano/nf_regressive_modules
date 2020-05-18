@@ -11,9 +11,9 @@ process EVAL_ALIGNMENT {
     val (id)
     file (test_alignment)
     tuple val(id), file (ref_alignment)
-    val (align_method)
-    val (tree_method)
-    val (bucket_size)
+    each (align_method)
+    each tree_method
+    each bucket_size
 
     output:
     file("*.sp")
@@ -61,9 +61,9 @@ process EASEL_INFO {
     val (id)
     file (test_alignment)
     tuple val(id), file (ref_alignment)
-    val (align_method)
-    val (tree_method)
-    val (bucket_size)
+    each (align_method)
+    each tree_method
+    each bucket_size
 
     output:
     file("*.easel_INFO")
@@ -91,9 +91,9 @@ process HOMOPLASY {
     val (id)
     file (test_alignment)
     tuple val(id), file (ref_alignment)
-    val (align_method)
-    val (tree_method)
-    val (bucket_size)
+    each align_method
+    each tree_method
+    each bucket_size
     file (homoplasy)        
 
     output:
@@ -131,9 +131,9 @@ process METRICS {
         val (id)
         file (test_alignment)
         tuple val(id), file (ref_alignment)
-        val (align_method)
-        val (tree_method)
-        val (bucket_size)
+        each align_method
+        each tree_method
+        each bucket_size
         file (metricsFile)
 
     output:
@@ -171,9 +171,9 @@ process GAPS_PROGRESSIVE {
     val (align_type)
     val (id)
     file (test_alignment)
-    val (align_method)
-    val (tree_method)
-    val (bucket_size)
+    each (align_method)
+    each tree_method
+    each bucket_size
 
     output:
         file("*.totGap")
