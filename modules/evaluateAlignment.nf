@@ -9,8 +9,7 @@ process EVAL_ALIGNMENT {
     input:
     val align_type
     val id
-    file test_alignment
-    tuple val(id), file (ref_alignment)
+    tuple file (test_alignment), val(id), file (ref_alignment)
     val align_method
     val tree_method
     val bucket_size

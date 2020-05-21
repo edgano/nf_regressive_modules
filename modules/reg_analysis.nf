@@ -30,7 +30,8 @@ workflow REG_ANALYSIS {
     }
 
     if (params.evaluate){
-      EVAL_ALIGNMENT ("regressive",REG_ALIGNER.out.id, REG_ALIGNER.out.alignmentFile, refs_ch, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize) 
+      alignment_ref = REG_ALIGNER.out.alignmentFile.combine(refs_ch)
+      EVAL_ALIGNMENT ("regressive", REG_ALIGNER.out.id, alignment_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize)
     }
     if (params.homoplasy){
       HOMOPLASY("regressive",REG_ALIGNER.out.id, REG_ALIGNER.out.alignmentFile, refs_ch, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize, REG_ALIGNER.out.homoplasyFile)
