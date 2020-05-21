@@ -17,11 +17,12 @@ process REG_ALIGNER {
     path (guide_tree)
 
     output:
-    val id, emit: id
+    // val id, emit: id
     val align_method, emit: alignMethod
     val tree_method, emit: treeMethod
     val bucket_size, emit: bucketSize
-    path "${id}.reg_${bucket_size}.${align_method}.with.${tree_method}.tree.aln", emit: alignmentFile
+    // path "${id}.reg_${bucket_size}.${align_method}.with.${tree_method}.tree.aln", emit: alignmentFile
+    tuple val (id), path ("${id}.reg_${bucket_size}.${align_method}.with.${tree_method}.tree.aln"), emit: alignmentFile
     path "${id}.homoplasy", emit: homoplasyFile
     path ".command.trace", emit: metricFile
 
@@ -103,8 +104,7 @@ process POOL_ALIGNER {
     tuple val(id), val(tree_method), file(guide_tree)
 
     output:
-    val id, emit:id
-    path "${id}.pool_${bucket_size}.${align_method}.with.${tree_method}.tree.aln", emit: alignmentFile
+    tuple val (id), path ("${id}.pool_${bucket_size}.${align_method}.with.${tree_method}.tree.aln"), emit: alignmentFile
     path "${id}.homoplasy", emit: homoplasyFile
     path ".command.trace", emit: metricFile
 
