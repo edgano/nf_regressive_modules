@@ -29,17 +29,18 @@ workflow REG_ANALYSIS {
       REG_ALIGNER (seqs_ch, align_method, bucket_size, tree_method, trees)
     }
 
+    alignment_plus_ref = REG_ALIGNER.out.alignmentFile.combine(refs_ch)
+
     if (params.evaluate){
-      alignment_ref = REG_ALIGNER.out.alignmentFile.combine(refs_ch)
-      EVAL_ALIGNMENT ("regressive", REG_ALIGNER.out.id, alignment_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize)
+      EVAL_ALIGNMENT ("regressive", REG_ALIGNER.out.id, alignment_plus_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize)
     }
     if (params.homoplasy){
-      HOMOPLASY("regressive",REG_ALIGNER.out.id, REG_ALIGNER.out.alignmentFile, refs_ch, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize, REG_ALIGNER.out.homoplasyFile)
+      HOMOPLASY("regressive",REG_ALIGNER.out.id, alignment_plus_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize, REG_ALIGNER.out.homoplasyFile)
     }
     if (params.metrics){
-      METRICS("regressive",REG_ALIGNER.out.id, REG_ALIGNER.out.alignmentFile, refs_ch, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize, REG_ALIGNER.out.metricFile)
+      METRICS("regressive",REG_ALIGNER.out.id, alignment_plus_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize, REG_ALIGNER.out.metricFile)
     }
-    //EASEL_INFO ("regressive",REG_ALIGNER.out.id, REG_ALIGNER.out.alignmentFile, refs_ch, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize)
+    //EASEL_INFO ("regressive",REG_ALIGNER.out.id, alignment_plus_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize)
 
 }
 
