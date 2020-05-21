@@ -28,16 +28,18 @@ workflow PROG_ANALYSIS {
     
     PROG_ALIGNER (seqs_ch, align_methods, trees_ch)
 
+    prog_alignment_plus_ref = PROG_ALIGNER.out.alignmentFile.combine(refs_ch)
+
     if (params.evaluate){
-      EVAL_ALIGNMENT ("progressive",PROG_ALIGNER.out.id, PROG_ALIGNER.out.alignmentFile, refs_ch, align_methods, tree_methods, "NA")
+      EVAL_ALIGNMENT ("progressive", PROG_ALIGNER.out.id, prog_alignment_plus_ref, align_methods, tree_methods, "NA")
     }
     if (params.gapCount){
       GAPS_PROGRESSIVE("progressive",PROG_ALIGNER.out.id, PROG_ALIGNER.out.alignmentFile, align_methods, tree_methods, "NA")
     }
     if (params.metrics){
-      METRICS("progressive",PROG_ALIGNER.out.id, PROG_ALIGNER.out.alignmentFile, refs_ch, align_methods, tree_methods, "NA", PROG_ALIGNER.out.metricFile)
+      METRICS("progressive",PROG_ALIGNER.out.id, prog_alignment_plus_ref, align_methods, tree_methods, "NA", PROG_ALIGNER.out.metricFile)
     }
-    EASEL_INFO ("progressive",PROG_ALIGNER.out.id, PROG_ALIGNER.out.alignmentFile, refs_ch, align_methods, tree_methods, "NA")
+    EASEL_INFO ("progressive",PROG_ALIGNER.out.id, prog_alignment_plus_ref, align_methods, tree_methods, "NA")
 
   //emit: 
 }
