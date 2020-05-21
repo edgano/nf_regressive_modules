@@ -9,8 +9,7 @@ process EVAL_ALIGNMENT {
     input:
     val align_type
     val id
-    file test_alignment
-    tuple val(id), file (ref_alignment)
+    tuple file (test_alignment), val (id_ref), file (ref_alignment)
     val align_method
     val tree_method
     val bucket_size
@@ -59,8 +58,7 @@ process EASEL_INFO {
     input:
     val align_type
     val id
-    file test_alignment
-    tuple val(id), file (ref_alignment)
+    tuple file (test_alignment), val (id_ref), file (ref_alignment)
     val align_method
     val tree_method
     val bucket_size
@@ -89,8 +87,7 @@ process HOMOPLASY {
     input:
     val align_type
     val id
-    file test_alignment
-    tuple val(id), file (ref_alignment)
+    tuple file (test_alignment), val (id_ref), file (ref_alignment)
     val align_method
     val tree_method
     val bucket_size
@@ -129,8 +126,7 @@ process METRICS {
     input:
         val align_type
         val id
-        file test_alignment
-        tuple val(id), file (ref_alignment)
+        tuple file (test_alignment), val (id_ref), file (ref_alignment)
         val align_method
         val tree_method
         val bucket_size

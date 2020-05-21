@@ -29,16 +29,18 @@ workflow REG_ANALYSIS {
       REG_ALIGNER (seqs_ch, align_method, bucket_size, tree_method, trees)
     }
 
+    alignment_plus_ref = REG_ALIGNER.out.alignmentFile.combine(refs_ch)
+
     if (params.evaluate){
-      EVAL_ALIGNMENT ("regressive",REG_ALIGNER.out.id, REG_ALIGNER.out.alignmentFile, refs_ch, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize) 
+      EVAL_ALIGNMENT ("regressive", REG_ALIGNER.out.id, alignment_plus_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize)
     }
     if (params.homoplasy){
-      HOMOPLASY("regressive",REG_ALIGNER.out.id, REG_ALIGNER.out.alignmentFile, refs_ch, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize, REG_ALIGNER.out.homoplasyFile)
+      HOMOPLASY("regressive",REG_ALIGNER.out.id, alignment_plus_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize, REG_ALIGNER.out.homoplasyFile)
     }
     if (params.metrics){
-      METRICS("regressive",REG_ALIGNER.out.id, REG_ALIGNER.out.alignmentFile, refs_ch, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize, REG_ALIGNER.out.metricFile)
+      METRICS("regressive",REG_ALIGNER.out.id, alignment_plus_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize, REG_ALIGNER.out.metricFile)
     }
-    //EASEL_INFO ("regressive",REG_ALIGNER.out.id, REG_ALIGNER.out.alignmentFile, refs_ch, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize)
+    //EASEL_INFO ("regressive",REG_ALIGNER.out.id, alignment_plus_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize)
 
 }
 
@@ -63,16 +65,18 @@ workflow POOL_ANALYSIS {
     
     POOL_ALIGNER (seqs_ch, align_methods, bucket_size, trees_ch)
 
+    pool_alignment_plus_ref = POOL_ALIGNER.out.alignmentFile.combine(refs_ch)
+
     if (params.evaluate){
-      EVAL_ALIGNMENT ("pool",POOL_ALIGNER.out.id, POOL_ALIGNER.out.alignmentFile, refs_ch, align_methods, tree_methods, bucket_size)
+      EVAL_ALIGNMENT ("pool",POOL_ALIGNER.out.id, pool_alignment_plus_ref, align_methods, tree_methods, bucket_size)
     }
     if (params.homoplasy){
-      HOMOPLASY("pool",POOL_ALIGNER.out.id, POOL_ALIGNER.out.alignmentFile, refs_ch, align_methods, tree_methods, bucket_size, POOL_ALIGNER.out.homoplasyFile)
+      HOMOPLASY("pool",POOL_ALIGNER.out.id,  pool_alignment_plus_ref, align_methods, tree_methods, bucket_size, POOL_ALIGNER.out.homoplasyFile)
     }
     if (params.metrics){
-      METRICS("pool",POOL_ALIGNER.out.id, POOL_ALIGNER.out.alignmentFile, refs_ch, align_methods, tree_methods, bucket_size, POOL_ALIGNER.out.metricFile)
+      METRICS("pool", POOL_ALIGNER.out.id, pool_alignment_plus_ref, align_methods, tree_methods, bucket_size, POOL_ALIGNER.out.metricFile)
     }
-    EASEL_INFO ("pool",POOL_ALIGNER.out.id, POOL_ALIGNER.out.alignmentFile, refs_ch, align_methods, tree_methods, bucket_size)
+    EASEL_INFO ("pool", POOL_ALIGNER.out.id, pool_alignment_plus_ref, align_methods, tree_methods, bucket_size)
 
   //emit: 
 }
@@ -99,16 +103,18 @@ workflow SLAVE_ANALYSIS {
     
     SLAVE_ALIGNER (seqs_ch, align_methods, bucket_size, trees_ch, slave_method)
 
+    slave_alignment_plus_ref = SLAVE_ALIGNER.out.alignmentFile.combine(refs_ch)
+
     if (params.evaluate){
-      EVAL_ALIGNMENT ("slave",SLAVE_ALIGNER.out.id, SLAVE_ALIGNER.out.alignmentFile, refs_ch, align_methods, SLAVE_ALIGNER.out.tree_method, bucket_size)
+      EVAL_ALIGNMENT ("slave",SLAVE_ALIGNER.out.id, slave_alignment_plus_ref, align_methods, SLAVE_ALIGNER.out.tree_method, bucket_size)
     }
     if (params.homoplasy){
-      HOMOPLASY("slave",SLAVE_ALIGNER.out.id, SLAVE_ALIGNER.out.alignmentFile, refs_ch, align_methods, SLAVE_ALIGNER.out.tree_method, bucket_size, SLAVE_ALIGNER.out.homoplasyFile)
+      HOMOPLASY("slave",SLAVE_ALIGNER.out.id, slave_alignment_plus_ref, align_methods, SLAVE_ALIGNER.out.tree_method, bucket_size, SLAVE_ALIGNER.out.homoplasyFile)
     }
     if (params.metrics){
-      METRICS("slave",SLAVE_ALIGNER.out.id, SLAVE_ALIGNER.out.alignmentFile, refs_ch, align_methods, SLAVE_ALIGNER.out.tree_method, bucket_size, SLAVE_ALIGNER.out.metricFile)
+      METRICS("slave",SLAVE_ALIGNER.out.id, slave_alignment_plus_ref, align_methods, SLAVE_ALIGNER.out.tree_method, bucket_size, SLAVE_ALIGNER.out.metricFile)
     }
-    EASEL_INFO ("slave",SLAVE_ALIGNER.out.id, SLAVE_ALIGNER.out.alignmentFile, refs_ch, align_methods, SLAVE_ALIGNER.out.tree_method, bucket_size)
+    EASEL_INFO ("slave",SLAVE_ALIGNER.out.id, slave_alignment_plus_refs, align_methods, SLAVE_ALIGNER.out.tree_method, bucket_size)
 
   //emit: 
 }
