@@ -29,7 +29,6 @@ workflow REG_ANALYSIS {
       REG_ALIGNER (seqs_ch, align_method, bucket_size, tree_method, trees)
     }
 
-    // alignment_plus_ref = REG_ALIGNER.out.alignmentFile.combine(refs_ch) //#del
     refs_ch
         .cross (REG_ALIGNER.out.alignmentFile)
         .map { it -> [ it[1][0], it[1][1], it[0][1] ] }
@@ -38,19 +37,15 @@ workflow REG_ANALYSIS {
     //REG_ALIGNER.out.alignmentFile.cross(refs_ch).view()
 
     if (params.evaluate){
-      // EVAL_ALIGNMENT ("regressive", REG_ALIGNER.out.id, alignment_plus_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize) //#del
       EVAL_ALIGNMENT ("regressive", alignment_plus_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize)
     }
     return
     if (params.homoplasy){
-      // HOMOPLASY("regressive",REG_ALIGNER.out.id, alignment_plus_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize, REG_ALIGNER.out.homoplasyFile) //#del
       HOMOPLASY("regressive", alignment_plus_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize, REG_ALIGNER.out.homoplasyFile)
     }
     if (params.metrics){
-      // METRICS("regressive",REG_ALIGNER.out.id, alignment_plus_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize, REG_ALIGNER.out.metricFile) //#del
       METRICS("regressive", alignment_plus_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize, REG_ALIGNER.out.metricFile)
     }
-    // EASEL_INFO ("regressive",REG_ALIGNER.out.id, alignment_plus_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize) //#del
     // EASEL_INFO ("regressive", alignment_plus_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize)
 
 }
@@ -76,25 +71,20 @@ workflow POOL_ANALYSIS {
     
     POOL_ALIGNER (seqs_ch, align_methods, bucket_size, trees_ch)
 
-    // pool_alignment_plus_ref = POOL_ALIGNER.out.alignmentFile.combine(refs_ch) //#del
     refs_ch
         .cross (POOL_ALIGNER.out.alignmentFile)
         .map { it -> [ it[1][0], it[1][1], it[0][1] ] }
         .set { pool_alignment_plus_ref }
 
     if (params.evaluate){
-      // EVAL_ALIGNMENT ("pool", POOL_ALIGNER.out.id, pool_alignment_plus_ref, align_methods, tree_methods, bucket_size) // #del
       EVAL_ALIGNMENT ("pool", pool_alignment_plus_ref, align_methods, tree_methods, bucket_size)
     }
     if (params.homoplasy){
-      // HOMOPLASY("pool", POOL_ALIGNER.out.id,  pool_alignment_plus_ref, align_methods, tree_methods, bucket_size, POOL_ALIGNER.out.homoplasyFile) // #del
       HOMOPLASY ("pool", pool_alignment_plus_ref, align_methods, tree_methods, bucket_size, POOL_ALIGNER.out.homoplasyFile)
     }
     if (params.metrics){
-      // METRICS("pool", POOL_ALIGNER.out.id, pool_alignment_plus_ref, align_methods, tree_methods, bucket_size, POOL_ALIGNER.out.metricFile)  // #del
       METRICS("pool", pool_alignment_plus_ref, align_methods, tree_methods, bucket_size, POOL_ALIGNER.out.metricFile)
     }
-    // EASEL_INFO ("pool", POOL_ALIGNER.out.id, pool_alignment_plus_ref, align_methods, tree_methods, bucket_size) // #del
     EASEL_INFO ("pool", pool_alignment_plus_ref, align_methods, tree_methods, bucket_size)
 
   //emit: 
@@ -122,25 +112,20 @@ workflow SLAVE_ANALYSIS {
     
     SLAVE_ALIGNER (seqs_ch, align_methods, bucket_size, trees_ch, slave_method)
 
-    // slave_alignment_plus_ref = SLAVE_ALIGNER.out.alignmentFile.combine(refs_ch) //#del
     refs_ch
         .cross (SLAVE_ALIGNER.out.alignmentFile)
         .map { it -> [ it[1][0], it[1][1], it[0][1] ] }
         .set { slave_alignment_plus_ref }
 
     if (params.evaluate){
-      // EVAL_ALIGNMENT ("slave",SLAVE_ALIGNER.out.id, slave_alignment_plus_ref, align_methods, SLAVE_ALIGNER.out.tree_method, bucket_size) //#del
       EVAL_ALIGNMENT ("slave", slave_alignment_plus_ref, align_methods, SLAVE_ALIGNER.out.tree_method, bucket_size)
     }
     if (params.homoplasy){
-      // HOMOPLASY("slave",SLAVE_ALIGNER.out.id, slave_alignment_plus_ref, align_methods, SLAVE_ALIGNER.out.tree_method, bucket_size, SLAVE_ALIGNER.out.homoplasyFile) //#del
       HOMOPLASY("slave", slave_alignment_plus_ref, align_methods, SLAVE_ALIGNER.out.tree_method, bucket_size, SLAVE_ALIGNER.out.homoplasyFile)
     }
     if (params.metrics){
-      // METRICS("slave", SLAVE_ALIGNER.out.id, slave_alignment_plus_ref, align_methods, SLAVE_ALIGNER.out.tree_method, bucket_size, SLAVE_ALIGNER.out.metricFile) //#del
       METRICS("slave", slave_alignment_plus_ref, align_methods, SLAVE_ALIGNER.out.tree_method, bucket_size, SLAVE_ALIGNER.out.metricFile)
     }
-    // EASEL_INFO ("slave", SLAVE_ALIGNER.out.id, slave_alignment_plus_ref, align_methods, SLAVE_ALIGNER.out.tree_method, bucket_size) //#del
     EASEL_INFO ("slave", slave_alignment_plus_ref, align_methods, SLAVE_ALIGNER.out.tree_method, bucket_size)
 
   //emit: 

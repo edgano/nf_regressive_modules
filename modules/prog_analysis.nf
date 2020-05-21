@@ -28,18 +28,16 @@ workflow PROG_ANALYSIS {
     
     PROG_ALIGNER (seqs_ch, align_methods, trees_ch)
 
-    // prog_alignment_plus_ref = PROG_ALIGNER.out.alignmentFile.combine(refs_ch) //#del
     refs_ch
         .cross (PROG_ALIGNER.out.alignmentFile)
         .map { it -> [ it[1][0], it[1][1], it[0][1] ] }
         .set { prog_alignment_plus_ref }
 
     if (params.evaluate){
-      // EVAL_ALIGNMENT ("progressive", PROG_ALIGNER.out.id, prog_alignment_plus_ref, align_methods, tree_methods, "NA") //#del
       EVAL_ALIGNMENT ("progressive", prog_alignment_plus_ref, align_methods, tree_methods, "NA")
     }
     if (params.gapCount){
-      GAPS_PROGRESSIVE("progressive", PROG_ALIGNER.out.id, PROG_ALIGNER.out.alignmentFile, align_methods, tree_methods, "NA") //#del
+      GAPS_PROGRESSIVE("progressive", PROG_ALIGNER.out.id, PROG_ALIGNER.out.alignmentFile, align_methods, tree_methods, "NA")
     }
     if (params.metrics){
       METRICS("progressive", prog_alignment_plus_ref, align_methods, tree_methods, "NA", PROG_ALIGNER.out.metricFile)
