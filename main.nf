@@ -61,9 +61,9 @@ params.dynamic_align=false
 params.pool_align=false
 
 params.evaluate=true
-params.homoplasy=true
-params.gapCount=true
-params.metrics=true
+params.homoplasy=false
+params.gapCount=false
+params.metrics=false
 
 // output directory
 params.outdir = "$baseDir/results"
@@ -140,9 +140,6 @@ workflow pipeline {
 
 workflow {
   pipeline()
-  
-  //publish:
-    //REG_ANALYSIS.out.tcScore_csv to: "_tc.csv"
 }
 
 /* 

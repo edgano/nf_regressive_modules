@@ -13,10 +13,14 @@ process REG_ALIGNER {
     tuple id, path(seqs)
     each align_method
     each bucket_size
-    tuple val(id), val(tree_method), file(guide_tree)
+    each tree_method
+    path (guide_tree)
 
     output:
-    val id, emit:id
+    val id, emit: id
+    val align_method, emit: alignMethod
+    val tree_method, emit: treeMethod
+    val bucket_size, emit: bucketSize
     path "${id}.reg_${bucket_size}.${align_method}.with.${tree_method}.tree.aln", emit: alignmentFile
     path "${id}.homoplasy", emit: homoplasyFile
     path ".command.trace", emit: metricFile

@@ -7,13 +7,13 @@ process EVAL_ALIGNMENT {
     publishDir "${params.outdir}/score"
 
     input:
-    val (align_type)
-    val (id)
-    file (test_alignment)
+    val align_type
+    val id
+    file test_alignment
     tuple val(id), file (ref_alignment)
-    each (align_method)
-    each tree_method
-    each bucket_size
+    val align_method
+    val tree_method
+    val bucket_size
 
     output:
     file("*.sp")
@@ -57,13 +57,13 @@ process EASEL_INFO {
     publishDir "${params.outdir}/easel"
 
     input:
-    val (align_type)
-    val (id)
-    file (test_alignment)
+    val align_type
+    val id
+    file test_alignment
     tuple val(id), file (ref_alignment)
-    each (align_method)
-    each tree_method
-    each bucket_size
+    val align_method
+    val tree_method
+    val bucket_size
 
     output:
     file("*.easel_INFO")
@@ -87,13 +87,13 @@ process HOMOPLASY {
     publishDir "${params.outdir}/homoplasy"
 
     input:
-    val (align_type)
-    val (id)
-    file (test_alignment)
+    val align_type
+    val id
+    file test_alignment
     tuple val(id), file (ref_alignment)
-    each align_method
-    each tree_method
-    each bucket_size
+    val align_method
+    val tree_method
+    val bucket_size
     file (homoplasy)        
 
     output:
@@ -127,13 +127,13 @@ process METRICS {
     publishDir "${params.outdir}/metrics"
 
     input:
-        val (align_type)
-        val (id)
-        file (test_alignment)
+        val align_type
+        val id
+        file test_alignment
         tuple val(id), file (ref_alignment)
-        each align_method
-        each tree_method
-        each bucket_size
+        val align_method
+        val tree_method
+        val bucket_size
         file (metricsFile)
 
     output:
@@ -168,12 +168,12 @@ process GAPS_PROGRESSIVE {
     publishDir "${params.outdir}/metrics"
 
     input:
-    val (align_type)
-    val (id)
-    file (test_alignment)
-    each (align_method)
-    each tree_method
-    each bucket_size
+    val align_type
+    val id
+    file test_alignment
+    val align_method
+    val tree_method
+    val bucket_size
 
     output:
         file("*.totGap")
