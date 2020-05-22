@@ -159,7 +159,7 @@ process METRICS {
 process GAPS_PROGRESSIVE {
     container 'edgano/base:latest'
     tag "GAPS_PROG on $id"
-    publishDir "${params.outdir}/metrics"
+    publishDir "${params.outdir}/gaps"
 
     input:
     val align_type

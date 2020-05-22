@@ -24,3 +24,24 @@ process COMBINE_SEQS {
     t_coffee -other_pg seq_reformat -in completeSeqs.fa -output fasta_seq -out ${id}.fa -action +reorder random
     """
 }
+
+process GENERATE_DYNAMIC_CONFIG{
+    container 'edgano/homoplasy:latest'
+    tag "CONFIG DYNAMIC"
+
+    input:
+    val (masterAln)
+    val (masterSize)
+    val (slaveAln)
+    val (slaveSize)
+
+    output:
+      path "${masterAln}.${masterSize}_${slaveAln}.${slaveSize}.config", emit: configFile
+      tuple val(masterAln), val(masterSize), val(slaveAln), val(slaveSize), emit: configValues
+
+    script:
+    """
+    echo '${masterAln} ${masterSize}' > ${masterAln}.${masterSize}_${slaveAln}.${slaveSize}.config
+    echo '${slaveAln} ${slaveSize}' >> ${masterAln}.${masterSize}_${slaveAln}.${slaveSize}.config
+    """
+}

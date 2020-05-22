@@ -90,25 +90,39 @@ workflow SLAVE_ANALYSIS {
     }
 }
 
-include DYNAMIC_ALIGNER   from './generateAlignment.nf'   
+include GENERATE_DYNAMIC_CONFIG      from './preprocess.nf'    
+include DYNAMIC_ALIGNER             from './generateAlignment.nf'   
 workflow DYNAMIC_ANALYSIS {
   take:
     seqs_ch
     refs_ch
-    align_method
     tree_method
     bucket_size
-    dynamic_size
+    dynamicX
     trees
      
   main: 
       //COMBINE_SEQS(seqs_ch, refs_ch) // need to combine seqs and ref by ID
+
+    if(params.dynamicConfig){
+      GENERATE_DYNAMIC_CONFIG(params.dynamicMasterAln, params.dynamicMasterSize, params.dynamicSlaveAln, params.dynamicSlaveSize)
+      align_method="CONFIG"
+      configFile = GENERATE_DYNAMIC_CONFIG.out.configFile
+      configValues = GENERATE_DYNAMIC_CONFIG.out.configValues
+      dynamicValues = "${params.dynamicMasterAln}.${params.dynamicMasterSize}_${params.dynamicSlaveAln}.${params.dynamicSlaveSize}"
+    }else{
+      align_method="DEFAULT"
+      configFile = "/"
+      configValues=["","","",""]
+      dynamicValues = "DEFAULT"
+    }
+
     if (!params.trees){
       TREE_GENERATION (seqs_ch, tree_method) 
         
-      DYNAMIC_ALIGNER (seqs_ch, align_method, bucket_size, dynamic_size, TREE_GENERATION.out.treeMethod, TREE_GENERATION.out.guideTree)
+      DYNAMIC_ALIGNER (seqs_ch, align_method, bucket_size, dynamicX, TREE_GENERATION.out.treeMethod, TREE_GENERATION.out.guideTree, configFile, configValues,dynamicValues)
     }else{
-      DYNAMIC_ALIGNER (seqs_ch, align_method, bucket_size, dynamic_size, tree_method, trees)
+      DYNAMIC_ALIGNER (seqs_ch, align_method, bucket_size, dynamicX, tree_method, trees, configFile, configValues,dynamicValues)
     }
 
     refs_ch

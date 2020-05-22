@@ -4,7 +4,7 @@ export protein_db_4_CLTCOFFEE=${params.database_path}
 t_coffee -reg -reg_method dynamic_msa \
          -seq ${seqs} \
          -reg_nseq ${bucket_size} \
-         -dynamic ${dynamic_size} \
+         -dynamic ${dynamicX} \
          -reg_homoplasy \
          -dynamic_config $PWD/config.txt \
-         -outfile ${id}.dynamic_${bucket_size}.dynamicSize.${dynamic_size}.${align_method}.with.${tree_method}.tree.aln
+         -outfile ${id}.dynamic_${bucket_size}.dynamicX.${dynamicX}.${masterAln}.${masterSize}_${slaveAln}.${slaveSize}.with.${tree_method}.tree.aln

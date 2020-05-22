@@ -83,24 +83,26 @@ process DYNAMIC_ALIGNER {
 
     input:
     tuple id, path(seqs)
-    each align_method
+    val align_method
     each bucket_size
-    each dynamic_size
+    each dynamicX
     each tree_method
     path (guide_tree)
+    path (dynamicConfig)
+    tuple val(masterAln), val(masterSize), val(slaveAln), val(slaveSize)
+    val dynamicValues
 
     output:
-    val align_method, emit: alignMethod
+    val dynamicValues, emit: alignMethod
     val tree_method, emit: treeMethod
-    val "${bucket_size}_${dynamic_size}", emit: bucketSize
-    tuple val (id), path("${id}.dynamic_${bucket_size}.dynamicSize.${dynamic_size}.${align_method}.with.${tree_method}.tree.aln"), emit: alignmentFile 
+    val "${bucket_size}_${dynamicX}", emit: bucketSize
+    tuple val (id), path("*.with.${tree_method}.tree.aln"), emit: alignmentFile 
     path "${id}.homoplasy", emit: homoplasyFile
     path ".command.trace", emit: metricFile
 
     script:
-    // template "${path_templates}/dynamic_align/dynamic_${align_method}.sh"
-    // the above template is not declared yet, thus I call the following one
-    template "${path_templates}/dynamic_align/dynamic_DEFAULT.sh"
+    // template can be default or using a config file
+    template "${path_templates}/dynamic_align/dynamic_${align_method}.sh"
 }
 
 process POOL_ALIGNER {

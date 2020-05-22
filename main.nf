@@ -37,9 +37,10 @@ nextflow.preview.dsl = 2
  * defaults parameter definitions
  */
 
-// ## subdatset for dynamic
+//    ## subdatsets
 //seq2improve="cryst,blmb,rrm,subt,ghf5,sdr,tRNA-synt_2b,zf-CCHH,egf,Acetyltransf,ghf13,p450,Rhodanese,aat,az,cytb,proteasome,GEL"
 //params.seqs ="/users/cn/egarriga/datasets/homfam/combinedSeqs/{${seq2improve}}.fa"
+top20fam=""
 
 // input sequences to align in fasta format
 //params.seqs = "$baseDir/data/*.fa"
@@ -63,15 +64,24 @@ params.buckets = "10"
 params.slave_tree_methods="mbed,parttree,famsadnd" 
 
 //  ## DYNAMIC parameters
-params.dynamicSize = "10000"
+params.dynamicX = "10000"
+          //TODO -> make 2 list? one with aligners and the other with sizes?
+          //      params.dynamicAlnList=["psicoffee_msa", "clustalo_msa", "famsa_msa"]
+          //      params.dynamicMaxNseqList=[20, 10000, 1000000]
+params.dynamicMasterAln="psicoffee_msa"
+params.dynamicMasterSize="50"
+params.dynamicSlaveAln="famsa_msa"
+params.dynamicSlaveSize="100000000"
+params.dynamicConfig=false
+
           //uniref50, pdb or path
 params.db = "pdb"        
 
 params.progressive_align = false
 params.regressive_align = false 
-params.pool_align=true        //<< TODO <- fix MAFFT on pool
+params.pool_align=false        //<< TODO <- fix MAFFT on pool
 params.slave_align=false
-params.dynamic_align=false  //<< TODO >> refactor to define methods
+params.dynamic_align=true
 
 params.evaluate=false
 params.homoplasy=false
@@ -109,7 +119,10 @@ log.info """\
          Generate Slave tree alignments                 : ${params.slave_align}
                   Slave tree methods                    : ${params.slave_tree_methods}
          Generate Dynamic alignments                    : ${params.dynamic_align}
-                  Dynamic size                          : ${params.dynamicSize}
+                  Dynamic size                          : ${params.dynamicX}
+                  Dynamic config file                   : ${params.dynamicConfig}
+                          master align - boundary       : ${params.dynamicMasterAln} - ${params.dynamicMasterSize}
+                          slave align  - boundary       : ${params.dynamicSlaveAln} - ${params.dynamicSlaveSize}
                   Dynamic DDBB                          : ${params.db}
                   DDBB path                             : ${params.database_path}
          Generate Pool alignments                       : ${params.pool_align}
@@ -151,7 +164,7 @@ tree_method = params.tree_methods.tokenize(',')
 align_method = params.align_methods.tokenize(',')
 bucket_list = params.buckets.tokenize(',')
 slave_method = params.slave_tree_methods.tokenize(',')
-dynamic_size = params.dynamicSize   //TODO <- tokenize it ??
+dynamicX = params.dynamicX   //TODO <- tokenize it ??
 
 /* 
  * main script flow
@@ -167,7 +180,7 @@ workflow pipeline {
       SLAVE_ANALYSIS(seqs_ch, refs_ch, align_method, tree_method, bucket_list, trees, slave_method)
     }
     if (params.dynamic_align){
-      DYNAMIC_ANALYSIS(seqs_ch, refs_ch, align_method, tree_method, bucket_list, dynamic_size, trees)
+      DYNAMIC_ANALYSIS(seqs_ch, refs_ch, tree_method, bucket_list, dynamicX, trees)
     }
     if (params.pool_align){
       POOL_ANALYSIS(seqs_ch, refs_ch, align_method, tree_method, bucket_list, trees)
