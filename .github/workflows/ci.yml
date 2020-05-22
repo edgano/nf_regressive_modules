@@ -89,7 +89,7 @@ jobs:
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{matrix.paramFlavour2run}} ${{matrix.paramAlign}} ${{matrix.paramTreeMethod}} ${{matrix.paramBucket}} ${{matrix.paramDynamic}}
           
-test_pool:
+  test_pool:
     env:
       NXF_VER: '20.01.0'
       NXF_ANSI_LOG: false
