@@ -1,6 +1,7 @@
 name: nf_reg_modules CI
 # This workflow is triggered on pushes and PRs to the repository.
 # It runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
+#paramAlign: [--align_methods=CLUSTALO,--align_methods=MAFFT-FFTNS1,--align_methods=FAMSA]
 on: [push, pull_request]
 
 jobs:
@@ -11,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        paramFlavour2run: [--progressive_align=false --regressive_align=true --slave_align=false --dynamic_align=false]
-        paramAlign: [--align_method=CLUSTALO,--align_method=MAFFT-FFTNS1,--align_method=FAMSA]
-        paramTreeMethod: [--tree_method=MBED,--tree_method=PARTTREE]
+        paramFlavour2run: [--progressive_align=false --regressive_align=true --slave_align=false --dynamic_align=false --pool_align=false] 
+        paramAlign: [--align_methods=CLUSTALO\,MAFFT-FFTNS1\,FAMSA]
+        paramTreeMethod: [--tree_methods=MBED,--tree_methods=PARTTREE,--tree_methods=DPPARTTREE0,--tree_methods=FAMSA-SLINK]
         paramBucket: [--buckets=100,--buckets=10]
     steps:
       - uses: actions/checkout@v2
@@ -32,9 +33,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        paramFlavour2run: [--progressive_align=true --regressive_align=false --slave_align=false --dynamic_align=false]
-        paramAlign: [--align_method=CLUSTALO,--align_method=MAFFT-FFTNS1,--align_method=FAMSA]
-        paramTreeMethod: [--tree_method=MBED,--tree_method=PARTTREE]
+        paramFlavour2run: [--progressive_align=true --regressive_align=false --slave_align=false --dynamic_align=false --pool_align=false] 
+        paramAlign: [--align_methods=CLUSTALO,--align_methods=MAFFT-FFTNS1,--align_methods=FAMSA]
+        paramTreeMethod: [--tree_methods=MBED,--tree_methods=PARTTREE,--tree_methods=DPPARTTREE0,--tree_methods=FAMSA-SLINK]
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow
@@ -52,11 +53,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        paramFlavour2run: [--progressive_align=false --regressive_align=false --slave_align=true --dynamic_align=false]
-        paramAlign: [--align_method=CLUSTALO,--align_method=MAFFT-FFTNS1,--align_method=FAMSA]
-        paramTreeMethod: [--tree_method=MBED,--tree_method=PARTTREE]
+        paramFlavour2run: [--progressive_align=false --regressive_align=false --slave_align=true --dynamic_align=false --pool_align=false] 
+        paramAlign: [--align_methods=CLUSTALO,--align_methods=MAFFT-FFTNS1,--align_methods=FAMSA]
+        paramTreeMethod: [--tree_methods=MBED,--tree_methods=PARTTREE,--tree_methods=DPPARTTREE0,--tree_methods=FAMSA-SLINK]
         paramBucket: [--buckets=100,--buckets=10]
-        paramsSlaveTree: [--slave_tree_method=mbed,--slave_tree_method=parttree,--slave_tree_method=famsadnd]
+        paramsSlaveTree: [--slave_tree_methods=mbed,--slave_tree_methods=parttree,--slave_tree_methods=famsadnd]
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow
@@ -66,3 +67,47 @@ jobs:
       - name: Run pipeline with minimal data to check SLAVE alignments
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{matrix.paramFlavour2run}} ${{matrix.paramAlign}} ${{matrix.paramTreeMethod}} ${{matrix.paramBucket}} ${{matrix.paramsSlaveTree}}
+         
+  test_pool:
+    env:
+      NXF_VER: '20.01.0'
+      NXF_ANSI_LOG: false
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        paramFlavour2run: [--progressive_align=false --regressive_align=false --slave_align=false --dynamic_align=false --pool_align=true] 
+        paramAlign: [--align_methods=CLUSTALO,--align_methods=FAMSA]
+        paramTreeMethod: [--tree_methods=MBED,--tree_methods=PARTTREE,--tree_methods=DPPARTTREE0,--tree_methods=FAMSA-SLINK]
+        paramBucket: [--buckets=100,--buckets=10]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+      - name: Run pipeline with minimal data to check REGRESSIVE alignments
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{matrix.paramFlavour2run}} ${{matrix.paramAlign}} ${{matrix.paramTreeMethod}} ${{matrix.paramBucket}}
+
+  test_dynamic:
+    env:
+      NXF_VER: '20.01.0'
+      NXF_ANSI_LOG: false
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        paramFlavour2run: [--progressive_align=false --regressive_align=true --slave_align=false --dynamic_align=true --pool_align=false] 
+        paramAlign: [--align_methods=CLUSTALO,--align_methods=MAFFT-FFTNS1,--align_methods=FAMSA]
+        paramTreeMethod: [--tree_methods=MBED,--tree_methods=PARTTREE,--tree_methods=DPPARTTREE0,--tree_methods=FAMSA-SLINK]
+        paramBucket: [--buckets=100,--buckets=10]
+        paramDynamic: [--dynamicSize=10000]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+      - name: Run pipeline with minimal data to check REGRESSIVE alignments
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{matrix.paramFlavour2run}} ${{matrix.paramAlign}} ${{matrix.paramTreeMethod}} ${{matrix.paramBucket}} ${{matrix.paramDynamic}}
+        

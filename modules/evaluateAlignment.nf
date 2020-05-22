@@ -4,7 +4,9 @@ params.outdir = 'results'
 process EVAL_ALIGNMENT {
     container 'edgano/tcoffee:slave'
     tag "EVAL_ALIGNMENT on $id"
-    publishDir "${params.outdir}/score"
+    publishDir "${params.outdir}/score/tc", pattern: '*.tc'
+    publishDir "${params.outdir}/score/sp", pattern: '*.sp'
+    publishDir "${params.outdir}/score/col", pattern: '*.col'
 
     input:
     val align_type
@@ -56,7 +58,7 @@ process EASEL_INFO {
 
     input:
     val align_type
-    tuple  val (id), file (test_alignment), file (ref_alignment)
+    tuple  val (id), file (test_alignment)
     val align_method
     val tree_method
     val bucket_size
@@ -84,11 +86,11 @@ process HOMOPLASY {
 
     input:
     val align_type
-    tuple  val (id), file (test_alignment), file (ref_alignment)
+    tuple  val (id), file (test_alignment)
     val align_method
     val tree_method
     val bucket_size
-    file (homoplasy)        
+    file homoplasy     
 
     output:
     file("*.homo")
@@ -121,12 +123,12 @@ process METRICS {
     publishDir "${params.outdir}/metrics"
 
     input:
-        val align_type
-        tuple  val (id), file (test_alignment), file (ref_alignment)
-        val align_method
-        val tree_method
-        val bucket_size
-        file (metricsFile)
+    val align_type
+    tuple  val (id), file (test_alignment)
+    val align_method
+    val tree_method
+    val bucket_size
+    file metricsFile
 
     output:
       file("*.metrics")
@@ -161,8 +163,7 @@ process GAPS_PROGRESSIVE {
 
     input:
     val align_type
-    val id
-    file test_alignment
+    tuple  val (id), file (test_alignment)
     val align_method
     val tree_method
     val bucket_size

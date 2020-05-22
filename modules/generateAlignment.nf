@@ -7,7 +7,7 @@ path_templates = "${moduleDir}/templates"
 process REG_ALIGNER {
     container 'edgano/tcoffee:psi'
     tag "$align_method - $tree_method - $bucket_size on $id"
-    publishDir "${params.outdir}/alignments"
+    publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
     input:
     tuple id, path(seqs)
@@ -17,14 +17,14 @@ process REG_ALIGNER {
     path (guide_tree)
 
     output:
-    // val id, emit: id
     val align_method, emit: alignMethod
     val tree_method, emit: treeMethod
     val bucket_size, emit: bucketSize
-    // path "${id}.reg_${bucket_size}.${align_method}.with.${tree_method}.tree.aln", emit: alignmentFile
     tuple val (id), path ("${id}.reg_${bucket_size}.${align_method}.with.${tree_method}.tree.aln"), emit: alignmentFile
     path "${id}.homoplasy", emit: homoplasyFile
     path ".command.trace", emit: metricFile
+
+    //TODO refactor emit alignmentFile
 
     script:
     template "${path_templates}/regressive_align/reg_${align_method}.sh"
@@ -33,16 +33,18 @@ process REG_ALIGNER {
 process PROG_ALIGNER {
     container 'edgano/tcoffee:psi'
     tag "$align_method - $tree_method on $id"
-    publishDir "${params.outdir}/alignments"
+    publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
     input:
     tuple id, path(seqs)
-    each (align_method)
-    tuple val(id), val(tree_method), file(guide_tree)
+    each align_method
+    each tree_method
+    path (guide_tree)
 
     output:
-    val id, emit:id
-    path "${id}.prog.${align_method}.with.${tree_method}.tree.aln", emit: alignmentFile
+    val align_method, emit: alignMethod
+    val tree_method, emit: treeMethod
+    tuple val (id), path ("${id}.prog.${align_method}.with.${tree_method}.tree.aln"), emit: alignmentFile
     path ".command.trace", emit: metricFile
 
     script:
@@ -52,39 +54,47 @@ process PROG_ALIGNER {
 process SLAVE_ALIGNER {
     container 'edgano/tcoffee:psi'
     tag "$align_method - $tree_method - $slave_method on $id"
-    publishDir "${params.outdir}/alignments"
+    publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
     input:
     tuple id, path(seqs)
-    each (align_method)
+    each align_method
     each bucket_size
-    tuple val(id), val(tree_method), file(guide_tree)
-    val (slave_method)
+    each tree_method
+    path guide_tree
+    each slave_method
 
     output:
-    val id, emit:id
-    path "${id}.slave_${bucket_size}.${align_method}.with.${tree_method}_${slave_method}.tree.aln", emit: alignmentFile
+    val align_method, emit: alignMethod
+    val "${tree_method}_${slave_method}", emit: treeMethod
+    val bucket_size, emit: bucketSize
+    tuple val (id), path ("${id}.slave_${bucket_size}.${align_method}.with.${tree_method}_${slave_method}.tree.aln"), emit: alignmentFile
     path "${id}.homoplasy", emit: homoplasyFile
     path ".command.trace", emit: metricFile
-    val "${tree_method}_${slave_method}", emit:tree_method
 
     script:
     template "${path_templates}/slave_align/slave_${align_method}.sh"
 }
 
 process DYNAMIC_ALIGNER {
-    container 'edgano/tcoffee:psi'
+    container 'edgano/tcoffee:pdb'
     tag "$align_method - $tree_method on $id"
-    publishDir "${params.outdir}/alignments"
+    publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
     input:
     tuple id, path(seqs)
-    each (align_method)
+    each align_method
     each bucket_size
-    tuple val(id), val(tree_method), file(guide_tree)
+    each dynamic_size
+    each tree_method
+    path (guide_tree)
 
     output:
-    file("${id}.dynamic_${bucket_size}.dynamicSize.${dynamic_size}.${align_method}.with.${tree_method}.tree.aln") 
+    val align_method, emit: alignMethod
+    val tree_method, emit: treeMethod
+    val "${bucket_size}_${dynamic_size}", emit: bucketSize
+    tuple val (id), path("${id}.dynamic_${bucket_size}.dynamicSize.${dynamic_size}.${align_method}.with.${tree_method}.tree.aln"), emit: alignmentFile 
+    path "${id}.homoplasy", emit: homoplasyFile
     path ".command.trace", emit: metricFile
 
     script:
@@ -92,18 +102,23 @@ process DYNAMIC_ALIGNER {
     // the above template is not declared yet, thus I call the following one
     template "${path_templates}/dynamic_align/dynamic_DEFAULT.sh"
 }
+
 process POOL_ALIGNER {
     container 'edgano/tcoffee:psi'
     tag "$align_method - $tree_method on $id"
-    publishDir "${params.outdir}/alignments"
+    publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
     input:
     tuple id, path(seqs)
-    each (align_method)
+    each align_method
     each bucket_size
-    tuple val(id), val(tree_method), file(guide_tree)
+    each tree_method
+    path (guide_tree)
 
     output:
+    val align_method, emit: alignMethod
+    val tree_method, emit: treeMethod
+    val bucket_size, emit: bucketSize
     tuple val (id), path ("${id}.pool_${bucket_size}.${align_method}.with.${tree_method}.tree.aln"), emit: alignmentFile
     path "${id}.homoplasy", emit: homoplasyFile
     path ".command.trace", emit: metricFile

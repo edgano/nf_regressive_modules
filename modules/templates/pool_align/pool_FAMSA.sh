@@ -3,4 +3,4 @@ t_coffee -reg -reg_method famsa_msa -pool \
          -seq ${seqs} \
          -reg_nseq ${bucket_size} \
          -reg_homoplasy \
-         -outfile ${id}.reg_${bucket_size}.${align_method}.with.${tree_method}.tree.aln
+         -outfile ${id}.pool_${bucket_size}.${align_method}.with.${tree_method}.tree.aln
