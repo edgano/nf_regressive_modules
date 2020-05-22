@@ -5,7 +5,7 @@ moduleDir="$baseDir/modules/"
 path_templates = "${moduleDir}/templates"
 
 process REG_ALIGNER {
-    container 'edgano/tcoffee:psi'
+    container 'edgano/tcoffee:pdb'
     tag "$align_method - $tree_method - $bucket_size on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
@@ -31,7 +31,7 @@ process REG_ALIGNER {
 }
 
 process PROG_ALIGNER {
-    container 'edgano/tcoffee:psi'
+    container 'edgano/tcoffee:pdb'
     tag "$align_method - $tree_method on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
@@ -52,7 +52,7 @@ process PROG_ALIGNER {
 }
 
 process SLAVE_ALIGNER {
-    container 'edgano/tcoffee:psi'
+    container 'edgano/tcoffee:pdb'
     tag "$align_method - $tree_method - $slave_method on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
@@ -104,7 +104,7 @@ process DYNAMIC_ALIGNER {
 }
 
 process POOL_ALIGNER {
-    container 'edgano/tcoffee:psi'
+    container 'edgano/tcoffee:pdb'
     tag "$align_method - $tree_method on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
 

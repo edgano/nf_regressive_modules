@@ -57,23 +57,23 @@ params.tree_methods = "FAMSA-SLINK"
 
 params.buckets = "1000"
 
-params.progressive_align = false
-params.regressive_align = false 
-params.pool_align=false        //<< TODO <- fix MAFFT on pool
-
 //  ## SLAVE parameters
-params.slave_align=false
                           //need to be lowercase -> direct to tcoffee
-                          //mbed,famsadnd
-params.slave_tree_methods="mbed,famsadnd" 
+                          //mbed,parttree,famsadnd
+params.slave_tree_methods="mbed,parttree,famsadnd" 
 
 //  ## DYNAMIC parameters
-params.dynamic_align=true  //<< TODO >> refactor to define methods
 params.dynamicSize = "10000"
           //uniref50, pdb or path
 params.db = "pdb"        
 
-params.evaluate=true
+params.progressive_align = false
+params.regressive_align = false 
+params.pool_align=false        //<< TODO <- fix MAFFT on pool
+params.slave_align=true
+params.dynamic_align=false  //<< TODO >> refactor to define methods
+
+params.evaluate=false
 params.homoplasy=false
 params.gapCount=false
 params.metrics=false
