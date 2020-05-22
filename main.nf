@@ -51,11 +51,11 @@ params.refs = 'https://raw.githubusercontent.com/edgano/datasets-test/homfam/sea
 //params.trees ="/Users/edgargarriga/CBCRG/nf_regressive_modules/results/trees/seatoxin.MBED.dnd"
 params.trees = false
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1
-params.align_methods = "CLUSTALO" 
+params.align_methods = "MAFFT-FFTNS1" 
                       //DPPARTTREE0,FAMSA-SLINK,MBED,PARTTREE
 params.tree_methods = "FAMSA-SLINK"      
 
-params.buckets = "1000"
+params.buckets = "10"
 
 //  ## SLAVE parameters
                           //need to be lowercase -> direct to tcoffee
@@ -69,8 +69,8 @@ params.db = "pdb"
 
 params.progressive_align = false
 params.regressive_align = false 
-params.pool_align=false        //<< TODO <- fix MAFFT on pool
-params.slave_align=true
+params.pool_align=true        //<< TODO <- fix MAFFT on pool
+params.slave_align=false
 params.dynamic_align=false  //<< TODO >> refactor to define methods
 
 params.evaluate=false
@@ -151,7 +151,7 @@ tree_method = params.tree_methods.tokenize(',')
 align_method = params.align_methods.tokenize(',')
 bucket_list = params.buckets.tokenize(',')
 slave_method = params.slave_tree_methods.tokenize(',')
-dynamic_size = params.dynamicSize
+dynamic_size = params.dynamicSize   //TODO <- tokenize it ??
 
 /* 
  * main script flow
