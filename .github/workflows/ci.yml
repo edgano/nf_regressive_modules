@@ -99,11 +99,11 @@ jobs:
         paramFlavour2run: [--progressive_align=false --regressive_align=false --slave_align=false --dynamic_align=false --pool_align=true] 
         paramAlign: [--align_methods=CLUSTALO,--align_methods=MAFFT-FFTNS1,--align_methods=FAMSA]
         paramTreeMethod: ["--tree_methods=MBED,MAFFT-PARTTREE,MAFFT-DPPARTTREE0,FAMSA-SLINK"]
-        paramBucket: ["--buckets=9,100"]
+        paramBucket: ["--buckets=9,50"] 
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow
-        run: |
+        run: | 
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
       - name: Run pipeline with minimal data to check REGRESSIVE alignments
