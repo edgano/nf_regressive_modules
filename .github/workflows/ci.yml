@@ -13,7 +13,7 @@ jobs:
       matrix:
         paramFlavour2run: ["--progressive_align=false --regressive_align=true --slave_align=false --dynamic_align=false --pool_align=false"] 
         paramAlign: [--align_methods=CLUSTALO,--align_methods=MAFFT-FFTNS1,--align_methods=FAMSA]
-        paramTreeMethod: ["--tree_methods=MBED,PARTTREE,DPPARTTREE0,FAMSA-SLINK"]
+        paramTreeMethod: ["--tree_methods=MBED,MAFFT-PARTTREE,MAFFT-DPPARTTREE0,FAMSA-SLINK"]
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow
@@ -33,7 +33,7 @@ jobs:
       matrix:
         paramFlavour2run: ["--progressive_align=false --regressive_align=true --slave_align=false --dynamic_align=false --pool_align=false"] 
         paramAlign: [--align_methods=CLUSTALO,--align_methods=MAFFT-FFTNS1,--align_methods=FAMSA]
-        paramTreeMethod: ["--tree_methods=MBED,PARTTREE,DPPARTTREE0,FAMSA-SLINK"]
+        paramTreeMethod: ["--tree_methods=MBED,MAFFT-PARTTREE,MAFFT-DPPARTTREE0,FAMSA-SLINK"]
         paramBucket: ["--buckets=9,100"]
     steps:
       - uses: actions/checkout@v2
@@ -54,7 +54,7 @@ jobs:
       matrix:
         paramFlavour2run: ["--progressive_align=false --regressive_align=false --slave_align=true --dynamic_align=false --pool_align=false"] 
         paramAlign: [--align_methods=CLUSTALO,--align_methods=MAFFT-FFTNS1,--align_methods=FAMSA]
-        paramTreeMethod: ["--tree_methods=MBED,PARTTREE,DPPARTTREE0,FAMSA-SLINK"]
+        paramTreeMethod: ["--tree_methods=MBED,MAFFT-PARTTREE,MAFFT-DPPARTTREE0,FAMSA-SLINK"]
         paramBucket: ["--buckets=9,100"]
         paramsSlaveTree: ["--slave_tree_methods=mbed,famsadnd"]
     steps:
@@ -75,7 +75,7 @@ jobs:
     strategy:
       matrix:
         paramFlavour2run: ["--progressive_align=false --regressive_align=true --slave_align=false --dynamic_align=true --pool_align=false"] 
-        paramTreeMethod: ["--tree_methods=MBED,PARTTREE,DPPARTTREE0,FAMSA-SLINK"]
+        paramTreeMethod: ["--tree_methods=MBED,MAFFT-PARTTREE,MAFFT-DPPARTTREE0,FAMSA-SLINK"]
         paramBucket: ["--buckets=10"]
         paramDynamic: ["--dynamicX=10000"]
         paramsConfig: [--dynamicConfig=true,--dynamicConfig=false]
@@ -98,7 +98,7 @@ jobs:
       matrix:
         paramFlavour2run: [--progressive_align=false --regressive_align=false --slave_align=false --dynamic_align=false --pool_align=true] 
         paramAlign: [--align_methods=CLUSTALO,--align_methods=MAFFT-FFTNS1,--align_methods=FAMSA]
-        paramTreeMethod: ["--tree_methods=MBED,DPPARTTREE0,FAMSA-SLINK"]
+        paramTreeMethod: ["--tree_methods=MBED,MAFFT-PARTTREE,MAFFT-DPPARTTREE0,FAMSA-SLINK"]
         paramBucket: ["--buckets=9,100"]
     steps:
       - uses: actions/checkout@v2
