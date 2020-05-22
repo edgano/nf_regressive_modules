@@ -15,7 +15,7 @@ jobs:
         paramFlavour2run: [--progressive_align=false --regressive_align=true --slave_align=false --dynamic_align=false --pool_align=false] 
         paramAlign: [--align_methods=CLUSTALO\,MAFFT-FFTNS1\,FAMSA]
         paramTreeMethod: [--tree_methods=MBED,--tree_methods=PARTTREE,--tree_methods=DPPARTTREE0,--tree_methods=FAMSA-SLINK]
-        paramBucket: [--buckets=100,--buckets=10]
+        paramBucket: [--buckets="100",--buckets="10"]
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow
@@ -56,7 +56,7 @@ jobs:
         paramFlavour2run: [--progressive_align=false --regressive_align=false --slave_align=true --dynamic_align=false --pool_align=false] 
         paramAlign: [--align_methods=CLUSTALO,--align_methods=MAFFT-FFTNS1,--align_methods=FAMSA]
         paramTreeMethod: [--tree_methods=MBED,--tree_methods=PARTTREE,--tree_methods=DPPARTTREE0,--tree_methods=FAMSA-SLINK]
-        paramBucket: [--buckets=100,--buckets=10]
+        paramBucket: [--buckets="100",--buckets="10"]
         paramsSlaveTree: [--slave_tree_methods=mbed,--slave_tree_methods=parttree,--slave_tree_methods=famsadnd]
     steps:
       - uses: actions/checkout@v2
@@ -78,7 +78,7 @@ jobs:
         paramFlavour2run: [--progressive_align=false --regressive_align=false --slave_align=false --dynamic_align=false --pool_align=true] 
         paramAlign: [--align_methods=CLUSTALO,--align_methods=FAMSA]
         paramTreeMethod: [--tree_methods=MBED,--tree_methods=PARTTREE,--tree_methods=DPPARTTREE0,--tree_methods=FAMSA-SLINK]
-        paramBucket: [--buckets=100,--buckets=10]
+        paramBucket: [--buckets="100",--buckets="10"]
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow
@@ -99,8 +99,8 @@ jobs:
         paramFlavour2run: [--progressive_align=false --regressive_align=true --slave_align=false --dynamic_align=true --pool_align=false] 
         paramAlign: [--align_methods=CLUSTALO,--align_methods=MAFFT-FFTNS1,--align_methods=FAMSA]
         paramTreeMethod: [--tree_methods=MBED,--tree_methods=PARTTREE,--tree_methods=DPPARTTREE0,--tree_methods=FAMSA-SLINK]
-        paramBucket: [--buckets=100,--buckets=10]
-        paramDynamic: [--dynamicSize=10000]
+        paramBucket: [--buckets="100",--buckets="10"]
+        paramDynamic: [--dynamicSize="10000"]
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow
