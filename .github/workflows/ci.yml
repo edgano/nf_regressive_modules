@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         paramFlavour2run: [--progressive_align=false --regressive_align=true --slave_align=false --dynamic_align=false --pool_align=false] 
-        paramAlign: [--align_methods=CLUSTALO\,MAFFT-FFTNS1\,FAMSA]
+        paramAlign: ["--align_methods=CLUSTALO,MAFFT-FFTNS1,FAMSA"]
         paramTreeMethod: [--tree_methods=MBED,--tree_methods=PARTTREE,--tree_methods=DPPARTTREE0,--tree_methods=FAMSA-SLINK]
         paramBucket: [--buckets="100",--buckets="10"]
     steps:
