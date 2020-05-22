@@ -151,7 +151,7 @@ tree_method = params.tree_methods.tokenize(',')
 align_method = params.align_methods.tokenize(',')
 bucket_list = params.buckets.tokenize(',')
 slave_method = params.slave_tree_methods.tokenize(',')
-dynamic_size = params.dynamicSize.tokenize(',')
+dynamic_size = params.dynamicSize
 
 /* 
  * main script flow

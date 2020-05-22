@@ -77,8 +77,8 @@ jobs:
         paramFlavour2run: ["--progressive_align=false --regressive_align=true --slave_align=false --dynamic_align=true --pool_align=false"] 
         paramAlign: [--align_methods=CLUSTALO,--align_methods=MAFFT-FFTNS1,--align_methods=FAMSA]
         paramTreeMethod: ["--tree_methods=MBED,PARTTREE,DPPARTTREE0,FAMSA-SLINK"]
-        paramBucket: ["--buckets=9,100"]
-        paramDynamic: ["--dynamicSize=\"10000\""]
+        paramBucket: ["--buckets=9,20"]
+        paramDynamic: ["--dynamicSize=10000"]
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow
