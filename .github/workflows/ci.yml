@@ -74,9 +74,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        paramFlavour2run: ["--progressive_align=false --regressive_align=true --slave_align=false --dynamic_align=true --pool_align=false"] 
+        paramFlavour2run: ["--progressive_align=false --regressive_align=false --slave_align=false --dynamic_align=true --pool_align=false"] 
         paramTreeMethod: ["--tree_methods=MBED,MAFFT-PARTTREE,MAFFT-DPPARTTREE0,FAMSA-SLINK"]
-        paramBucket: [--buckets=\"10\"]
+        paramBucket: ["--buckets=10"]
         paramDynamic: ["--dynamicX=10000"]
         paramsConfig: [--dynamicConfig=true,--dynamicConfig=false]
     steps:
