@@ -39,8 +39,7 @@ workflow PROG_ANALYSIS {
         .cross (PROG_ALIGNER.out.alignmentFile)
         .map { it -> [ it[1][0], it[1][1], it[0][1] ] }
         .set { alignment_and_ref }
-
-    if (params.evaluate){
+        
       EVAL_ALIGNMENT ("progressive", alignment_and_ref, PROG_ALIGNER.out.alignMethod, PROG_ALIGNER.out.treeMethod,"NA")
     }
     if (params.gapCount){

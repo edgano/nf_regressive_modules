@@ -73,9 +73,9 @@ params.dynamicConfig=false
           //uniref50, pdb or path
 params.db = "pdb"        
 
-params.progressive_align = false
+params.progressive_align = true
 params.regressive_align = false           //done
-params.pool_align=true                   //done
+params.pool_align=false                   //done
 params.slave_align=false    // ERROR _ child=parttree
 params.dynamic_align=false                //done
 
