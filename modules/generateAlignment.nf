@@ -36,8 +36,6 @@ process PROG_ALIGNER {
     input:
     tuple val(id), val(tree_method), path(seqs), path(guide_tree)
     each align_method
-    each bucket_size
-    each align_method
 
     output:
     val align_method, emit: alignMethod

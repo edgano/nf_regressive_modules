@@ -21,19 +21,27 @@ workflow PROG_ANALYSIS {
     //COMBINE_SEQS(seqs_ch, refs_ch) // need to combine seqs and ref by ID
     if (!params.trees){
       TREE_GENERATION (seqs_ch, tree_method) 
-        
-      PROG_ALIGNER (seqs_ch, align_method, TREE_GENERATION.out.treeMethod, TREE_GENERATION.out.guideTree)
+    
+      seqs_ch
+          .cross(TREE_GENERATION.out)
+          .map { it -> [ it[1][0], it[1][1], it[0][1], it[1][2] ] }
+          .set { seqs_and_trees }
     }else{
-      PROG_ALIGNER (seqs_ch, align_method, tree_method, trees)
+      seqs_ch
+        .cross(trees)
+        .map { it -> [ it[1][0], it[1][1], it[0][1], it[1][2] ] }
+        .set { seqs_and_trees }
     }
-
-    refs_ch
+    PROG_ALIGNER (seqs_and_trees, align_method)
+   
+    if (params.evaluate){
+      refs_ch
         .cross (PROG_ALIGNER.out.alignmentFile)
         .map { it -> [ it[1][0], it[1][1], it[0][1] ] }
-        .set { alignment_plus_ref }
+        .set { alignment_and_ref }
 
     if (params.evaluate){
-      EVAL_ALIGNMENT ("progressive", alignment_plus_ref, PROG_ALIGNER.out.alignMethod, PROG_ALIGNER.out.treeMethod,"NA")
+      EVAL_ALIGNMENT ("progressive", alignment_and_ref, PROG_ALIGNER.out.alignMethod, PROG_ALIGNER.out.treeMethod,"NA")
     }
     if (params.gapCount){
       GAPS_PROGRESSIVE("progressive", PROG_ALIGNER.out.alignmentFile, PROG_ALIGNER.out.alignMethod, PROG_ALIGNER.out.treeMethod,"NA")
