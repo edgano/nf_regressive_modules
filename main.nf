@@ -52,9 +52,9 @@ params.trees = false
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1
 params.align_methods = "CLUSTALO,FAMSA,MAFFT-FFTNS1" 
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE
-params.tree_methods = "MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE"      //TODO -> reuse trees for multiple methods.
+params.tree_methods = "MAFFT-PARTTREE"      //TODO -> reuse trees for multiple methods.
 
-params.buckets = "9,100"
+params.buckets = "100"
 
 //  ## SLAVE parameters
                           //need to be lowercase -> direct to tcoffee
@@ -75,8 +75,8 @@ params.db = "pdb"
 
 params.progressive_align = false
 params.regressive_align = false           //done
-params.pool_align=false                   //done
-params.slave_align=true    // ERROR _ child=parttree
+params.pool_align=true                   //done
+params.slave_align=false    // ERROR _ child=parttree
 params.dynamic_align=false                //done
 
 params.evaluate=false
