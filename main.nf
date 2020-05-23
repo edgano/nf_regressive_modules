@@ -79,7 +79,7 @@ params.db = "pdb"
 
 params.progressive_align = false
 params.regressive_align = false 
-params.pool_align=false        //<< TODO <- fix MAFFT on pool
+params.pool_align=false        //<< TODO <- fix MAFFT on pool when nreg > datasetSize
 params.slave_align=false
 params.dynamic_align=true
 
