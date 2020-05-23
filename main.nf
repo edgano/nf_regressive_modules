@@ -162,9 +162,9 @@ if ( params.trees ) {
 // tokenize params 
 tree_method = params.tree_methods.tokenize(',')
 align_method = params.align_methods.tokenize(',')
-bucket_list = params.buckets.tokenize(',')
+bucket_list = params.buckets.toString().tokenize(',') //int to string
 slave_method = params.slave_tree_methods.tokenize(',')
-dynamicX = params.dynamicX   //TODO <- tokenize it ??
+dynamicX = params.dynamicX.toString().tokenize(',') //int to string
 
 /* 
  * main script flow
