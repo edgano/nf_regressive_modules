@@ -1,3 +1,6 @@
+export NO_MAFFT_BINARIES=1
+export MAFFT_BINARIES=''
+
 t_coffee -reg -reg_method clustalo_msa \
      -seq ${seqs} \
      -reg_tree ${guide_tree} \

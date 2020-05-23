@@ -38,36 +38,32 @@ nextflow.preview.dsl = 2
  */
 
 //    ## subdatsets
-//seq2improve="cryst,blmb,rrm,subt,ghf5,sdr,tRNA-synt_2b,zf-CCHH,egf,Acetyltransf,ghf13,p450,Rhodanese,aat,az,cytb,proteasome,GEL"
+seq2improve="cryst,blmb,rrm,subt,ghf5,sdr,tRNA-synt_2b,zf-CCHH,egf,Acetyltransf,ghf13,p450,Rhodanese,aat,az,cytb,proteasome,GEL"
+top20fam="gluts,myb_DNA-binding,tRNA-synt_2b,biotin_lipoyl,hom,ghf13,aldosered,hla,Rhodanese,PDZ,blmb,rhv,p450,adh,aat,rrm,Acetyltransf,sdr,zf-CCHH,rvp"
 //params.seqs ="/users/cn/egarriga/datasets/homfam/combinedSeqs/{${seq2improve}}.fa"
-top20fam=""
 
 // input sequences to align in fasta format
-//params.seqs = "$baseDir/data/*.fa"
 params.seqs = 'https://raw.githubusercontent.com/edgano/datasets-test/homfam/seatoxin.fa'
 
-//params.refs = "$baseDir/data/*.ref"
 params.refs = 'https://raw.githubusercontent.com/edgano/datasets-test/homfam/seatoxin.ref'
 
-//params.trees ="/Users/edgargarriga/CBCRG/nf_regressive_modules/results/trees/seatoxin.MBED.dnd"
+//params.trees ="/Users/edgargarriga/CBCRG/nf_regressive_modules/results/trees/*.dnd"
 params.trees = false
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1
-params.align_methods = "MAFFT-FFTNS1" 
-                      //DPPARTTREE0,FAMSA-SLINK,MBED,PARTTREE
-params.tree_methods = "FAMSA-SLINK"      
+params.align_methods = "CLUSTALO,FAMSA,MAFFT-FFTNS1" 
+                      //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE
+params.tree_methods = "MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE"      //TODO -> reuse trees for multiple methods.
 
-params.buckets = "10"
+params.buckets = "9,100"
 
 //  ## SLAVE parameters
                           //need to be lowercase -> direct to tcoffee
                           //mbed,parttree,famsadnd
-params.slave_tree_methods="mbed,parttree,famsadnd" 
+params.slave_tree_methods="mbed,famsadnd,parttree" 
 
 //  ## DYNAMIC parameters
 params.dynamicX = "10000"
-          //TODO -> make 2 list? one with aligners and the other with sizes?
-          //      params.dynamicAlnList=["psicoffee_msa", "clustalo_msa", "famsa_msa"]
-          //      params.dynamicMaxNseqList=[20, 10000, 1000000]
+          //TODO -> make 2 list? one with aligners and the other with sizes? (to have more than 2 aligners)
 params.dynamicMasterAln="psicoffee_msa"
 params.dynamicMasterSize="50"
 params.dynamicSlaveAln="famsa_msa"
@@ -78,10 +74,10 @@ params.dynamicConfig=false
 params.db = "pdb"        
 
 params.progressive_align = false
-params.regressive_align = false 
-params.pool_align=false        //<< TODO <- fix MAFFT on pool when nreg > datasetSize
-params.slave_align=false
-params.dynamic_align=true
+params.regressive_align = false           //done
+params.pool_align=false                   //done
+params.slave_align=true    // ERROR _ child=parttree
+params.dynamic_align=false                //done
 
 params.evaluate=false
 params.homoplasy=false

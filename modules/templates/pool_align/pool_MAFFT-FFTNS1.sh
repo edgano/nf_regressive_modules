@@ -1,4 +1,7 @@
-t_coffee -reg -reg_method mafftfftns1_msa -pool \
+export NO_MAFFT_BINARIES=1
+export MAFFT_BINARIES=''
+
+valgrind t_coffee -reg -reg_method mafftfftns1_msa -pool \
          -reg_tree ${guide_tree} \
          -seq ${seqs} \
          -reg_nseq ${bucket_size} \

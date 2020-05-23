@@ -1,4 +1,5 @@
 export NO_MAFFT_BINARIES=1
+export MAFFT_BINARIES=''
 
 t_coffee -reg -reg_method mafftfftns1_msa \
      -seq ${seqs} \

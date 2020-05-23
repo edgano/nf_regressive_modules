@@ -5,16 +5,14 @@ moduleDir="$baseDir/modules/"
 path_templates = "${moduleDir}/templates"
 
 process REG_ALIGNER {
-    container 'edgano/tcoffee:pdb'
+    container '6278c1e1c43f'//'edgano/tcoffee:pdb'
     tag "$align_method - $tree_method - $bucket_size on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
     input:
-    tuple id, path(seqs)
+    tuple val(id), val(tree_method), path(seqs), path(guide_tree)
     each align_method
     each bucket_size
-    each tree_method
-    path (guide_tree)
 
     output:
     val align_method, emit: alignMethod
@@ -31,15 +29,15 @@ process REG_ALIGNER {
 }
 
 process PROG_ALIGNER {
-    container 'edgano/tcoffee:pdb'
+    container '6278c1e1c43f'//'edgano/tcoffee:pdb'
     tag "$align_method - $tree_method on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
     input:
-    tuple id, path(seqs)
+    tuple val(id), val(tree_method), path(seqs), path(guide_tree)
     each align_method
-    each tree_method
-    path (guide_tree)
+    each bucket_size
+    each align_method
 
     output:
     val align_method, emit: alignMethod
@@ -52,17 +50,15 @@ process PROG_ALIGNER {
 }
 
 process SLAVE_ALIGNER {
-    container 'edgano/tcoffee:pdb'
-    tag "$align_method - $tree_method - $slave_method on $id"
+    container '6278c1e1c43f'//'edgano/tcoffee:pdb'
+    tag "$align_method - $tree_method - $slave_method - $bucket_size on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
     input:
-    tuple id, path(seqs)
+    tuple val(id), val(tree_method), path(seqs), path(guide_tree)
     each align_method
     each bucket_size
-    each tree_method
-    path guide_tree
-    each slave_method
+    each slave_method   
 
     output:
     val align_method, emit: alignMethod
@@ -77,17 +73,15 @@ process SLAVE_ALIGNER {
 }
 
 process DYNAMIC_ALIGNER {
-    container 'edgano/tcoffee:pdb'
+    container '6278c1e1c43f'//'edgano/tcoffee:pdb'
     tag "$align_method - $tree_method on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
     input:
-    tuple id, path(seqs)
+    tuple val(id), val(tree_method), path(seqs), path(guide_tree)
     val align_method
     each bucket_size
     each dynamicX
-    each tree_method
-    path (guide_tree)
     path (dynamicConfig)
     tuple val(masterAln), val(masterSize), val(slaveAln), val(slaveSize)
     val dynamicValues
@@ -106,16 +100,14 @@ process DYNAMIC_ALIGNER {
 }
 
 process POOL_ALIGNER {
-    container 'edgano/tcoffee:pdb'
-    tag "$align_method - $tree_method on $id"
+    container '6278c1e1c43f'//'edgano/tcoffee:pdb'
+    tag "$align_method - $tree_method - $bucket_size on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
     input:
-    tuple id, path(seqs)
+    tuple val(id), val(tree_method), path(seqs), path(guide_tree)
     each align_method
     each bucket_size
-    each tree_method
-    path (guide_tree)
 
     output:
     val align_method, emit: alignMethod
