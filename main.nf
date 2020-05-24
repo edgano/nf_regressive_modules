@@ -68,18 +68,18 @@ params.dynamicMasterAln="psicoffee_msa"
 params.dynamicMasterSize="50"
 params.dynamicSlaveAln="famsa_msa"
 params.dynamicSlaveSize="100000000"
-params.dynamicConfig=false
+params.dynamicConfig=true
 
           //uniref50, pdb or path
 params.db = "pdb"        
 
-params.progressive_align = true
+params.progressive_align = false
 params.regressive_align = false           //done
 params.pool_align=false                   //done
 params.slave_align=false    // ERROR _ child=parttree
-params.dynamic_align=false                //done
+params.dynamic_align=true                //done
 
-params.evaluate=false
+params.evaluate=true
 params.homoplasy=false
 params.gapCount=false
 params.metrics=false
