@@ -16,9 +16,9 @@ process EVAL_ALIGNMENT {
     val bucket_size
 
     output:
-    file("*.sp")
+    path "${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.sp", emit: spScore
     path "${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.tc", emit: tcScore
-    file("*.col") 
+    path "${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.col", emit: colScore
 
     script:
     """
