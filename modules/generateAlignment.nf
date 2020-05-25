@@ -5,7 +5,7 @@ moduleDir="$baseDir/modules/"
 path_templates = "${moduleDir}/templates"
 
 process REG_ALIGNER {
-    container 'edgano/tcoffee:pdb'
+    container '9b6f96acf09b'//'edgano/tcoffee:pdb'
     tag "$align_method - $tree_method - $bucket_size on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
