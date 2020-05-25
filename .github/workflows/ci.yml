@@ -9,6 +9,7 @@ jobs:
       NXF_VER: '20.01.0'
       NXF_ANSI_LOG: false
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
     strategy:
       matrix:
         paramFlavour2run: ["--progressive_align=false --regressive_align=true --slave_align=false --dynamic_align=false --pool_align=false"] 
@@ -29,6 +30,7 @@ jobs:
       NXF_VER: '20.01.0'
       NXF_ANSI_LOG: false
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
     strategy:
       matrix:
         paramFlavour2run: ["--progressive_align=false --regressive_align=true --slave_align=false --dynamic_align=false --pool_align=false"] 
@@ -50,6 +52,7 @@ jobs:
       NXF_VER: '20.01.0'
       NXF_ANSI_LOG: false
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
     strategy:
       matrix:
         paramFlavour2run: ["--progressive_align=false --regressive_align=false --slave_align=true --dynamic_align=false --pool_align=false"] 
@@ -72,6 +75,7 @@ jobs:
       NXF_VER: '20.01.0'
       NXF_ANSI_LOG: false
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
     strategy:
       matrix:
         paramFlavour2run: ["--progressive_align=false --regressive_align=false --slave_align=false --dynamic_align=true --pool_align=false"] 
@@ -94,6 +98,7 @@ jobs:
       NXF_VER: '20.01.0'
       NXF_ANSI_LOG: false
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
     strategy:
       matrix:
         paramFlavour2run: [--progressive_align=false --regressive_align=false --slave_align=false --dynamic_align=false --pool_align=true] 
