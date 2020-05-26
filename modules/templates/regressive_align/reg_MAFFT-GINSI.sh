@@ -1,4 +1,5 @@
 export NO_MAFFT_BINARIES=1
+export MAFFT_BINARIES=''
 
 t_coffee -reg -reg_method mafftginsi_msa \
          -reg_tree ${guide_tree} \

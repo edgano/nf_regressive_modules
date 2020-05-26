@@ -5,7 +5,7 @@ moduleDir="$baseDir/modules/"
 path_templates = "${moduleDir}/templates"
 
 process TREE_GENERATION {
-    container 'edgano/homoplasy:latest'
+    container 'edgano/tcoffee:pdb'
     tag "$tree_method on $id"
     publishDir "${params.outdir}/trees"
 

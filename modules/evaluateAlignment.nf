@@ -2,7 +2,7 @@
 params.outdir = 'results'
 
 process EVAL_ALIGNMENT {
-    container 'edgano/tcoffee:slave'
+    container 'edgano/tcoffee:pdb'
     tag "EVAL_ALIGNMENT on $id"
     publishDir "${params.outdir}/score/tc", pattern: '*.tc'
     publishDir "${params.outdir}/score/sp", pattern: '*.sp'

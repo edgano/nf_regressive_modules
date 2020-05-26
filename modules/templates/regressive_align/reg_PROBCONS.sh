@@ -1,7 +1,4 @@
-export NO_MAFFT_BINARIES=1
-export MAFFT_BINARIES=''
-
-t_coffee -reg -reg_method mafftfftns1_msa \
+t_coffee -reg -reg_method probcons_msa \
          -reg_tree ${guide_tree} \
          -seq ${seqs} \
          -reg_nseq ${bucket_size} \

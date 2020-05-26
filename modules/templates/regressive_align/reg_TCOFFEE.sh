@@ -1,8 +1,4 @@
-export NO_MAFFT_BINARIES=1
-export MAFFT_BINARIES=''
-
-replace_U.pl ${seqs} 
-t_coffee -reg -reg_method mafftsparsecore_msa \
+t_coffee -reg -reg_method t_coffee_msa \
          -reg_tree ${guide_tree} \
          -seq ${seqs} \
          -reg_nseq ${bucket_size} \

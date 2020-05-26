@@ -49,8 +49,9 @@ params.refs = "/users/cn/egarriga/datasets/homfam/refs/{${top20fam}}.ref"
 
 //params.trees ="/Users/edgargarriga/CBCRG/nf_regressive_modules/results/trees/*.dnd"
 params.trees = false
-                      //CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE
-params.align_methods = "UPP"
+                      //CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE,PROBCONS,TCOFFEE,MAFFT,MSAPROBS
+params.align_methods = "CLUSTALO"
+                      //TODO FIX -> reg_UPP
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE
 params.tree_methods = "MAFFT-PARTTREE"      //TODO -> reuse trees for multiple methods.
 
