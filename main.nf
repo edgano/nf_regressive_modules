@@ -49,11 +49,23 @@ params.refs = "/users/cn/egarriga/datasets/homfam/refs/{${top20fam}}.ref"
 
 //params.trees ="/Users/edgargarriga/CBCRG/nf_regressive_modules/results/trees/*.dnd"
 params.trees = false
-                      //CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE,PROBCONS,TCOFFEE,MAFFT,MSAPROBS
-params.align_methods = "CLUSTALO"
                       //TODO FIX -> reg_UPP
-                      //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE
-params.tree_methods = "MAFFT-PARTTREE"      //TODO -> reuse trees for multiple methods.
+                      //CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE,MAFFT,MSAPROBS,PROBCONS,TCOFFEE,UPP
+params.align_methods = "CLUSTALO"
+                      
+//CLUSTALW-QUICK,CLUSTALW                    
+//FAMSA-SLINK,FAMSA-SLINKmedoid,FAMSA-SLINKparttree,FAMSA-UPGMA,FAMSA-UPGMAmedoid,FAMSA-UPGMAparttree   
+//MAFFT-DPPARTTREE0,MAFFT-DPPARTTREE1,MAFFT-DPPARTTREE2,MAFFT-DPPARTTREE2size
+//MAFFT-FASTAPARTTREE,MAFFT-FFTNS1,MAFFT-FFTNS1mem,MAFFT-FFTNS2,MAFFT-FFTNS2mem
+//MAFFT-PARTTREE0,MAFFT-PARTTREE1,MAFFT-PARTTREE2,MAFFT-PARTTREE2size
+//MAFFT,MBED
+//TCOFFEE-BLENGTH,TCOFFEE-ISWLCAT,TCOFFEE-KM,TCOFFEE-LONGCAT,TCOFFEE-NJ,TCOFFEE-REG,TCOFFEE-SHORTCAT,TCOFFEE-SWL,TCOFFEE-SWLcat,TCOFFEE-UPGMA
+
+//TODO -> rtest tcoffee trees
+//     -> not working on PROG bc they are not rooted
+
+//MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE
+params.tree_methods = "MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE"      
 
 params.buckets = "100"
 
@@ -74,13 +86,13 @@ params.dynamicConfig=true
           //uniref50, pdb or path
 params.db = "pdb"        
 
-params.progressive_align = false
+params.progressive_align = true
 params.regressive_align = true           
-params.pool_align=false                  
-params.slave_align=false   
-params.dynamic_align=false               
+params.pool_align=true                  
+params.slave_align=true   
+params.dynamic_align=true               
 
-params.evaluate=true
+params.evaluate=false
 params.homoplasy=false
 params.gapCount=false
 params.metrics=false
@@ -135,6 +147,7 @@ log.info """\
          .stripIndent()
 
 // import analysis pipelines
+include TREE_GENERATION from './modules/treeGeneration'        params(params)
 include REG_ANALYSIS from './modules/reg_analysis'        params(params)
 include PROG_ANALYSIS from './modules/prog_analysis'      params(params)
 include SLAVE_ANALYSIS from './modules/reg_analysis'      params(params)
@@ -167,20 +180,33 @@ dynamicX = params.dynamicX.toString().tokenize(',') //int to string
  * main script flow
  */
 workflow pipeline {
+    if (!params.trees){
+      TREE_GENERATION (seqs_ch, tree_method) 
+      seqs_ch
+        .cross(TREE_GENERATION.out)
+        .map { it -> [ it[1][0], it[1][1], it[0][1], it[1][2] ] }
+        .set { seqs_and_trees }
+    }else{
+      seqs_ch
+        .cross(trees)
+        .map { it -> [ it[1][0], it[1][1], it[0][1], it[1][2] ] }
+        .set { seqs_and_trees }
+    }
+
     if (params.regressive_align){
-      REG_ANALYSIS(seqs_ch, refs_ch, align_method, tree_method, bucket_list, trees)
+      REG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
     }
     if (params.progressive_align){
-      PROG_ANALYSIS(seqs_ch, refs_ch, align_method, tree_method, trees)
+      PROG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method)
     }
     if (params.slave_align){
-      SLAVE_ANALYSIS(seqs_ch, refs_ch, align_method, tree_method, bucket_list, trees, slave_method)
+      SLAVE_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list, slave_method)
     }
     if (params.dynamic_align){
-      DYNAMIC_ANALYSIS(seqs_ch, refs_ch, tree_method, bucket_list, dynamicX, trees)
+      DYNAMIC_ANALYSIS(seqs_and_trees, refs_ch, tree_method, bucket_list, dynamicX)
     }
     if (params.pool_align){
-      POOL_ANALYSIS(seqs_ch, refs_ch, align_method, tree_method, bucket_list, trees)
+      POOL_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
     }
 }
 

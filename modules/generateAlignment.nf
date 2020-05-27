@@ -40,7 +40,7 @@ process PROG_ALIGNER {
     output:
     val align_method, emit: alignMethod
     val tree_method, emit: treeMethod
-    tuple val (id), path ("${id}.prog.${align_method}.with.${tree_method}.tree.aln"), emit: alignmentFile
+    tuple val (id), path ("${id}.prog.*.tree.aln"), emit: alignmentFile
     path ".command.trace", emit: metricFile
 
     script:

@@ -17,7 +17,7 @@ process EVAL_ALIGNMENT {
 
     output:
     path "${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.sp", emit: spScore
-    path "${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.tc", emit: tcScore
+    tuple val ("${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree"), path ("${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.tc"), emit: tcScore
     path "${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.col", emit: colScore
 
     script:
