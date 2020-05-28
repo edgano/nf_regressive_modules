@@ -22,8 +22,6 @@ process REG_ALIGNER {
     path "${id}.homoplasy", emit: homoplasyFile
     path ".command.trace", emit: metricFile
 
-    //TODO refactor emit alignmentFile
-
     script:
     template "${path_templates}/regressive_align/reg_${align_method}.sh"
 }

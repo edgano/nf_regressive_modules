@@ -51,13 +51,14 @@ params.trees = false
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1
 params.align_methods = "CLUSTALO,FAMSA,MAFFT-FFTNS1" 
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE
-params.tree_methods = "MAFFT-PARTTREE"      //TODO -> reuse trees for multiple methods.
+params.tree_methods = "MAFFT-PARTTREE" 
 
-params.buckets = "100"
+params.buckets = "1000"
 
 
-params.progressive_align = false
-params.regressive_align = false
+params.biotech = false
+params.reg_protocols = false
+params.tcoffee_protocols = false
 
 params.evaluate=true
 params.homoplasy=false
@@ -67,7 +68,6 @@ params.easel=false
 
 // output directory
 params.outdir = "$baseDir/resultsBiotechAndProtocols"
-
 
 log.info """\
          PIPELINE  ~  version 0.1"
@@ -80,7 +80,8 @@ log.info """\
          Bucket size                                    : ${params.buckets}
          --##--
          Generate Nature Biotech analysis               : ${params.biotech}
-         Generate Protocols analysis                    : ${params.protocols}
+         Generate Regressive Protocols analysis         : ${params.reg_protocols}
+         Generate TCoffee Protocols analysis            : ${params.tcoffee_protocols}
          --##--
          Perform evaluation? Requires reference         : ${params.evaluate}
          Check homoplasy? Only for regressive           : ${params.homoplasy}
@@ -93,8 +94,10 @@ log.info """\
          .stripIndent()
 
 // import analysis pipelines
-include NAT_BIOTECH_ANALYSIS    from './modules/papers_analysis'        params(params)
-include REG_PROTOCOLS_ANALYSIS  from './modules/papers_analysis'        params(params)
+include TREE_GENERATION             from './modules/treeGeneration'         params(params)
+include NAT_BIOTECH_ANALYSIS        from './modules/papers_analysis'        params(params)
+include REG_PROTOCOLS_ANALYSIS      from './modules/papers_analysis'        params(params)
+include TCOFFEE_PROTOCOLS_ANALYSIS  from './modules/papers_analysis'        params(params)
 
 // Channels containing sequences
 seqs_ch = Channel.fromPath( params.seqs, checkIfExists: true ).map { item -> [ item.baseName, item] }
@@ -102,7 +105,6 @@ seqs_ch = Channel.fromPath( params.seqs, checkIfExists: true ).map { item -> [ i
 if ( params.refs ) {
   refs_ch = Channel.fromPath( params.refs ).map { item -> [ item.baseName, item] }
 }
-
 // Channels for user provided trees or empty channel if trees are to be generated [OPTIONAL]
 if ( params.trees ) {
   trees = Channel.fromPath(params.trees)
@@ -119,13 +121,46 @@ bucket_list = params.buckets.toString().tokenize(',')       //int to string
 /* 
  * main script flow
  */
-workflow pipeline {
+workflow pipeline {     
+      if (!params.trees){
+      TREE_GENERATION (seqs_ch, tree_method) 
+      seqs_ch
+        .cross(TREE_GENERATION.out)
+        .map { it -> [ it[1][0], it[1][1], it[0][1], it[1][2] ] }
+        .set { seqs_and_trees }
+    }else{
+      seqs_ch
+        .cross(trees)
+        .map { it -> [ it[1][0], it[1][1], it[0][1], it[1][2] ] }
+        .set { seqs_and_trees }
+    }
+
     if (params.biotech){
-      NAT_BIOTECH_ANALYSIS(seqs_ch, refs_ch, align_method, tree_method, bucket_list, trees)
+      //TODO define aligners & tree
+        // CO,FFTNS1,UPP,SPARSECORE,GINSI
+        // PARTREE0,MBED
+        // 1000
+        // Homfam dataset
+      NAT_BIOTECH_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
     }
-    if (params.protocols){
-      REG_PROTOCOLS_ANALYSIS(seqs_ch, refs_ch, align_method, tree_method, bucket_list, trees)
+    if (params.reg_protocols){
+      //TODO define aligners & tree
+        // CO,FFTNS1,GINSI
+        // PARTREE0,MBED
+        // 1000
+        // gluts.fasta
+        
+        //t_coffee -reg -seq gluts.fasta -reg_nseq 1000 -reg_tree mbed -reg_method clustalo_msa -outfile gluts.aln -outtree gluts.mbed
+        //t_coffee -reg -seq gluts.fasta -reg_nseq 1000 -reg_tree mbed -reg_method mafftginsi_msa -outfile gluts.aln -outtree gluts.mbed
+        //t_coffee -reg -seq gluts.fasta -reg_nseq 1000 -reg_tree parttree -reg_method mafftfftnsi_msa -outfile gluts.aln -outtree gluts.parttree
+      REG_PROTOCOLS_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
     }
+    if (params.tcoffee_protocols){
+      //TODO define parameters
+
+      TCOFFEE_PROTOCOLS_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
+    }
+
 }
 
 workflow {

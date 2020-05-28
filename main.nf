@@ -61,22 +61,22 @@ params.align_methods = "CLUSTALO"
 //MAFFT,MBED
 //TCOFFEE-BLENGTH,TCOFFEE-ISWLCAT,TCOFFEE-KM,TCOFFEE-LONGCAT,TCOFFEE-NJ,TCOFFEE-REG,TCOFFEE-SHORTCAT,TCOFFEE-SWL,TCOFFEE-SWLcat,TCOFFEE-UPGMA
 
-//TODO -> rtest tcoffee trees
-//     -> not working on PROG bc they are not rooted
+//TODO -> test tcoffee trees
+//     CLUSTALW-QUICK,CLUSTALW  -> not working on PROG bc they are not rooted
 
-//MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE
-params.tree_methods = "MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE"      
+                      //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE0
+params.tree_methods = "MBED"      
 
-params.buckets = "100"
+params.buckets = "30"
 
 //  ## SLAVE parameters
                           //need to be lowercase -> direct to tcoffee
+                          //mbed,parttree,famsadnd,cwdnd,dpparttree,fastparttree,mafftdnd,fftns1dnd,fftns2dnd,nj 
                           //mbed,parttree,famsadnd
-params.slave_tree_methods="mbed,famsadnd,parttree" 
+params.slave_tree_methods="cwdnd,dpparttree,fastparttree,mafftdnd,fftns1dnd,fftns2dnd,nj" 
 
 //  ## DYNAMIC parameters
-params.dynamicX = "10000"
-          //TODO -> make 2 list? one with aligners and the other with sizes? (to have more than 2 aligners)
+params.dynamicX = "10000"                 //TODO -> make 2 list? one with aligners and the other with sizes? (to have more than 2 aligners)
 params.dynamicMasterAln="psicoffee_msa"
 params.dynamicMasterSize="50"
 params.dynamicSlaveAln="famsa_msa"
@@ -85,25 +85,25 @@ params.dynamicConfig=true
 
           //uniref50, pdb or path
 params.db = "pdb"        
+          // define default database path
+uniref_path = "/users/cn/egarriga/datasets/db/uniref50.fasta"   // cluster path
+pdb_path = "/database/pdb/pdb_seqres.txt"                       // docker path
 
-params.progressive_align = true
+
+params.progressive_align = false
 params.regressive_align = true           
-params.pool_align=true                  
-params.slave_align=true   
-params.dynamic_align=true               
+params.pool_align=false                  
+params.slave_align=false   
+params.dynamic_align=false               
 
-params.evaluate=false
-params.homoplasy=false
+params.evaluate=true
+params.homoplasy=true
 params.gapCount=false
-params.metrics=false
-params.easel=false
+params.metrics=true
+params.easel=true
 
 // output directory
 params.outdir = "$baseDir/results"
-
-// define database path
-uniref_path = "/users/cn/egarriga/datasets/db/uniref50.fasta"   // cluster path
-pdb_path = "/database/pdb/pdb_seqres.txt"                       // docker path
 
 if (params.db=='uniref50'){
   params.database_path = uniref_path
@@ -172,14 +172,15 @@ if ( params.trees ) {
 // tokenize params 
 tree_method = params.tree_methods.tokenize(',')
 align_method = params.align_methods.tokenize(',')
-bucket_list = params.buckets.toString().tokenize(',') //int to string
+bucket_list = params.buckets.toString().tokenize(',')     //int to string
 slave_method = params.slave_tree_methods.tokenize(',')
-dynamicX = params.dynamicX.toString().tokenize(',') //int to string
+dynamicX = params.dynamicX.toString().tokenize(',')       //int to string
 
 /* 
  * main script flow
  */
 workflow pipeline {
+
     if (!params.trees){
       TREE_GENERATION (seqs_ch, tree_method) 
       seqs_ch

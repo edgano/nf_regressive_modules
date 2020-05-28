@@ -16,10 +16,27 @@ process EVAL_ALIGNMENT {
     val bucket_size
 
     output:
-    path "${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.sp", emit: spScore
-    tuple val ("${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree"), path ("${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.tc"), emit: tcScore
-    path "${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.col", emit: colScore
+    tuple val(id), \
+    val(align_type), \
+    val(bucket_size), \
+    val(align_method), \
+    val(tree_method), \
+    path ("${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.sp"), emit: spScore
 
+    tuple val(id), \
+    val(align_type), \
+    val(bucket_size), \
+    val(align_method), \
+    val(tree_method), \
+    path ("${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.tc"), emit: tcScore
+
+    tuple val(id), \
+    val(align_type), \
+    val(bucket_size), \
+    val(align_method), \
+    val(tree_method), \
+    path ("${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.col"), emit: colScore
+   
     script:
     """
     ## Sum-of-Pairs Score ##
@@ -64,15 +81,20 @@ process EASEL_INFO {
     val bucket_size
 
     output:
-    file("*.easel_INFO")
-    file("*.avgLen")
-    file("*.avgId")
+    tuple val(id), \
+    val(align_type), \
+    val(bucket_size), \
+    val(align_method), \
+    val(tree_method), \
+    path("*.easel_INFO"), \
+    path("*.avgLen"), \
+    path("*.avgId"), emit: easelFiles
       
      shell:
      '''
      esl-alistat !{test_alignment} > !{id}.!{align_type}.!{bucket_size}.!{align_method}.with.!{tree_method}.tree.easel_INFO
-     awk -F : '{ if (\$1=="Average length") print \$2}' !{id}.!{align_type}.!{bucket_size}.!{align_method}.with.!{tree_method}.tree.easel_INFO | sed 's/ //g' > !{id}.!{align_type}.!{bucket_size}.!{align_method}.with.!{tree_method}.tree.avgLen 
-     awk -F : '{ if (\$1=="Average identity") print substr(\$2, 1, length(\$2)-1)}' !{id}.!{align_type}.!{bucket_size}.!{align_method}.with.!{tree_method}.tree.easel_INFO | sed 's/ //g' > !{id}.!{align_type}.!{bucket_size}.!{align_method}.with.!{tree_method}.tree.avgId 
+     awk -F : '{ if (\$1=="Average length") printf "%s", \$2}' !{id}.!{align_type}.!{bucket_size}.!{align_method}.with.!{tree_method}.tree.easel_INFO | sed 's/ //g' > !{id}.!{align_type}.!{bucket_size}.!{align_method}.with.!{tree_method}.tree.avgLen 
+     awk -F : '{ if (\$1=="Average identity") printf "%s", substr(\$2, 1, length(\$2)-1)}' !{id}.!{align_type}.!{bucket_size}.!{align_method}.with.!{tree_method}.tree.easel_INFO | sed 's/ //g' > !{id}.!{align_type}.!{bucket_size}.!{align_method}.with.!{tree_method}.tree.avgId 
 
      ## awk 'NR > 8 && $1 !~/\\// { sum+= $3 } END {print "SUM: "sum"\\nAVG: "sum/(NR-9)}' !{id}.!{align_type}.!{bucket_size}.!{align_method}.with.!{tree_method}.tree.easel_INFO > !{id}.!{align_type}.!{bucket_size}.!{align_method}.with.!{tree_method}.tree.easel_AVG
      ## the first && is to skip first lines and the last one. The AVG is done -8 all the time execpt for the END print to "erase" the last "//" too.
@@ -93,27 +115,34 @@ process HOMOPLASY {
     file homoplasy     
 
     output:
-    file("*.homo")
-    file("*.w_homo")
-    file("*.w_homo2")
-    file("*.len")
-    file("*.ngap")
-    file("*.ngap2")
+    tuple val(id), \
+    val(align_type), \
+    val(bucket_size), \
+    val(align_method), \
+    val(tree_method), \
+    path ("*.homo"), \
+    path("*.w_homo"), \
+    path("*.w_homo2"), \
+    path("*.len"), \
+    path("*.ngap"), \
+    path("*.ngap2"), emit: homoFiles
 
     script:
-  """    
-    ## homo
-    awk -F : '{ if (\$1=="HOMOPLASY") print \$2}' ${homoplasy} > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.homo
-    ## w_homo
-    awk -F : '{ if (\$1=="WEIGHTED_HOMOPLASY") print \$2}' ${id}.homoplasy > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.w_homo
-    ## w_homo2
-    awk -F : '{ if (\$1=="WEIGHTED_HOMOPLASY2") print \$2}' ${id}.homoplasy > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.w_homo2
-    ## len
-    awk -F : '{ if (\$1=="LEN") print \$2}' ${id}.homoplasy > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.len
-    ## ngap
-    awk -F : '{ if (\$1=="NGAP") print \$2}' ${id}.homoplasy > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.ngap
-    ## ngap2
-    awk -F : '{ if (\$1=="NGAP2") print \$2}' ${id}.homoplasy > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.ngap2 
+  """  
+        ## remove whitespace  
+    cat ${homoplasy} | tr -d ' ' > aux.txt 
+        ## homo     
+    awk -F : '{ if (\$1=="HOMOPLASY") printf "%s", \$2}' aux.txt  > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.homo 
+        ## w_homo
+    awk -F : '{ if (\$1=="WEIGHTED_HOMOPLASY") printf "%s", \$2}' aux.txt  > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.w_homo
+        ## w_homo2
+    awk -F : '{ if (\$1=="WEIGHTED_HOMOPLASY2") printf "%s", \$2}' aux.txt > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.w_homo2
+        ## len
+    awk -F : '{ if (\$1=="LEN") printf "%s", \$2}' aux.txt > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.len
+        ## ngap
+    awk -F : '{ if (\$1=="NGAP") printf "%s", \$2}' aux.txt > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.ngap
+        ## ngap2
+    awk -F : '{ if (\$1=="NGAP2") printf "%s", \$2}' aux.txt > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.ngap2 
     """
 }
 
@@ -131,26 +160,32 @@ process METRICS {
     file metricsFile
 
     output:
-      file("*.metrics")
-      file("*.realtime")
-      file("*.rss")
-      file("*.peakRss")
-      file("*.vmem")
-      file("*.peakVmem")
-      file("*.metrics") 
+    tuple val(id), \
+    val(align_type), \
+    val(bucket_size), \
+    val(align_method), \
+    val(tree_method), \
+    path("*.metrics"), \
+    path("*.realtime"), \
+    path("*.rss"), \
+    path("*.peakRss"), \
+    path("*.vmem"), \
+    path("*.peakVmem"), emit: metricFiles
 
     script:
     """    
+        ## remove whitespace  
+    cat ${metricsFile} | tr -d ' ' > aux.txt 
         ## realtime > Task execution time i.e. delta between completion and start timestamp i.e. compute wall-time
-    awk -F = '{ if (\$1=="realtime") print \$2}' ${metricsFile} > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.realtime
+    awk -F = '{ if (\$1=="realtime") printf "%s", \$2}' aux.txt  > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.realtime
         ## rss > Real memory (resident set) size of the process
-    awk -F = '{ if (\$1=="rss") print \$2}' ${metricsFile}> ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.rss
+    awk -F = '{ if (\$1=="rss") printf "%s", \$2}' aux.txt > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.rss
         ## peakRss > Peak of real memory
-    awk -F = '{ if (\$1=="peak_rss") print \$2}' ${metricsFile} > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.peakRss
+    awk -F = '{ if (\$1=="peak_rss") printf "%s", \$2}' aux.txt  > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.peakRss
         ## vmem > Virtual memory size of the process
-    awk -F = '{ if (\$1=="vmem") print \$2}' ${metricsFile} > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.vmem
+    awk -F = '{ if (\$1=="vmem") printf "%s", \$2}' aux.txt  > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.vmem
         ## peakVmem > Peak of virtual memory
-    awk -F = '{ if (\$1=="peak_vmem") print \$2}' ${metricsFile} > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.peakVmem
+    awk -F = '{ if (\$1=="peak_vmem") printf "%s", \$2}' aux.txt  > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.peakVmem
     
     mv ${metricsFile} ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.metrics
     """
@@ -169,9 +204,14 @@ process GAPS_PROGRESSIVE {
     val bucket_size
 
     output:
-        file("*.totGap")
-        file("*.numSeq")
-        file("*.alnLen")
+    tuple val(id), \
+    val(align_type), \
+    val(bucket_size), \
+    val(align_method), \
+    val(tree_method), \
+    path("*.totGap"), \
+    path("*.numSeq"), \
+    path("*.alnLen"), emit: metricFiles
 
     script:
     """    
