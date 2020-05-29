@@ -17,7 +17,7 @@ declare -a all=(seatoxin hip     scorptoxin      cyt3    rnasemam        bowman 
 ################
 ##  ALIGNERS  ##
 ################
-declare -a aligner=(psicoffee_msa.50_famsa_msa.100000000)
+declare -a aligner=(psicoffee_msa.50_famsa_msa.100000000 famsa_msa.50_famsa_msa.100000000)
 
 ################
 ##    TREES   ##

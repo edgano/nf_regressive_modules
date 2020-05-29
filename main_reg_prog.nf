@@ -47,8 +47,8 @@ params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/*.fa"
 
 params.refs = "/users/cn/egarriga/datasets/homfam/refs/*.ref"
 
-//params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.{FAMSA,CLUSTALO,MAFFT_PARTTREE}.dnd"
-params.trees = false
+params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.{FAMSA,CLUSTALO,MAFFT_PARTTREE}.dnd"
+//params.trees = false
                       //TODO FIX -> reg_UPP
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE,MAFFT,MSAPROBS,PROBCONS,TCOFFEE,UPP,MUSCLE
 params.align_methods = "CLUSTALO,FAMSA,MAFFT-FFTNS1"
@@ -73,7 +73,7 @@ params.buckets = "1000"
                           //need to be lowercase -> direct to tcoffee
                           //mbed,parttree,famsadnd,cwdnd,dpparttree,fastparttree,mafftdnd,fftns1dnd,fftns2dnd,nj 
                           //mbed,parttree,famsadnd
-params.slave_tree_methods="cwdnd,dpparttree,fastparttree,mafftdnd,fftns1dnd,fftns2dnd,nj" 
+params.slave_tree_methods="mbed,parttree,famsadnd" 
 
 //  ## DYNAMIC parameters
 params.dynamicX = "10000"                 //TODO -> make 2 list? one with aligners and the other with sizes? (to have more than 2 aligners)
@@ -90,10 +90,10 @@ uniref_path = "/users/cn/egarriga/datasets/db/uniref50.fasta"   // cluster path
 pdb_path = "/database/pdb/pdb_seqres.txt"                       // docker path
 
 
-params.progressive_align = true
-params.regressive_align = true           
+params.progressive_align = false
+params.regressive_align = false           
 params.pool_align=false                  
-params.slave_align=false   
+params.slave_align=true   
 params.dynamic_align=false               
 
 params.evaluate=true
