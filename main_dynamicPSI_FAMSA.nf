@@ -43,16 +43,16 @@ top20fam="gluts,myb_DNA-binding,tRNA-synt_2b,biotin_lipoyl,hom,ghf13,aldosered,h
 //params.seqs ="/users/cn/egarriga/datasets/homfam/combinedSeqs/{${seq2improve}}.fa"
 
 // input sequences to align in fasta format
-params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/{${top20fam}}.fa"
+params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/*.fa"
 
-params.refs = "/users/cn/egarriga/datasets/homfam/refs/{${top20fam}}.ref"
+params.refs = "/users/cn/egarriga/datasets/homfam/refs/*.ref"
 
 params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.{FAMSA,CLUSTALO,MAFFT_PARTTREE}.dnd"
 //params.trees = false
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1
 params.align_methods = "CLUSTALO"//,FAMSA,MAFFT-FFTNS1" 
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE
-params.tree_methods = "MAFFT-PARTTREE"      //TODO -> reuse trees for multiple methods.
+params.tree_methods = "MBED"      //TODO -> reuse trees for multiple methods.
 
 params.buckets = "20"
 
@@ -134,6 +134,7 @@ log.info """\
          .stripIndent()
 
 // import analysis pipelines
+include TREE_GENERATION from './modules/treeGeneration'        params(params)
 include REG_ANALYSIS from './modules/reg_analysis'        params(params)
 include PROG_ANALYSIS from './modules/prog_analysis'      params(params)
 include SLAVE_ANALYSIS from './modules/reg_analysis'      params(params)
@@ -166,20 +167,34 @@ dynamicX = params.dynamicX.toString().tokenize(',') //int to string
  * main script flow
  */
 workflow pipeline {
+
+    if (!params.trees){
+      TREE_GENERATION (seqs_ch, tree_method) 
+      seqs_ch
+        .cross(TREE_GENERATION.out)
+        .map { it -> [ it[1][0], it[1][1], it[0][1], it[1][2] ] }
+        .set { seqs_and_trees }
+    }else{
+      seqs_ch
+        .cross(trees)
+        .map { it -> [ it[1][0], it[1][1], it[0][1], it[1][2] ] }
+        .set { seqs_and_trees }
+    }
+
     if (params.regressive_align){
-      REG_ANALYSIS(seqs_ch, refs_ch, align_method, tree_method, bucket_list, trees)
+      REG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
     }
     if (params.progressive_align){
-      PROG_ANALYSIS(seqs_ch, refs_ch, align_method, tree_method, trees)
+      PROG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method)
     }
     if (params.slave_align){
-      SLAVE_ANALYSIS(seqs_ch, refs_ch, align_method, tree_method, bucket_list, trees, slave_method)
+      SLAVE_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list, slave_method)
     }
     if (params.dynamic_align){
-      DYNAMIC_ANALYSIS(seqs_ch, refs_ch, tree_method, bucket_list, dynamicX, trees)
+      DYNAMIC_ANALYSIS(seqs_and_trees, refs_ch, tree_method, bucket_list, dynamicX)
     }
     if (params.pool_align){
-      POOL_ANALYSIS(seqs_ch, refs_ch, align_method, tree_method, bucket_list, trees)
+      POOL_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
     }
 }
 
