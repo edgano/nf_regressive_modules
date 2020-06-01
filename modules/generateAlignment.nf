@@ -1,8 +1,8 @@
 #!/bin/bash nextflow
 //params.outdir = 'results'
 
-moduleDir="$baseDir/modules/"
-path_templates = "${moduleDir}/templates"
+include set_templates_path from './functions.nf'
+path_templates = set_templates_path()
 
 process REG_ALIGNER {
     container 'edgano/tcoffee:pdb'
