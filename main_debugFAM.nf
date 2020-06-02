@@ -47,7 +47,8 @@ params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/ricin.fa"
 
 params.refs = "/users/cn/egarriga/datasets/homfam/refs/ricin.ref"
 
-params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.FAMSA.dnd"
+//params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.FAMSA.dnd"
+params.trees="/results/trees/*.MBED.dnd"
 //params.trees = false
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1
 params.align_methods = "CLUSTALO"//,FAMSA,MAFFT-FFTNS1" 
