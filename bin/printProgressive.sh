@@ -22,20 +22,20 @@ declare -a aligner=(CLUSTALO MAFFT-FFTNS1 FAMSA)
 ################
 ##    TREES   ##
 ################   
-declare -a tree=(CLUSTALO MAFFT_PARTTREE FAMSA)
+declare -a tree=(CLUSTALO FAMSA MAFFT_PARTTREE)
+#             (codnd dpparttreednd1 dpparttreednd2 dpparttreednd2size fastaparttreednd fftns1dnd fftns1dndmem fftns2dnd fftns2dndmem mafftdnd parttreednd0 parttreednd1 parttreednd2 parttreednd2size)
 
-declare -a slave_tree=(mbed parttree famsadnd)
 ###############
 ##   Nseq    ##
 ###############
-declare -a bucket=(1000) #(1000 3000 5000 10000 20000)
+declare -a bucket=(NA) #(1000 3000 5000 10000 20000)
 #               (NA)        -> for PROG
 #               (1000 3000 5000)
 
 ##############
 ## Prog/REG ##
 ##############
-declare -a flavour="slave" 
+declare -a flavour="progressive" #"prog_align"  #"reg_align"  
 
 printf "\t\t########################\n"
 printf "\t\t######### TC ###########\n"
@@ -53,12 +53,9 @@ for x in ${aligner[@]}
 do
   for y in ${tree[@]}
   do
-    for t in ${slave_tree[@]}
+    for z in ${bucket[@]}
     do
-        for z in ${bucket[@]}
-        do
-            printf ${x}";"
-        done
+      printf ${x}";"
     done
   done
 done
@@ -70,46 +67,23 @@ for x in ${aligner[@]}
 do
   for y in ${tree[@]}
   do
-    for t in ${slave_tree[@]}
+    for z in ${bucket[@]}
     do
-        for z in ${bucket[@]}
-        do
-            printf ${y}";"
-        done
+      printf ${y}";"
     done
   done
 done
 printf "\n"
 
-##print 3r line -> slave
-printf "Slave_tree;"
-for x in ${aligner[@]}
-do
-  for y in ${tree[@]}
-  do
-    for t in ${slave_tree[@]}
-    do
-        for z in ${bucket[@]}
-        do
-            printf ${t}";"
-        done
-    done
-  done
-done
-printf "\n"
-
-##print 4r line -> nSeqs
+##print 3r line -> nSeq
 printf "nSeq;"
 for x in ${aligner[@]}
 do
   for y in ${tree[@]}
   do
-    for t in ${slave_tree[@]}
+    for z in ${bucket[@]}
     do
-        for z in ${bucket[@]}
-        do
-            printf ${z}";"
-        done
+      printf ${z}";"
     done
   done
 done
@@ -123,14 +97,11 @@ do
     do
         for tree_method in ${tree[@]} ## loop each tree
         do
-            for slaveTree in ${slave_tree[@]}
-            do
-                for nSeq in ${bucket[@]}  ## loop all the buckets
-                do
-                    cat ../results/score/tc/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}_${slaveTree}.tree.tc | tr '' ';'| tr -d "[:space:]"
-                    printf ";" 
-                done
-            done
+          for nSeq in ${bucket[@]}  ## loop all the buckets
+          do
+            cat ../results/score/tc/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.tc | tr '' ';'| tr -d "[:space:]"
+            printf ";" 
+          done
        	done
     done
     printf "\n"
@@ -149,7 +120,7 @@ do
   do
     for z in ${bucket[@]}
     do
-      for i in {1..7}
+      for i in {1..4}
       do
         printf ${x}";"
       done
@@ -166,7 +137,7 @@ do
   do
     for z in ${bucket[@]}
     do
-      for i in {1..7}
+      for i in {1..4}
       do
         printf ${y}";"
       done
@@ -183,7 +154,7 @@ do
   do
     for z in ${bucket[@]}
     do
-      for i in {1..7}
+      for i in {1..4}
       do
         printf ${z}";"
       done
@@ -199,7 +170,7 @@ do
   do
     for z in ${bucket[@]}
     do
-      printf "avgID;len;ngap;ngap2;homo;w_homo;w_homo2;"
+      printf "avgID;alnLen;totGap;numSeq;"
     done
   done
 done
@@ -218,21 +189,14 @@ do
           do
             cat ../results/easel/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.avgId | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.len | tr '' ';'| tr -d "[:space:]"
+            cat ../results/gaps/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.alnLen | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.ngap | tr '' ';'| tr -d "[:space:]"
+            cat ../results/gaps/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.totGap | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.ngap2 | tr '' ';'| tr -d "[:space:]"
-            printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.homo | tr '' ';'| tr -d "[:space:]"
-            printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.w_homo | tr '' ';'| tr -d "[:space:]"
-            printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.w_homo2 | tr '' ';'| tr -d "[:space:]"
+            cat ../results/gaps/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.numSeq | tr '' ';'| tr -d "[:space:]"
             printf ";" 
           done
        	done
     done
     printf "\n"
 done
-
