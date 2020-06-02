@@ -65,7 +65,7 @@ params.align_methods = "CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE
 //     CLUSTALW-QUICK,CLUSTALW  -> not working on PROG bc they are not rooted
 
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE0
-params.tree_methods = "FAMSA-SLINK"      
+params.tree_methods = "FAMSA-SLINK"
 
 params.buckets = "30"
 
@@ -147,7 +147,7 @@ log.info """\
          .stripIndent()
 
 // import analysis pipelines
-include TREE_GENERATION from './modules/treeGeneration'        params(params)
+include TREE_GENERATION from './modules/treeGeneration'   params(params)
 include REG_ANALYSIS from './modules/reg_analysis'        params(params)
 include PROG_ANALYSIS from './modules/prog_analysis'      params(params)
 include SLAVE_ANALYSIS from './modules/reg_analysis'      params(params)
