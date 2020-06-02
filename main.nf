@@ -52,7 +52,7 @@ params.trees = false
                       //TODO FIX -> reg_UPP
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE,MAFFT,MSAPROBS,PROBCONS,TCOFFEE,UPP,MUSCLE
 params.align_methods = "MUSCLE"
-                      
+
 //CLUSTALW-QUICK,CLUSTALW                    
 //FAMSA-SLINK,FAMSA-SLINKmedoid,FAMSA-SLINKparttree,FAMSA-UPGMA,FAMSA-UPGMAmedoid,FAMSA-UPGMAparttree   
 //MAFFT-DPPARTTREE0,MAFFT-DPPARTTREE1,MAFFT-DPPARTTREE2,MAFFT-DPPARTTREE2size
@@ -91,7 +91,7 @@ pdb_path = "/database/pdb/pdb_seqres.txt"                       // docker path
 
 
 params.progressive_align = true
-params.regressive_align = false           
+params.regressive_align = false
 params.pool_align=false                  
 params.slave_align=false   
 params.dynamic_align=false               
@@ -147,7 +147,7 @@ log.info """\
          .stripIndent()
 
 // import analysis pipelines
-include TREE_GENERATION from './modules/treeGeneration'        params(params)
+include TREE_GENERATION from './modules/treeGeneration'   params(params)
 include REG_ANALYSIS from './modules/reg_analysis'        params(params)
 include PROG_ANALYSIS from './modules/prog_analysis'      params(params)
 include SLAVE_ANALYSIS from './modules/reg_analysis'      params(params)
