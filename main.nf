@@ -51,8 +51,8 @@ params.refs = "/users/cn/egarriga/datasets/homfam/refs/{${top20fam}}.ref"
 params.trees = false
                       //TODO FIX -> reg_UPP
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE,MAFFT,MSAPROBS,PROBCONS,TCOFFEE,UPP,MUSCLE
-params.align_methods = "MUSCLE"
-
+params.align_methods = "CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE,MAFFT,MSAPROBS,PROBCONS,TCOFFEE,UPP,MUSCLE"
+                      
 //CLUSTALW-QUICK,CLUSTALW                    
 //FAMSA-SLINK,FAMSA-SLINKmedoid,FAMSA-SLINKparttree,FAMSA-UPGMA,FAMSA-UPGMAmedoid,FAMSA-UPGMAparttree   
 //MAFFT-DPPARTTREE0,MAFFT-DPPARTTREE1,MAFFT-DPPARTTREE2,MAFFT-DPPARTTREE2size
@@ -65,7 +65,7 @@ params.align_methods = "MUSCLE"
 //     CLUSTALW-QUICK,CLUSTALW  -> not working on PROG bc they are not rooted
 
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE0
-params.tree_methods = "MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE0"      
+params.tree_methods = "FAMSA-SLINK"
 
 params.buckets = "30"
 
@@ -91,7 +91,7 @@ pdb_path = "/database/pdb/pdb_seqres.txt"                       // docker path
 
 
 params.progressive_align = true
-params.regressive_align = false
+params.regressive_align = false           
 params.pool_align=false                  
 params.slave_align=false   
 params.dynamic_align=false               

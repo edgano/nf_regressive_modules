@@ -9,5 +9,5 @@ t_coffee -reg -reg_method dynamic_msa \
          -reg_nseq ${bucket_size} \
          -dynamic ${dynamicX} \
          -reg_homoplasy \
-         -dynamic_config $PWD/config.txt \
+         -dynamic_config ${dynamicConfig} \
          -outfile ${id}.dynamic_${params.db}_${bucket_size}.dynamicX.${dynamicX}.${masterAln}.${masterSize}_${slaveAln}.${slaveSize}.with.${tree_method}.tree.aln

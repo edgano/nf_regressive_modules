@@ -83,7 +83,7 @@ process DYNAMIC_ALIGNER {
     val dynamicValues
 
     output:
-    val dynamicValues, emit: alignMethod
+    val "${dynamicValues}_${params.db}", emit: alignMethod
     val tree_method, emit: treeMethod
     val "${bucket_size}_${dynamicX}", emit: bucketSize
     tuple val (id), path("*.with.${tree_method}.tree.aln"), emit: alignmentFile 
