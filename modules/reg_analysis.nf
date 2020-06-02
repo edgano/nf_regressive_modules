@@ -29,13 +29,13 @@ workflow REG_ANALYSIS {
       EVAL_ALIGNMENT ("regressive", alignment_and_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize)
       EVAL_ALIGNMENT.out.tcScore
                     .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text}" }
-                    .collectFile(name: "${workflow.runName}.tcScore.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
+                    .collectFile(name: "${workflow.runName}.regressive.tcScore.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
       EVAL_ALIGNMENT.out.spScore
                     .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text}" }
-                    .collectFile(name: "${workflow.runName}.spScore.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
+                    .collectFile(name: "${workflow.runName}.regressive.spScore.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
       EVAL_ALIGNMENT.out.colScore
                     .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text}" }
-                    .collectFile(name: "${workflow.runName}.colScore.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
+                    .collectFile(name: "${workflow.runName}.regressive.colScore.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
                     
     }
     if (params.homoplasy){
@@ -43,19 +43,19 @@ workflow REG_ANALYSIS {
       
       HOMOPLASY.out.homoFiles
                     .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text};${it[6].text};${it[7].text};${it[8].text};${it[9].text};${it[10].text}" }
-                    .collectFile(name: "${workflow.runName}.homo.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")  
+                    .collectFile(name: "${workflow.runName}.regressive.homo.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")  
     }
     if (params.metrics){
       METRICS("regressive", REG_ALIGNER.out.alignmentFile, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize, REG_ALIGNER.out.metricFile)
       METRICS.out.metricFiles
                     .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[6].text};${it[7].text};${it[8].text};${it[9].text};${it[10].text}" }
-                    .collectFile(name: "${workflow.runName}.metrics.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
+                    .collectFile(name: "${workflow.runName}.regressive.metrics.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
     }
     if (params.easel){ 
       EASEL_INFO ("regressive", REG_ALIGNER.out.alignmentFile, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize)
       EASEL_INFO.out.easelFiles
                     .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[6].text};${it[7].text}" }
-                    .collectFile(name: "${workflow.runName}.easel.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
+                    .collectFile(name: "${workflow.runName}.regressive.easel.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
     }
 }
 

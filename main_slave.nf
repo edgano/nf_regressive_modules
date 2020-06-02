@@ -47,23 +47,36 @@ params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/*.fa"
 
 params.refs = "/users/cn/egarriga/datasets/homfam/refs/*.ref"
 
-params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.{FAMSA,CLUSTALO,MAFFT_PARTTREE}.dnd"
-//params.trees = false
-                      //CLUSTALO,FAMSA,MAFFT-FFTNS1
-params.align_methods = "CLUSTALO"//,FAMSA,MAFFT-FFTNS1" 
-                      //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE
-params.tree_methods = "MBED"      //TODO -> reuse trees for multiple methods.
+//params.trees ="/Users/edgargarriga/CBCRG/nf_regressive_modules/results/trees/*.dnd"
+params.trees = false
+                      //TODO FIX -> reg_UPP
+                      //CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE,MAFFT,MSAPROBS,PROBCONS,TCOFFEE,UPP,MUSCLE
+params.align_methods = "MUSCLE"
+                      
+//CLUSTALW-QUICK,CLUSTALW                    
+//FAMSA-SLINK,FAMSA-SLINKmedoid,FAMSA-SLINKparttree,FAMSA-UPGMA,FAMSA-UPGMAmedoid,FAMSA-UPGMAparttree   
+//MAFFT-DPPARTTREE0,MAFFT-DPPARTTREE1,MAFFT-DPPARTTREE2,MAFFT-DPPARTTREE2size
+//MAFFT-FASTAPARTTREE,MAFFT-FFTNS1,MAFFT-FFTNS1mem,MAFFT-FFTNS2,MAFFT-FFTNS2mem
+//MAFFT-PARTTREE0,MAFFT-PARTTREE1,MAFFT-PARTTREE2,MAFFT-PARTTREE2size
+//MAFFT,MBED
+//TCOFFEE-BLENGTH,TCOFFEE-ISWLCAT,TCOFFEE-KM,TCOFFEE-LONGCAT,TCOFFEE-NJ,TCOFFEE-REG,TCOFFEE-SHORTCAT,TCOFFEE-SWL,TCOFFEE-SWLcat,TCOFFEE-UPGMA
 
-params.buckets = "20"
+//TODO -> test tcoffee trees
+//     CLUSTALW-QUICK,CLUSTALW  -> not working on PROG bc they are not rooted
+
+                      //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE0
+params.tree_methods = "MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE0"      
+
+params.buckets = "30"
 
 //  ## SLAVE parameters
                           //need to be lowercase -> direct to tcoffee
+                          //mbed,parttree,famsadnd,cwdnd,dpparttree,fastparttree,mafftdnd,fftns1dnd,fftns2dnd,nj 
                           //mbed,parttree,famsadnd
-params.slave_tree_methods="mbed,famsadnd,parttree" 
+params.slave_tree_methods="cwdnd,dpparttree,fastparttree,mafftdnd,fftns1dnd,fftns2dnd,nj" 
 
 //  ## DYNAMIC parameters
-params.dynamicX = "100000"
-          //TODO -> make 2 list? one with aligners and the other with sizes? (to have more than 2 aligners)
+params.dynamicX = "10000"                 //TODO -> make 2 list? one with aligners and the other with sizes? (to have more than 2 aligners)
 params.dynamicMasterAln="psicoffee_msa"
 params.dynamicMasterSize="50"
 params.dynamicSlaveAln="famsa_msa"
@@ -72,25 +85,25 @@ params.dynamicConfig=true
 
           //uniref50, pdb or path
 params.db = "pdb"        
+          // define default database path
+uniref_path = "/users/cn/egarriga/datasets/db/uniref50.fasta"   // cluster path
+pdb_path = "/database/pdb/pdb_seqres.txt"                       // docker path
 
-params.progressive_align = false
-params.regressive_align = false           //done
-params.pool_align=false                   //done
-params.slave_align=false    // ERROR _ child=parttree
-params.dynamic_align=true                //done
+
+params.progressive_align = true
+params.regressive_align = false           
+params.pool_align=false                  
+params.slave_align=false   
+params.dynamic_align=false               
 
 params.evaluate=true
-params.homoplasy=true
+params.homoplasy=false
 params.gapCount=false
-params.metrics=true
-params.easel=true
+params.metrics=false
+params.easel=false
 
 // output directory
 params.outdir = "$baseDir/results"
-
-// define database path
-uniref_path = "/users/cn/egarriga/datasets/db/uniref50.fasta"   // cluster path
-pdb_path = "/database/pdb/pdb_seqres.txt"                       // docker path
 
 if (params.db=='uniref50'){
   params.database_path = uniref_path
@@ -159,9 +172,9 @@ if ( params.trees ) {
 // tokenize params 
 tree_method = params.tree_methods.tokenize(',')
 align_method = params.align_methods.tokenize(',')
-bucket_list = params.buckets.toString().tokenize(',') //int to string
+bucket_list = params.buckets.toString().tokenize(',')     //int to string
 slave_method = params.slave_tree_methods.tokenize(',')
-dynamicX = params.dynamicX.toString().tokenize(',') //int to string
+dynamicX = params.dynamicX.toString().tokenize(',')       //int to string
 
 /* 
  * main script flow

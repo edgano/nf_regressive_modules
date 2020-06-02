@@ -43,11 +43,11 @@ top20fam="gluts,myb_DNA-binding,tRNA-synt_2b,biotin_lipoyl,hom,ghf13,aldosered,h
 //params.seqs ="/users/cn/egarriga/datasets/homfam/combinedSeqs/{${seq2improve}}.fa"
 
 // input sequences to align in fasta format
-params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/*.fa"
+params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/ricin.fa"
 
-params.refs = "/users/cn/egarriga/datasets/homfam/refs/*.ref"
+params.refs = "/users/cn/egarriga/datasets/homfam/refs/ricin.ref"
 
-params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.{FAMSA,CLUSTALO,MAFFT_PARTTREE}.dnd"
+params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.FAMSA.dnd"
 //params.trees = false
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1
 params.align_methods = "CLUSTALO"//,FAMSA,MAFFT-FFTNS1" 
@@ -64,7 +64,7 @@ params.slave_tree_methods="mbed,famsadnd,parttree"
 //  ## DYNAMIC parameters
 params.dynamicX = "100000"
           //TODO -> make 2 list? one with aligners and the other with sizes? (to have more than 2 aligners)
-params.dynamicMasterAln="psicoffee_msa"
+params.dynamicMasterAln="famsa_msa"
 params.dynamicMasterSize="50"
 params.dynamicSlaveAln="famsa_msa"
 params.dynamicSlaveSize="100000000"
@@ -74,19 +74,19 @@ params.dynamicConfig=true
 params.db = "pdb"        
 
 params.progressive_align = false
-params.regressive_align = false           //done
-params.pool_align=false                   //done
-params.slave_align=false    // ERROR _ child=parttree
-params.dynamic_align=true                //done
+params.regressive_align = false           
+params.pool_align=false                   
+params.slave_align=false    
+params.dynamic_align=true               
 
 params.evaluate=true
-params.homoplasy=true
+params.homoplasy=false
 params.gapCount=false
-params.metrics=true
-params.easel=true
+params.metrics=false
+params.easel=false
 
 // output directory
-params.outdir = "$baseDir/results"
+params.outdir = "$baseDir/results_debug"
 
 // define database path
 uniref_path = "/users/cn/egarriga/datasets/db/uniref50.fasta"   // cluster path
