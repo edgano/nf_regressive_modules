@@ -159,6 +159,8 @@ seqs_ch = Channel.fromPath( params.seqs, checkIfExists: true ).map { item -> [ i
 
 if ( params.refs ) {
   refs_ch = Channel.fromPath( params.refs ).map { item -> [ item.baseName, item] }
+}else { 
+  Channel.empty().set { refs_ch }
 }
 
 // Channels for user provided trees or empty channel if trees are to be generated [OPTIONAL]
