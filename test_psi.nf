@@ -67,7 +67,7 @@ params.align_methods = "PSI"
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE0
 params.tree_methods = "FAMSA-SLINK"
 
-params.buckets = "10"
+params.buckets = "100"
 
 //  ## SLAVE parameters
                           //need to be lowercase -> direct to tcoffee
