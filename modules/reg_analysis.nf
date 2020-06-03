@@ -48,7 +48,7 @@ workflow REG_ANALYSIS {
     if (params.metrics){
       METRICS("regressive", REG_ALIGNER.out.alignmentFile, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize, REG_ALIGNER.out.metricFile)
       METRICS.out.metricFiles
-                    .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[6].text};${it[7].text};${it[8].text};${it[9].text};${it[10].text}" }
+                    .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text};${it[6].text};${it[7].text};${it[8].text};${it[9].text}" }
                     .collectFile(name: "${workflow.runName}.regressive.metrics.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
     }
     if (params.easel){ 

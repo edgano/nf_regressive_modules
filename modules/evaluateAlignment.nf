@@ -149,7 +149,7 @@ process HOMOPLASY {
 process METRICS {
     container 'edgano/base:latest'
     tag "METRICS on $id"
-    publishDir "${params.outdir}/metrics"
+    publishDir "${params.outdir}/metrics", mode: 'copy', overwrite: true
 
     input:
     val align_type
@@ -165,7 +165,6 @@ process METRICS {
     val(bucket_size), \
     val(align_method), \
     val(tree_method), \
-    path("*.metrics"), \
     path("*.realtime"), \
     path("*.rss"), \
     path("*.peakRss"), \
@@ -187,7 +186,7 @@ process METRICS {
         ## peakVmem > Peak of virtual memory
     awk -F = '{ if (\$1=="peak_vmem") printf "%s", \$2}' aux.txt  > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.peakVmem
     
-    mv ${metricsFile} ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.metrics
+    ## mv ${metricsFile} ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.metrics
     """
 }
 
