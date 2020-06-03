@@ -40,7 +40,6 @@ workflow REG_ANALYSIS {
     }
     if (params.homoplasy){
       HOMOPLASY("regressive", REG_ALIGNER.out.alignmentFile, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize, REG_ALIGNER.out.homoplasyFile)
-      
       HOMOPLASY.out.homoFiles
                     .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text};${it[6].text};${it[7].text};${it[8].text};${it[9].text};${it[10].text}" }
                     .collectFile(name: "${workflow.runName}.regressive.homo.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")  
@@ -79,15 +78,33 @@ workflow SLAVE_ANALYSIS {
         .set { alignment_and_ref }
 
       EVAL_ALIGNMENT ("slave", alignment_and_ref, SLAVE_ALIGNER.out.alignMethod, SLAVE_ALIGNER.out.treeMethod, SLAVE_ALIGNER.out.bucketSize)
+      EVAL_ALIGNMENT.out.tcScore
+                    .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text}" }
+                    .collectFile(name: "${workflow.runName}.slave.tcScore.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
+      EVAL_ALIGNMENT.out.spScore
+                    .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text}" }
+                    .collectFile(name: "${workflow.runName}.slave.spScore.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
+      EVAL_ALIGNMENT.out.colScore
+                    .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text}" }
+                    .collectFile(name: "${workflow.runName}.slave.colScore.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
     }
     if (params.homoplasy){
       HOMOPLASY("slave", SLAVE_ALIGNER.out.alignmentFile, SLAVE_ALIGNER.out.alignMethod, SLAVE_ALIGNER.out.treeMethod, SLAVE_ALIGNER.out.bucketSize, SLAVE_ALIGNER.out.homoplasyFile)
+      HOMOPLASY.out.homoFiles
+                  .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text};${it[6].text};${it[7].text};${it[8].text};${it[9].text};${it[10].text}" }
+                  .collectFile(name: "${workflow.runName}.slave.homo.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")     
     }
     if (params.metrics){
       METRICS("slave", SLAVE_ALIGNER.out.alignmentFile, SLAVE_ALIGNER.out.alignMethod, SLAVE_ALIGNER.out.treeMethod, SLAVE_ALIGNER.out.bucketSize, SLAVE_ALIGNER.out.metricFile)
+      METRICS.out.metricFiles
+                    .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text};${it[6].text};${it[7].text};${it[8].text};${it[9].text}" }
+                    .collectFile(name: "${workflow.runName}.slave.metrics.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
     }
     if (params.easel){
       EASEL_INFO ("slave", SLAVE_ALIGNER.out.alignmentFile, SLAVE_ALIGNER.out.alignMethod, SLAVE_ALIGNER.out.treeMethod, SLAVE_ALIGNER.out.bucketSize)
+      EASEL_INFO.out.easelFiles
+                    .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[6].text};${it[7].text}" }
+                    .collectFile(name: "${workflow.runName}.slave.easel.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
     }
 }
 
@@ -127,15 +144,33 @@ workflow DYNAMIC_ANALYSIS {
         .set { alignment_and_ref }
 
       EVAL_ALIGNMENT ("dynamic", alignment_and_ref, DYNAMIC_ALIGNER.out.alignMethod, DYNAMIC_ALIGNER.out.treeMethod, DYNAMIC_ALIGNER.out.bucketSize)
+      EVAL_ALIGNMENT.out.tcScore
+                    .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text}" }
+                    .collectFile(name: "${workflow.runName}.dynamic.tcScore.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
+      EVAL_ALIGNMENT.out.spScore
+                    .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text}" }
+                    .collectFile(name: "${workflow.runName}.dynamic.spScore.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
+      EVAL_ALIGNMENT.out.colScore
+                    .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text}" }
+                    .collectFile(name: "${workflow.runName}.dynamic.colScore.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
     }
     if (params.homoplasy){
       HOMOPLASY("dynamic", DYNAMIC_ALIGNER.out.alignmentFile, DYNAMIC_ALIGNER.out.alignMethod, DYNAMIC_ALIGNER.out.treeMethod, DYNAMIC_ALIGNER.out.bucketSize, DYNAMIC_ALIGNER.out.homoplasyFile)
+      HOMOPLASY.out.homoFiles
+                  .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text};${it[6].text};${it[7].text};${it[8].text};${it[9].text};${it[10].text}" }
+                  .collectFile(name: "${workflow.runName}.dynamic.homo.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")  
     }
     if (params.metrics){
       METRICS("dynamic", DYNAMIC_ALIGNER.out.alignmentFile, DYNAMIC_ALIGNER.out.alignMethod, DYNAMIC_ALIGNER.out.treeMethod, DYNAMIC_ALIGNER.out.bucketSize, DYNAMIC_ALIGNER.out.metricFile)
+      METRICS.out.metricFiles
+                    .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text};${it[6].text};${it[7].text};${it[8].text};${it[9].text}" }
+                    .collectFile(name: "${workflow.runName}.dynamic.metrics.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
     }
     if (params.easel){
       EASEL_INFO ("dynamic", DYNAMIC_ALIGNER.out.alignmentFile, DYNAMIC_ALIGNER.out.alignMethod, DYNAMIC_ALIGNER.out.treeMethod, DYNAMIC_ALIGNER.out.bucketSize)
+      EASEL_INFO.out.easelFiles
+                    .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[6].text};${it[7].text}" }
+                    .collectFile(name: "${workflow.runName}.dynamic.easel.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")    
     }
 }
 
@@ -158,14 +193,32 @@ workflow POOL_ANALYSIS {
         .set { alignment_and_ref }
     
       EVAL_ALIGNMENT ("pool", alignment_and_ref, POOL_ALIGNER.out.alignMethod, POOL_ALIGNER.out.treeMethod, POOL_ALIGNER.out.bucketSize)
+      EVAL_ALIGNMENT.out.tcScore
+                    .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text}" }
+                    .collectFile(name: "${workflow.runName}.pool.tcScore.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
+      EVAL_ALIGNMENT.out.spScore
+                    .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text}" }
+                    .collectFile(name: "${workflow.runName}.pool.spScore.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
+      EVAL_ALIGNMENT.out.colScore
+                    .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text}" }
+                    .collectFile(name: "${workflow.runName}.pool.colScore.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
     }
     if (params.homoplasy){
       HOMOPLASY("pool", POOL_ALIGNER.out.alignmentFile, POOL_ALIGNER.out.alignMethod, POOL_ALIGNER.out.treeMethod, POOL_ALIGNER.out.bucketSize, POOL_ALIGNER.out.homoplasyFile)
+      HOMOPLASY.out.homoFiles
+                  .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text};${it[6].text};${it[7].text};${it[8].text};${it[9].text};${it[10].text}" }
+                  .collectFile(name: "${workflow.runName}.pool.homo.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")  
     }
     if (params.metrics){
       METRICS("pool", POOL_ALIGNER.out.alignmentFile, POOL_ALIGNER.out.alignMethod, POOL_ALIGNER.out.treeMethod, POOL_ALIGNER.out.bucketSize, POOL_ALIGNER.out.metricFile)
+      METRICS.out.metricFiles
+                    .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text};${it[6].text};${it[7].text};${it[8].text};${it[9].text}" }
+                    .collectFile(name: "${workflow.runName}.pool.metrics.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
     }
     if (params.easel){
       EASEL_INFO ("pool", POOL_ALIGNER.out.alignmentFile, POOL_ALIGNER.out.alignMethod, POOL_ALIGNER.out.treeMethod, POOL_ALIGNER.out.bucketSize)
+      EASEL_INFO.out.easelFiles
+                    .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[6].text};${it[7].text}" }
+                    .collectFile(name: "${workflow.runName}.pool.easel.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")    
     }
 }
