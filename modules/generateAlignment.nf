@@ -7,7 +7,7 @@ path_templates = set_templates_path()
 process REG_ALIGNER {
     container 'edgano/tcoffee:pdb'
     tag "$align_method - $tree_method - $bucket_size on $id"
-    publishDir "${params.outdir}/alignments", pattern: '*.aln'
+    publishDir "${params.outdir}/alignments", mode: 'copy', overwrite: true, pattern: '*.aln'
 
     input:
     tuple val(id), val(tree_method), path(seqs), path(guide_tree)
@@ -29,7 +29,7 @@ process REG_ALIGNER {
 process PROG_ALIGNER {
     container 'edgano/tcoffee:pdb'
     tag "$align_method - $tree_method on $id"
-    publishDir "${params.outdir}/alignments", pattern: '*.aln'
+    publishDir "${params.outdir}/alignments", mode: 'copy', overwrite: true, pattern: '*.aln'
 
     input:
     tuple val(id), val(tree_method), path(seqs), path(guide_tree)
@@ -48,7 +48,7 @@ process PROG_ALIGNER {
 process SLAVE_ALIGNER {
     container 'edgano/tcoffee:pdb'
     tag "$align_method - $tree_method - $slave_method - $bucket_size on $id"
-    publishDir "${params.outdir}/alignments", pattern: '*.aln'
+    publishDir "${params.outdir}/alignments", mode: 'copy', overwrite: true, pattern: '*.aln'
 
     input:
     tuple val(id), val(tree_method), path(seqs), path(guide_tree)
@@ -71,7 +71,7 @@ process SLAVE_ALIGNER {
 process DYNAMIC_ALIGNER {
     container 'edgano/tcoffee:pdb'
     tag "$align_method - $tree_method on $id"
-    publishDir "${params.outdir}/alignments", pattern: '*.aln'
+    publishDir "${params.outdir}/alignments", mode: 'copy', overwrite: true, pattern: '*.aln'
 
     input:
     tuple val(id), val(tree_method), path(seqs), path(guide_tree)
@@ -98,7 +98,7 @@ process DYNAMIC_ALIGNER {
 process POOL_ALIGNER {
     container 'edgano/tcoffee:pdb'
     tag "$align_method - $tree_method - $bucket_size on $id"
-    publishDir "${params.outdir}/alignments", pattern: '*.aln'
+    publishDir "${params.outdir}/alignments", mode: 'copy', overwrite: true, pattern: '*.aln'
 
     input:
     tuple val(id), val(tree_method), path(seqs), path(guide_tree)

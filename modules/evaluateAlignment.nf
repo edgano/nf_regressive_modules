@@ -4,9 +4,9 @@ params.outdir = 'results'
 process EVAL_ALIGNMENT {
     container 'edgano/tcoffee:pdb'
     tag "EVAL_ALIGNMENT on $id"
-    publishDir "${params.outdir}/score/tc", pattern: '*.tc'
-    publishDir "${params.outdir}/score/sp", pattern: '*.sp'
-    publishDir "${params.outdir}/score/col", pattern: '*.col'
+    publishDir "${params.outdir}/score/tc", mode: 'copy', overwrite: true, pattern: '*.tc'
+    publishDir "${params.outdir}/score/sp", mode: 'copy', overwrite: true, pattern: '*.sp'
+    publishDir "${params.outdir}/score/col", mode: 'copy', overwrite: true, pattern: '*.col'
 
     input:
     val align_type
@@ -71,7 +71,7 @@ process EVAL_ALIGNMENT {
 process EASEL_INFO {
     container 'edgano/hmmer:latest'
     tag "EASEL_INFO on $id"
-    publishDir "${params.outdir}/easel"
+    publishDir "${params.outdir}/easel", mode: 'copy', overwrite: true
 
     input:
     val align_type
@@ -104,7 +104,7 @@ process EASEL_INFO {
 process HOMOPLASY {
     container 'edgano/base:latest'
     tag "HOMOPLASY on $id"
-    publishDir "${params.outdir}/homoplasy"
+    publishDir "${params.outdir}/homoplasy", mode: 'copy', overwrite: true
 
     input:
     val align_type
@@ -194,7 +194,7 @@ process METRICS {
 process GAPS_PROGRESSIVE {
     container 'edgano/base:latest'
     tag "GAPS_PROG on $id"
-    publishDir "${params.outdir}/gaps"
+    publishDir "${params.outdir}/gaps", mode: 'copy', overwrite: true
 
     input:
     val align_type

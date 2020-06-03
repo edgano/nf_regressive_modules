@@ -7,7 +7,7 @@ path_templates = set_templates_path()
 process TREE_GENERATION {
     container 'edgano/tcoffee:pdb'
     tag "$tree_method on $id"
-    publishDir "${params.outdir}/trees"
+    publishDir "${params.outdir}/trees", mode: 'copy', overwrite: true
 
     input:
     tuple id, path(seqs)
