@@ -17,12 +17,12 @@ declare -a all=(seatoxin hip     scorptoxin      cyt3    rnasemam        bowman 
 ################
 ##  ALIGNERS  ##
 ################
-declare -a aligner=(psicoffee_msa.50_famsa_msa.100000000 famsa_msa.50_famsa_msa.100000000)
+declare -a aligner=(DEFAULT_uniref50)
 
 ################
 ##    TREES   ##
 ################   
-declare -a tree=(CLUSTALO MAFFT_PARTTREE FAMSA)
+declare -a tree=(FAMSA)
 
 ###############
 ##   Nseq    ##
