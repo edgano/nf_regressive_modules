@@ -22,7 +22,13 @@ RUN apt-get update && \
       python-setuptools \
       default-jdk \
       valgrind \
-      libpng-dev 
+      libpng-dev \
+      r-base \
+      r-recommended
+
+#install R packages
+RUN R -e "install.packages('seqinr', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('ape', repos = 'http://ape-package.ird.fr/')"
 
 # install argtable 2
 RUN wget http://prdownloads.sourceforge.net/argtable/argtable2-13.tar.gz && \

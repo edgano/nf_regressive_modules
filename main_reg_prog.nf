@@ -90,9 +90,9 @@ uniref_path = "/users/cn/egarriga/datasets/db/uniref50.fasta"   // cluster path
 pdb_path = "/database/pdb/pdb_seqres.txt"                       // docker path
 
 
-params.progressive_align = false
-params.regressive_align = false           
-params.pool_align=false                  
+params.progressive_align = true
+params.regressive_align = true           
+params.pool_align=true                  
 params.slave_align=true   
 params.dynamic_align=false               
 
