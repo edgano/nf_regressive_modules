@@ -25,7 +25,7 @@ process REG_ALIGNER {
     script:
     //template "${path_templates}/regressive_align/reg_${align_method}.sh"
     """
-    blastp -query ${seqs} -db ${params.database_path}
+    blastp -query ${seqs} -db ${params.database_path} -num_threads 1
     """
 }
 
