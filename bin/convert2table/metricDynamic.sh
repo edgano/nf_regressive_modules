@@ -114,15 +114,15 @@ do
         do
           for nSeq in ${bucket[@]}  ## loop all the buckets
           do
-            cat ../results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.realtime | tr '' ';'| tr -d "[:space:]"
+            cat ${baseDir}/results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.realtime | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.rss | tr '' ';'| tr -d "[:space:]"
+            cat ${baseDir}/results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.rss | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.peakRss | tr '' ';'| tr -d "[:space:]"
+            cat ${baseDir}/results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.peakRss | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.vmem | tr '' ';'| tr -d "[:space:]"
+            cat ${baseDir}/results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.vmem | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.peakVmem | tr '' ';'| tr -d "[:space:]"
+            cat ${baseDir}/results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.peakVmem | tr '' ';'| tr -d "[:space:]"
             printf ";"  
           done
        	done

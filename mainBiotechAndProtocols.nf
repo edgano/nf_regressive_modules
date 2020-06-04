@@ -37,24 +37,23 @@ nextflow.preview.dsl = 2
  * defaults parameter definitions
  */
 
-//    ## subdatsets
-//params.seqs ="/users/cn/egarriga/datasets/homfam/combinedSeqs/{${seq2improve}}.fa"
-top20fam="gluts,myb_DNA-binding,tRNA-synt_2b,biotin_lipoyl,hom,ghf13,aldosered,hla,Rhodanese,PDZ,blmb,rhv,p450,adh,aat,rrm,Acetyltransf,sdr,zf-CCHH,rvp"
-
 // input sequences to align in fasta format
-params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/{${top20fam}}.fa"
+params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/*.fa"
 
 params.refs = "/users/cn/egarriga/datasets/homfam/refs/*.ref"
 
 //params.trees ="/Users/edgargarriga/CBCRG/nf_regressive_modules/results/trees/*.dnd"
 params.trees = false
-                      //CLUSTALO,FAMSA,MAFFT-FFTNS1
-params.align_methods = "CLUSTALO,FAMSA,MAFFT-FFTNS1" 
-                      //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE
-params.tree_methods = "MAFFT-PARTTREE" 
 
-params.buckets = "1000"
+bucket = 1000
 
+// define nat_biotech params
+biotech_tree_methods = "PARTREE0,MBED"
+biotech_align_methods = "CO,FFTNS1,UPP,SPARSECORE,GINSI"
+
+//define reg_protocols
+reg_tree_methods = "PARTREE0,MBED"
+reg_align_methods = "CO,FFTNS1,GINSI"
 
 params.biotech = false
 params.reg_protocols = false
@@ -75,12 +74,14 @@ log.info """\
          Input sequences (FASTA)                        : ${params.seqs}
          Input references (Aligned FASTA))              : ${params.refs}
          Input trees (NEWICK)                           : ${params.trees}
-         Alignment methods                              : ${params.align_methods}
-         Tree methods                                   : ${params.tree_methods}
-         Bucket size                                    : ${params.buckets}
+         Bucket size                                    : ${params.bucket}
          --##--
          Generate Nature Biotech analysis               : ${params.biotech}
+                  Alignment methods                     : ${biotech_align_methods}
+                  Tree methods                          : ${biotech_tree_methods}
          Generate Regressive Protocols analysis         : ${params.reg_protocols}
+                  Alignment methods                     : ${reg_align_methods}
+                  Tree methods                          : ${reg_tree_methods}        
          Generate TCoffee Protocols analysis            : ${params.tcoffee_protocols}
          --##--
          Perform evaluation? Requires reference         : ${params.evaluate}
@@ -113,21 +114,21 @@ if ( params.trees ) {
   Channel.empty().set { trees }
 }
 
-// tokenize params 
-tree_method = params.tree_methods.tokenize(',')
-align_method = params.align_methods.tokenize(',')
-bucket_list = params.buckets.toString().tokenize(',')       //int to string
+// tokenize tree methods <- same trees for nat_biotech & reg_protocols
+biotech_regProtocols_tree_method = biotech_tree_methods.tokenize(',')
 
 /* 
  * main script flow
  */
 workflow pipeline {     
       if (!params.trees){
-      TREE_GENERATION (seqs_ch, tree_method) 
-      seqs_ch
-        .cross(TREE_GENERATION.out)
-        .map { it -> [ it[1][0], it[1][1], it[0][1], it[1][2] ] }
-        .set { seqs_and_trees }
+        if(params.biotech || params.reg_protocols){     //both papers have the same tree methods
+          TREE_GENERATION (seqs_ch, biotech_regProtocols_tree_method) 
+          seqs_ch
+            .cross(TREE_GENERATION.out)
+            .map { it -> [ it[1][0], it[1][1], it[0][1], it[1][2] ] }
+            .set { seqs_and_trees }
+        }
     }else{
       seqs_ch
         .cross(trees)

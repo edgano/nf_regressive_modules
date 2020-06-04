@@ -22,21 +22,20 @@ declare -a aligner=(CLUSTALO MAFFT-FFTNS1 FAMSA)
 ################
 ##    TREES   ##
 ################   
-declare -a tree=(CLUSTALO MAFFT_PARTTREE FAMSA)
+declare -a tree=(CLUSTALO FAMSA MAFFT_PARTTREE)
+#             (codnd dpparttreednd1 dpparttreednd2 dpparttreednd2size fastaparttreednd fftns1dnd fftns1dndmem fftns2dnd fftns2dndmem mafftdnd parttreednd0 parttreednd1 parttreednd2 parttreednd2size)
 
-declare -a slave_tree=(mbed parttree famsadnd)
 ###############
 ##   Nseq    ##
 ###############
-declare -a bucket=(1000) #(1000 3000 5000 10000 20000)
+declare -a bucket=(NA) #(1000 3000 5000 10000 20000)
 #               (NA)        -> for PROG
 #               (1000 3000 5000)
 
 ##############
 ## Prog/REG ##
 ##############
-declare -a flavour="slave" 
-
+declare -a flavour="progressive" #"prog_align"  #"reg_align"  
 
 printf "\n"
 printf "\t\t########################\n"
@@ -118,15 +117,15 @@ do
         do
           for nSeq in ${bucket[@]}  ## loop all the buckets
           do
-            cat ../results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.realtime | tr '' ';'| tr -d "[:space:]"
+            cat ${baseDir}/results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.realtime | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.rss | tr '' ';'| tr -d "[:space:]"
+            cat ${baseDir}/results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.rss | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.peakRss | tr '' ';'| tr -d "[:space:]"
+            cat ${baseDir}/results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.peakRss | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.vmem | tr '' ';'| tr -d "[:space:]"
+            cat ${baseDir}/results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.vmem | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.peakVmem | tr '' ';'| tr -d "[:space:]"
+            cat ${baseDir}/results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.peakVmem | tr '' ';'| tr -d "[:space:]"
             printf ";"  
           done
        	done

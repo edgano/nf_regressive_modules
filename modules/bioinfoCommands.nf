@@ -5,6 +5,7 @@ path_templates = set_templates_path()
 
 process BLASTP {
     container 'edgano/tcoffee:pdb'
+    label 'process_high'
     tag "$id - $params.db"
     publishDir "${params.outdir}"
 

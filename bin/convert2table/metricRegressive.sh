@@ -5,7 +5,7 @@
 #################
 
 # >> HOMFAM
-declare -a all=(seatoxin hip     scorptoxin      cyt3    rnasemam        bowman  toxin   ghf11   TNF     sti     Stap_Strp_toxin profilin        ricin   ghf22   ChtBD   ins     trfl    slectin phoslip ltn     il8     az      kringle cryst   DEATH   cah     mmp     rub     ghf10   tgfb    sodcu   KAS     DMRL_synthase   tms     GEL     kunitz  Sulfotransfer   mofe    Ald_Xan_dh_2    ghf5    phc     aadh    annexin serpin  cytb    asp     oxidored_q6     hpr     hormone_rec     hr      tim     glob    ace     cys     ghf1    sodfe   peroxidase      uce     flav    HMG_box OTCace  msb     icd     proteasome      cyclo   LIM     HLH     ldh     subt    int     lyase_1 gpdh    egf     blm     gluts   myb_DNA-binding tRNA-synt_2b    biotin_lipoyl   hom     ghf13   aldosered       hla     Rhodanese       PDZ     blmb    rhv     p450    adh     aat     rrm     Acetyltransf    sdr     zf-CCHH rvp)
+declare -a all=(seatoxin) ## hip     scorptoxin      cyt3    rnasemam        bowman  toxin   ghf11   TNF     sti     Stap_Strp_toxin profilin        ricin   ghf22   ChtBD   ins     trfl    slectin phoslip ltn     il8     az      kringle cryst   DEATH   cah     mmp     rub     ghf10   tgfb    sodcu   KAS     DMRL_synthase   tms     GEL     kunitz  Sulfotransfer   mofe    Ald_Xan_dh_2    ghf5    phc     aadh    annexin serpin  cytb    asp     oxidored_q6     hpr     hormone_rec     hr      tim     glob    ace     cys     ghf1    sodfe   peroxidase      uce     flav    HMG_box OTCace  msb     icd     proteasome      cyclo   LIM     HLH     ldh     subt    int     lyase_1 gpdh    egf     blm     gluts   myb_DNA-binding tRNA-synt_2b    biotin_lipoyl   hom     ghf13   aldosered       hla     Rhodanese       PDZ     blmb    rhv     p450    adh     aat     rrm     Acetyltransf    sdr     zf-CCHH rvp)
 
 # declare -a over1000=(ltn     il8     az      kringle cryst   DEATH   cah     mmp     rub     ghf10   tgfb    sodcu   KAS     DMRL_synthase   tms     GEL     kunitz  Sulfotransfer   mofe    Ald_Xan_dh_2    ghf5    phc     aadh    annexin serpin  cytb    asp     oxidored_q6     hpr     hormone_rec     hr      tim     glob    ace     cys     ghf1    sodfe   peroxidase      uce     flav    HMG_box OTCace  msb     icd     proteasome      cyclo   LIM     HLH     ldh     subt    int     lyase_1 gpdh    egf     blm )
 
@@ -22,20 +22,20 @@ declare -a aligner=(CLUSTALO MAFFT-FFTNS1 FAMSA)
 ################
 ##    TREES   ##
 ################   
-declare -a tree=(CLUSTALO FAMSA MAFFT_PARTTREE)
+declare -a tree=(MBED FAMSA-SLINK MAFFT-PARTTREE0)
 #             (codnd dpparttreednd1 dpparttreednd2 dpparttreednd2size fastaparttreednd fftns1dnd fftns1dndmem fftns2dnd fftns2dndmem mafftdnd parttreednd0 parttreednd1 parttreednd2 parttreednd2size)
 
 ###############
 ##   Nseq    ##
 ###############
-declare -a bucket=(NA) #(1000 3000 5000 10000 20000)
+declare -a bucket=(1000) #(1000 3000 5000 10000 20000)
 #               (NA)        -> for PROG
 #               (1000 3000 5000)
 
 ##############
 ## Prog/REG ##
 ##############
-declare -a flavour="progressive" #"prog_align"  #"reg_align"  
+declare -a flavour="regressive" #"prog_align"  #"reg_align"  
 
 printf "\n"
 printf "\t\t########################\n"
@@ -117,15 +117,15 @@ do
         do
           for nSeq in ${bucket[@]}  ## loop all the buckets
           do
-            cat ../results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.realtime | tr '' ';'| tr -d "[:space:]"
+            cat ${baseDir}/results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.realtime | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.rss | tr '' ';'| tr -d "[:space:]"
+            cat ${baseDir}/results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.rss | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.peakRss | tr '' ';'| tr -d "[:space:]"
+            cat ${baseDir}/results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.peakRss | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.vmem | tr '' ';'| tr -d "[:space:]"
+            cat ${baseDir}/results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.vmem | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.peakVmem | tr '' ';'| tr -d "[:space:]"
+            cat ${baseDir}/results/metrics/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.peakVmem | tr '' ';'| tr -d "[:space:]"
             printf ";"  
           done
        	done
