@@ -6,7 +6,7 @@ path_templates = set_templates_path()
 process BLASTP {
     container 'edgano/tcoffee:pdb'
     tag "$id - $params.db"
-    //publishDir "${params.outdir}/alignments", pattern: '*.aln'
+    publishDir "${params.outdir}"
 
     input:
     tuple val(id), path(seqs)
@@ -26,7 +26,7 @@ process BLASTP {
 process MAKEBLASTDB{
     container 'edgano/tcoffee:pdb'
     tag "$id - $params.db"
-    //publishDir "${params.outdir}/alignments", pattern: '*.aln'
+    publishDir "${params.outdir}/db", mode: 'copy', overwrite: true
 
     input:
     tuple val(id), path(infile)
