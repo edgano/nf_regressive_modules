@@ -10,6 +10,7 @@ process BLASTP {
 
     input:
     tuple val(id), path(seqs)
+    val (numThreads)
 
     output:
     //tuple val (id), path ("${id}.reg_${bucket_size}.${align_method}.with.${tree_method}.tree.aln"), emit: alignmentFile
@@ -18,6 +19,27 @@ process BLASTP {
 
     script:
     """
-    blastp -query ${seqs} -db ${params.database_path}
+    blastp -query ${seqs} -db ${params.database_path} -num_threads ${numThreads}
+    """
+}
+
+process MAKEBLASTDB{
+    container 'edgano/tcoffee:pdb'
+    tag "$id - $params.db"
+    //publishDir "${params.outdir}/alignments", pattern: '*.aln'
+
+    input:
+    tuple val(id), path(infile)
+    val (inputType)
+    val (dbType)
+
+    output:
+    //tuple val (id), path ("${id}.reg_${bucket_size}.${align_method}.with.${tree_method}.tree.aln"), emit: alignmentFile
+    //path "${id}.homoplasy", emit: homoplasyFile
+    //path ".command.trace", emit: metricFile
+
+    script:
+    """
+    makeblastdb -in ${infile} -input_type ${inputType} -dbtype ${dbType} 
     """
 }
