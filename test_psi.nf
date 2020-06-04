@@ -47,8 +47,8 @@ params.seqs = "${baseDir}/test/*.fa"
 
 //params.refs = "/users/cn/egarriga/datasets/homfam/refs/{${top20fam}}.ref"
 
-//params.trees ="/Users/edgargarriga/CBCRG/nf_regressive_modules/results/trees/*.dnd"
-params.trees = false
+params.trees ="${baseDir}/test/*.dnd"
+//params.trees = false
                       //TODO FIX -> reg_UPP
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE,MAFFT,MSAPROBS,PROBCONS,TCOFFEE,UPP,MUSCLE
 params.align_methods = "PSI"
@@ -97,10 +97,10 @@ params.slave_align=false
 params.dynamic_align=false               
 
 params.evaluate=false
-params.homoplasy=true
+params.homoplasy=false
 params.gapCount=false
-params.metrics=true
-params.easel=true
+params.metrics=false
+params.easel=false
 
 // output directory
 params.outdir = "$baseDir/results"

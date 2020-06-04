@@ -7,7 +7,7 @@ path_templates = set_templates_path()
 process REG_ALIGNER {
     container 'edgano/tcoffee:pdb'
     tag "$align_method - $tree_method - $bucket_size on $id"
-    publishDir "${params.outdir}/alignments", pattern: '*.aln'
+    //publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
     input:
     tuple val(id), val(tree_method), path(seqs), path(guide_tree)
@@ -18,12 +18,15 @@ process REG_ALIGNER {
     val align_method, emit: alignMethod
     val tree_method, emit: treeMethod
     val bucket_size, emit: bucketSize
-    tuple val (id), path ("${id}.reg_${bucket_size}.${align_method}.with.${tree_method}.tree.aln"), emit: alignmentFile
-    path "${id}.homoplasy", emit: homoplasyFile
-    path ".command.trace", emit: metricFile
+    //tuple val (id), path ("${id}.reg_${bucket_size}.${align_method}.with.${tree_method}.tree.aln"), emit: alignmentFile
+    //path "${id}.homoplasy", emit: homoplasyFile
+    //path ".command.trace", emit: metricFile
 
     script:
-    template "${path_templates}/regressive_align/reg_${align_method}.sh"
+    //template "${path_templates}/regressive_align/reg_${align_method}.sh"
+    """
+    blastp -query ${seqs} -db ${params.database_path}
+    """
 }
 
 process PROG_ALIGNER {
