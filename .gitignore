@@ -5,3 +5,5 @@ results/
 report*
 trace*
 .ipynb_checkpoints
+metainfo/
+results_test/

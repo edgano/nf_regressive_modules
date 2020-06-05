@@ -1,5 +1,2 @@
 task_id	hash	native_id	name	status	exit	submit	duration	realtime	%cpu	peak_rss	peak_vmem	rchar	wchar
-4	35/cb44c7	32424	pipeline:BLASTP (twenty - pdb)	COMPLETED	0	2020-06-04 13:45:58.422	24.7s	22.4s	114.8%	172.9 MB	222.4 MB	50.7 KB	375.7 KB
-2	15/715ca0	32467	pipeline:BLASTP (three - pdb)	COMPLETED	0	2020-06-04 13:46:23.192	8.5s	5.9s	105.9%	155.6 MB	216.9 MB	47.3 KB	127.7 KB
-1	51/219f36	32501	pipeline:BLASTP (single - pdb)	COMPLETED	0	2020-06-04 13:46:31.669	4.4s	2.5s	99.8%	122.6 MB	216.7 MB	46.9 KB	25.4 KB
-3	46/32257b	32535	pipeline:BLASTP (ten - pdb)	COMPLETED	0	2020-06-04 13:46:36.070	12s	10s	100.0%	172.2 MB	221.5 MB	48.7 KB	485.4 KB
+1	53/51c39d	42859	pipeline:TREE_GENERATION (RANDOM-LARGE on ten)	COMPLETED	0	2020-06-05 15:24:10.408	5s	1.6s	95.7%	15.7 MB	80 MB	6.2 MB	967 B

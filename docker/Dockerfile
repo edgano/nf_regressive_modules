@@ -27,7 +27,7 @@ RUN apt-get update && \
       r-recommended
 
 #install R packages
-RUN R -e "install.packages('seqinr', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('seqinr', repos='http://R-Forge.R-project.org')"
 RUN R -e "install.packages('ape', repos = 'http://ape-package.ird.fr/')"
 
 # install argtable 2
@@ -77,7 +77,7 @@ RUN wget http://www.clustal.org/download/current/clustalw-2.1.tar.gz && \
     rm /clustalw-2.1.tar.gz
 
 #install fasta35 (needed for mafft)
-RUN wget https://faculty.virginia.edu/wrpearson/fasta/fasta33-35/fasta-35.4.12.tar.gz && \
+RUN wget https://faculty.virginia.edu/wrpearson/fasta/fasta33-35/fasta-35.4.12.tar.gz --no-check-certificate && \
     tar -zxf fasta-35.4.12.tar.gz && \
     cd fasta-35.4.12/src && \
     make -f ../make/Makefile.linux_sse2 && \

@@ -4,7 +4,7 @@ include set_templates_path from './functions.nf'
 path_templates = set_templates_path()
 
 process BLASTP {
-    container 'edgano/tcoffee:pdb'
+    container 'edgano/tcoffee:pdb'  //blast/pdb
     label 'process_high'
     tag "$id - $params.db"
     publishDir "${params.outdir}"
@@ -25,7 +25,7 @@ process BLASTP {
 }
 
 process MAKEBLASTDB{
-    container 'edgano/tcoffee:pdb'
+    container 'edgano/tcoffee:pdb'  //blast/pdb
     tag "$id - $params.db"
     publishDir "${params.outdir}/db", mode: 'copy', overwrite: true
 
@@ -43,4 +43,28 @@ process MAKEBLASTDB{
     """
     makeblastdb -in ${infile} -input_type ${inputType} -dbtype ${dbType} 
     """
+}
+
+process CONVERT2GAP{
+    container '14c27fbd79b9'        // base with 
+    tag "fasta2gap: ${fasta2gap} - $id"
+    publishDir "${params.outdir}/aln2gap", mode: 'copy', overwrite: true
+
+    input:
+    tuple val(id), path(infile)
+    val(fasta2gap)                  //if true  : convert fasta to gap
+                                    //if false : convert gap to fasta
+    output:
+    path "${id}_{F2G.gap,G2F.fa}"
+
+    script:
+    """
+    ${baseDir}/bin/bioinfoCommands/gap ${infile} ${fasta2gap}
+
+    if (${fasta2gap}); then               
+        mv resultF2G.gap ${id}_F2G.gap
+    else                              
+        mv resultG2F.fa ${id}_G2F.fa
+    fi
+    """    
 }

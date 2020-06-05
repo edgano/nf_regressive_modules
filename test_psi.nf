@@ -10,7 +10,7 @@ nextflow.preview.dsl = 2
  */
 
 // input sequences to align in fasta format
-params.seqs = "${baseDir}/test/*.fa"
+params.seqs = "${baseDir}/test/ten.fa"
 
           //uniref50, pdb or path
 params.db = "uniref50"        
@@ -45,13 +45,19 @@ log.info """\
 
 // import analysis pipelines
 include BLASTP from './modules/bioinfoCommands'   params(params)
+include CONVERT2GAP from './modules/bioinfoCommands'   params(params)
+include TREE_GENERATION from './modules/treeGeneration'   params(params)
 
 // Channels containing sequences
 seqs_ch = Channel.fromPath( params.seqs, checkIfExists: true ).map { item -> [ item.baseName, item] }
 
+params.tree_methods = "RANDOM-LARGE"
+tree_method = params.tree_methods.tokenize(',')
+
 /*    main script flow  */
 workflow pipeline {
-  BLASTP(seqs_ch, params.numThreads)
+  //CONVERT2GAP(seqs_ch, false)
+  TREE_GENERATION (seqs_ch, tree_method) 
 }
 
 workflow {

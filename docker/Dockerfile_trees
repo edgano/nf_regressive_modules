@@ -1,0 +1,85 @@
+FROM debian:jessie
+MAINTAINER Edgar Garriga <edgano@gmail.com>
+
+## Docker image for regressive multiple sequence aligment including all the requirements
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      ed \
+      less \
+      vim-tiny \
+      wget \
+      git \
+      python \
+      build-essential \
+      cmake \
+      curl \
+      libargtable2-0 \
+      ca-certificates \
+      libpng12-0 \
+      python-biopython \
+      python-numpy \ 
+      ruby \ 
+      python-setuptools \
+      default-jdk \
+      valgrind \
+      libpng-dev \
+      r-base \
+      r-recommended \
+      r-cran-ape r-cran-segmented
+
+#RUN apt-get upgrade -y
+
+#install R packages
+RUN apt-get install -y --no-install-recommends libblas-dev liblapack-dev gfortran 
+#libgfortran
+
+RUN R -e "install.packages('seqinr', repos='http://R-Forge.R-project.org')"
+                                    # repos="http://R-Forge.R-project.org")
+#RUN R -e "install.packages('ape', dependencies=TRUE, repos = 'http://cran.r-project.org')"
+
+# install argtable 2
+
+# install CLUSTAL OMEGA
+
+# install CLUSTALO w1
+
+# install CLUSTAL w2
+
+# install fasta35 (needed for mafft)
+
+# install MAFFT
+
+# install FAMSA
+RUN git clone https://github.com/refresh-bio/FAMSA.git && \
+  cd FAMSA && \ 
+  git checkout e2442bb34a5d5894e300bbec78c259b9cfffa8f0 && \ 
+  sed -i 's/all: famsa famsa-gpu/all: famsa/' makefile && \
+  sed -i 's/NO_AVX = false/NO_AVX = true/' makefile && \
+  sed -i 's/NO_AVX2 = false/NO_AVX2 = true/' makefile && \
+  sed -i 's/NO_GPU = false/NO_GPU = true/' makefile && \
+  make && \
+  cp famsa /bin/.
+
+# Install TCOFFEE
+RUN git clone https://github.com/edgano/tcoffee.git tcoffee && \
+    cd tcoffee && \
+    git checkout 4372953c7597a6e558cd16b8f89579fa15839e33 && \
+    cd t_coffee/src && \
+    make t_coffee && \
+    cp t_coffee /bin/.
+
+ENV HOME '/'
+
+ENV FASTA_4_MAFFT '/bin/fasta35'
+
+ENV HOME_4_TCOFFEE '/tmp/.tcoffee/'
+ENV CACHE_4_TCOFFEE '/tmp/.tcoffee/cache'
+ENV LOCKDIR_4_TCOFFEE '/tmp/.tcoffee/lock'
+ENV TMP_4_TCOFFEE '/tmp/.tcoffee/tmp'
+ENV TRASH_4_TCOFFEE '/tmp/.tcoffee/trash'
+
+#unset MAFFT_BINARIES
+ENV MAFFT_BINARIES ''
+
+
+# docker build -f Dockerfile_trees .
