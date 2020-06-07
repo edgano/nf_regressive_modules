@@ -124,15 +124,15 @@ workflow DYNAMIC_ANALYSIS {
 // ######
     if(params.dynamicConfig){
       GENERATE_DYNAMIC_CONFIG(params.dynamicMasterAln, params.dynamicMasterSize, params.dynamicSlaveAln, params.dynamicSlaveSize)
-      align_method="CONFIG"
+      align_method="CONFIG-POOL"
       configFile = GENERATE_DYNAMIC_CONFIG.out.configFile
       configValues = GENERATE_DYNAMIC_CONFIG.out.configValues
       dynamicValues = "${params.dynamicMasterAln}.${params.dynamicMasterSize}_${params.dynamicSlaveAln}.${params.dynamicSlaveSize}"
     }else{            
-      align_method="DEFAULT"
+      align_method="DEFAULT-POOL"
       configFile = "/"
       configValues=["","","",""]
-      dynamicValues = "DEFAULT"
+      dynamicValues = "DEFAULT-POOL"
     }
 
     DYNAMIC_ALIGNER (seqs_and_trees, align_method, bucket_size, dynamicX, configFile, configValues, dynamicValues)

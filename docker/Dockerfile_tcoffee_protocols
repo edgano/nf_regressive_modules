@@ -83,13 +83,30 @@ RUN git clone https://github.com/cbcrg/tcoffee.git tcoffee && \
     git checkout 6a0d31b82326819d4e1683aa3910c37068f5a3b6 && \
     cd t_coffee/src && \
     make t_coffee && \
-    cp t_coffee /bin/.
-    cp t_coffee *.pl /bin/. && \
-    mkdir /tmp/cache && mkdir /tmp/lock && \
+    cp t_coffee /bin/. && \
+    cp t_coffee *.pl /bin/. 
 
 # Install TMalign
 RUN wget https://zhanglab.ccmb.med.umich.edu/TM-align/TMalign.f && \
-    gfortran -static -O3 -ffast-math -lm -o TMalign TMalign.f
+    gfortran -static -O3 -ffast-math -lm -o TMalign TMalign.f && \
+    mv TMalign /bin/.
+
+# Install Mustang
+RUN wget http://lcb.infotech.monash.edu.au/mustang/mustang_v3.2.3.tgz &&  \
+   tar -zxvf mustang_v3.2.3.tgz && \
+   cd MUSTANG_v3.2.3/ && \
+   make && \
+   cp bin/mustang-3.2.3 /bin/mustang && \
+   rm /mustang_v3.2.3.tgz
+
+#install CLUSTAL w2
+RUN wget http://www.clustal.org/download/current/clustalw-2.1.tar.gz && \
+    tar -zxf clustalw-2.1.tar.gz && \
+    cd clustalw-2.1 && \
+    ./configure && \
+    make && \
+    make install && \
+    rm /clustalw-2.1.tar.gz
 
 ENV HOME '/'
 

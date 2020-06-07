@@ -169,9 +169,9 @@ RUN git clone https://github.com/refresh-bio/FAMSA.git && \
   cp famsa /bin/.
     
 # Install TCOFFEE
-RUN git clone https://github.com/cbcrg/tcoffee.git tcoffee && \
+RUN git clone https://github.com/edgano/tcoffee.git tcoffee && \
     cd tcoffee && \
-    git checkout 6a0d31b82326819d4e1683aa3910c37068f5a3b6 && \
+    git checkout 5b7ce93991afd74073a8ab7874c5687795208aa1 && \
     cd t_coffee/src && \
     make t_coffee && \
     cp t_coffee /bin/.

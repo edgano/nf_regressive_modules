@@ -118,13 +118,15 @@ process POOL_ALIGNER {
 }
 
 process TCOFFEE_ALIGNER{
-container 'fe94905825c8'
+container '8c3c8bd24cb3'
     tag "$tc_mode  on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
     input:
     tuple val(id), path(seqs)
-    val tc_mode
+    each tcoffee_mode
+    file (template)
+    file (pdbFile)
 
     output:
     val tc_mode, emit: tcMode
@@ -132,52 +134,52 @@ container 'fe94905825c8'
     path ".command.trace", emit: metricFile
 
     script:    
-    if( tc_mode == 'default' )
+    if( tcoffee_mode == 'default' )
         """
-        t_coffee -seq $seqs > ${id}.tcoffee.${tc_mode}.aln
+        t_coffee -seq $seqs -outfile ${id}.tcoffee.${tcoffee_mode}.aln
         """ 
-    else if( tc_mode == 'quickaln' )
+    else if( tcoffee_mode == 'quickaln' )
         """
-        t_coffee -seq $seqs -mode quickaln > ${id}.tcoffee.${tc_mode}.aln
+        t_coffee -seq $seqs -mode quickaln -outfile ${id}.tcoffee.${tcoffee_mode}.aln
         """    
-    else if( tc_mode == 'mcoffee' )
+    else if( tcoffee_mode == 'mcoffee' )
         """
-        t_coffee -seq $seqs -mode mcoffee > ${id}.tcoffee.${tc_mode}.aln
+        t_coffee -seq $seqs -mode mcoffee -outfile ${id}.tcoffee.${tcoffee_mode}.aln
         """ 
-    else if( tc_mode == 'accurate' )
+    else if( tcoffee_mode == 'accurate' )
         """
-        t_coffee -seq $seqs -mode accurate > ${id}.tcoffee.${tc_mode}.aln
+        t_coffee -seq $seqs -mode accurate -outfile ${id}.tcoffee.${tcoffee_mode}.aln
         """            
-    else if( tc_mode == 'fmcoffee' )
+    else if( tcoffee_mode == 'fmcoffee' )
         """
-        t_coffee -seq $seqs -mode fmcoffee > ${id}.tcoffee.${tc_mode}.aln
+        t_coffee -seq $seqs -mode fmcoffee -outfile ${id}.tcoffee.${tcoffee_mode}.aln
         """
-    else if( tc_mode == 'psicoffee' )
+    else if( tcoffee_mode == 'psicoffee' )
         """
-        t_coffee -seq $seqs -mode psicoffee > ${id}.tcoffee.${tc_mode}.aln
+        t_coffee -seq $seqs -mode psicoffee -outfile ${id}.tcoffee.${tcoffee_mode}.aln
         """
-    else if( tc_mode == 'expresso' )
+    else if( tcoffee_mode == 'expresso' )
         """
-        t_coffee -seq $seqs -mode expresso -pdb_type dn > ${id}.tcoffee.${tc_mode}.aln
+        t_coffee -seq $seqs -mode expresso -pdb_type dn -outfile ${id}.tcoffee.${tcoffee_mode}.aln
         """ 
-    else if( tc_mode == 'procoffee' )
+    else if( tcoffee_mode == 'procoffee' )
         """
-        t_coffee -seq $seqs -mode procoffee > ${id}.tcoffee.${tc_mode}.aln
+        t_coffee -seq $seqs -mode procoffee -outfile ${id}.tcoffee.${tcoffee_mode}.aln
         """        
-    else if( tc_mode == '3dcoffee' )
+    else if( tcoffee_mode == '3dcoffee' )
         """
-        t_coffee -seq $seqs -method sap_pair -template_file sh3.template_file > ${id}.tcoffee.${tc_mode}.aln
+        t_coffee -seq $seqs -method sap_pair -template_file ${template} -outfile ${id}.tcoffee.${tcoffee_mode}.aln
         """
-    else if( tc_mode == 'trmsd' )
+    else if( tcoffee_mode == 'trmsd' )
         """
-        t_coffee -seq $seqs -method mustang_pair -template_file crd.template_file
+        t_coffee -seq $seqs -method mustang_pair -template_file ${template} -outfile ${id}.tcoffee.${tcoffee_mode}.aln
 
-        t_coffee -other_pg trmsd -aln crd.aln -template_file crd.template_file
+        t_coffee -other_pg trmsd -aln crd.aln -template_file ${template}
         """
-    else if( tc_mode == 'rcoffee' )
+    else if( tcoffee_mode == 'rcoffee' )
         """
-        t_coffee -seq $seqs -mode rcoffee -outfile RNA_rcoffee.aln > ${id}.tcoffee.${tc_mode}.aln
+        t_coffee -seq $seqs -mode rcoffee -outfile ${id}.tcoffee.${tcoffee_mode}.aln
         """
     else
-        error "Invalid alignment mode: ${tc_mode}"
+        error "Invalid alignment mode: ${tcoffee_mode}"
 }
