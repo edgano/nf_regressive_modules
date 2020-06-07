@@ -18,11 +18,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Nextflow workflow report for run id [elated_hopper]">
+  <meta name="description" content="Nextflow workflow report for run id [small_lamarck]">
   <meta name="author" content="Paolo Di Tommaso, Phil Ewels">
   <link rel="icon" type="image/png" href="https://www.nextflow.io/img/favicon.png" />
 
-  <title>[elated_hopper] Nextflow Workflow Report</title>
+  <title>[small_lamarck] Nextflow Workflow Report</title>
 
   <style type="text/css">
   /*!
@@ -137,7 +137,7 @@ table.DTCR_clonedTable.dataTable{position:absolute !important;background-color:r
         <li class="nav-item"><a class="nav-link" href="#tasks">Tasks</a></li>
       </ul>
       <span class="navbar-text">
-        [elated_hopper]
+        [small_lamarck]
       </span>
     </div>
   </nav>
@@ -146,27 +146,100 @@ table.DTCR_clonedTable.dataTable{position:absolute !important;background-color:r
     <div class="container">
 
       <h1 class="display-3">Nextflow workflow report</h1>
-      <h2 class="text-muted mb-4"><samp>[elated_hopper]</samp> </h2>
+      <h2 class="text-muted mb-4"><samp>[small_lamarck]</samp> </h2>
 
       
-          <div class="alert alert-success mb-4">
-              Workflow execution completed successfully!
+          <div class="alert alert-danger mb-4">
+              <h4>Workflow execution completed unsuccessfully!</h4>
+              <p>The exit status of the task that caused the workflow execution to fail was: <code>1</code>.</p>
+              <p>The full error message was:</p>
+              <pre>Error executing process > 'pipeline:TCOFFEE_ANALYSIS:TCOFFEE_ALIGNER (psicoffee  on ten)'
+
+Caused by:
+  Process `pipeline:TCOFFEE_ANALYSIS:TCOFFEE_ALIGNER (psicoffee  on ten)` terminated with an error exit status (1)
+
+Command executed:
+
+  t_coffee -seq ten.fa -mode psicoffee > ten.tcoffee.psicoffee.aln
+
+Command exit status:
+  1
+
+Command output:
+  (empty)
+
+Command error:
+  -dpa_min_score2	D	[0] 
+  -dpa_keep_tmpfile	FL	[0] 	0
+  -dpa_debug     	D	[0] 	0 
+  -multi_core    	S	[0] 	templates_jobs_relax_msa_evaluate
+  -n_core        	D	[0] 	1 
+  -thread        	D	[0] 	1 
+  -max_n_proc    	D	[0] 	1 
+  -lib_list      	S	[0] 
+  -prune_lib_mode	S	[0] 	5
+  -tip           	S	[0] 	none
+  -rna_lib       	S	[0] 
+  -no_warning    	D	[0] 	0 
+  -run_local_script	D	[0] 	0 
+  -proxy         	S	[0] 	unset
+  -email         	S	[0] 
+  -clean_overaln 	D	[0] 	0 
+  -overaln_param 	S	[0] 
+  -overaln_mode  	S	[0] 
+  -overaln_model 	S	[0] 
+  -overaln_threshold	D	[0] 	0 
+  -overaln_target	D	[0] 	0 
+  -overaln_P1    	D	[0] 	0 
+  -overaln_P2    	D	[0] 	0 
+  -overaln_P3    	D	[0] 	0 
+  -overaln_P4    	D	[0] 	0 
+  -exon_boundaries	S	[0] 
+  -display       	D	[0] 	100 
+  
+  INPUT FILES
+  	Input File (M) proba_pair 
+  	Input File (S) ten.fa  Format fasta_seq
+  
+  Identify Master Sequences [no]:
+  
+  Master Sequences Identified
+  Looking For Sequence Templates:
+  
+  	Template Type: [BLAST] Mode Or File: [BLAST] [Start
+  135 -- WARNING: Could Not Use EMAIL
+  
+  pid 29 -- Could not Run t_coffee -other_pg tc_generic_method.pl -mode=profile_template -database=uniref50 -method=blastp -cache=/tmp/.tcoffee/cache/ -minid=40 -maxid=90 -mincov=40 -trim=100 -server=EBI -type=_R_ -infile=/tmp/.tcoffee/tmp/tco/tcoda6zuu1529//6994929q701u134 -outfile=ten_prf1.template_list -tmpdir=/tmp/.tcoffee/tmp/tco/tcoda6zuu1529/ to find templates[T-COFFEE](unforked mode) 
+  ]
+  pid 29 -- Impossible to find BLAST Templates Check that your blast server is properly installed [See documentation][FATAL:T-COFFEE] 
+  
+  
+  *************************************************************************************************
+  *                        MESSAGES RECAPITULATION                                    
+  29 -- WARNING: Could not Run t_coffee -other_pg tc_generic_method.pl -mode=profile_template -database=uniref50 -method=blastp -cache=/tmp/.tcoffee/cache/ -minid=40 -maxid=90 -mincov=40 -trim=100 -server=EBI -type=_R_ -infile=/tmp/.tcoffee/tmp/tco/tcoda6zuu1529//6994929q701u134 -outfile=ten_prf1.template_list -tmpdir=/tmp/.tcoffee/tmp/tco/tcoda6zuu1529/ to find templates[T-COFFEE](unforked mode) 
+  29 -- WARNING: Impossible to find BLAST Templates Check that your blast server is properly installed [See documentation][FATAL:T-COFFEE] 
+  *************************************************************************************************
+
+Work dir:
+  /Users/edgargarriga/CBCRG/nf_regressive_modules/work/d2/4187d12ea8ebe2d570dd95dc8069a4
+
+Tip: when you have fixed the problem you can continue the execution adding the option `-resume` to the run command line</pre>
           </div>
       
 
       <dl>
         <dt>Run times</dt>
         <dd>
-          <span id="workflow_start">05-Jun-2020 15:24:02</span> - <span id="workflow_complete">05-Jun-2020 15:24:15</span>
-          (<span id="completed_fromnow"></span>duration: <strong>13s</strong>)
+          <span id="workflow_start">07-Jun-2020 10:24:10</span> - <span id="workflow_complete">07-Jun-2020 10:24:20</span>
+          (<span id="completed_fromnow"></span>duration: <strong>9.2s</strong>)
         </dd>
 
         <dl>
           <div class="progress" style="height: 1.6rem; margin: 1.2rem auto; border-radius: 0.20rem;">
-            <div style="width: 100.0%" class="progress-bar bg-success" data-toggle="tooltip" data-placement="top" title="1 tasks succeeded"><span class="text-truncate">&nbsp; 1 succeeded &nbsp;</span></div>
+            <div style="width: 0.0%" class="progress-bar bg-success" data-toggle="tooltip" data-placement="top" title="0 tasks succeeded"><span class="text-truncate">&nbsp; 0 succeeded &nbsp;</span></div>
             <div style="width: 0.0%" class="progress-bar bg-secondary" data-toggle="tooltip" data-placement="top" title="0 tasks were cached"><span class="text-truncate">&nbsp; 0 cached &nbsp;</span></div>
             <div style="width: 0.0%" class="progress-bar bg-warning" data-toggle="tooltip" data-placement="top" title="0 tasks reported and error and were ignored"><span class="text-truncate">&nbsp; 0 ignored &nbsp;</span></div>
-            <div style="width: 0.0%" class="progress-bar bg-danger" data-toggle="tooltip" data-placement="top" title="0 tasks failed"><span class="text-truncate">&nbsp; 0 failed &nbsp;</span></div>
+            <div style="width: 100.0%" class="progress-bar bg-danger" data-toggle="tooltip" data-placement="top" title="1 tasks failed"><span class="text-truncate">&nbsp; 1 failed &nbsp;</span></div>
           </div>
         </dl>
 
@@ -194,11 +267,11 @@ table.DTCR_clonedTable.dataTable{position:absolute !important;background-color:r
 
         
           <dt class="col-sm-3">Script ID</dt>
-          <dd class="col-sm-9"><code>1314d7b8ebf6d5c804a565a435db0fbc</code></dd>
+          <dd class="col-sm-9"><code>17072af69bc96c3a617b2d4049d485ce</code></dd>
         
 
         <dt class="col-sm-3">Workflow session</dt>
-        <dd class="col-sm-9"><code>82e1f92a-e08d-4dd9-a2f7-823021106ac1</code></dd>
+        <dd class="col-sm-9"><code>85d56fac-f536-46cd-b9bf-fe2136b955a1</code></dd>
 
         
 
@@ -1020,7 +1093,7 @@ $(function() {
 
   // Nextflow report data
   window.data = { "trace":[
-{"task_id":"1","hash":"53\/51c39d","native_id":"42859","process":"pipeline:TREE_GENERATION","module":"-","container":"d0227f80401d","tag":"RANDOM-LARGE on ten","name":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","status":"COMPLETED","exit":"0","submit":"1591363450408","start":"1591363450535","complete":"1591363455371","duration":"4963","realtime":"1567","%cpu":"95.7","%mem":"0.8","rss":"16465920","vmem":"83865600","peak_rss":"16465920","peak_vmem":"83873792","rchar":"6509957","wchar":"967","syscr":"579","syscw":"28","read_bytes":"16384","write_bytes":"0","attempt":"1","workdir":"\/Users\/edgargarriga\/CBCRG\/nf_regressive_modules\/work\/53\/51c39d6b1e7652120e3eb532b73673","script":"Rscript \/Users\/edgargarriga\/CBCRG\/nf_regressive_modules\/bin\/generateTree\/largeTree.R ten.fa\n\nmv out.dnd ten.RANDOM-LARGE.dnd","scratch":"-","queue":"-","cpus":"2","memory":"8589934592","disk":"-","time":"14400000","env":"PATH=\/Users\/edgargarriga\/CBCRG\/nf_regressive_modules\/bin:$PATH\n","error_action":"-","vol_ctxt":"32","inv_ctxt":"168"}], "summary":[{"cpuUsage":{"mean":47.85,"min":47.85,"q1":47.85,"q2":47.85,"q3":47.85,"max":47.85,"minLabel":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","maxLabel":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q1Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q2Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q3Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)"},"process":"TREE_GENERATION","mem":{"mean":16465920,"min":16465920,"q1":16465920,"q2":16465920,"q3":16465920,"max":16465920,"minLabel":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","maxLabel":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q1Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q2Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q3Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)"},"memUsage":{"mean":0.19,"min":0.19,"q1":0.19,"q2":0.19,"q3":0.19,"max":0.19,"minLabel":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","maxLabel":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q1Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q2Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q3Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)"},"timeUsage":{"mean":0.01,"min":0.01,"q1":0.01,"q2":0.01,"q3":0.01,"max":0.01,"minLabel":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","maxLabel":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q1Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q2Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q3Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)"},"vmem":{"mean":83873792,"min":83873792,"q1":83873792,"q2":83873792,"q3":83873792,"max":83873792,"minLabel":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","maxLabel":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q1Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q2Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q3Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)"},"reads":{"mean":6509957,"min":6509957,"q1":6509957,"q2":6509957,"q3":6509957,"max":6509957,"minLabel":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","maxLabel":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q1Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q2Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q3Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)"},"cpu":{"mean":95.7,"min":95.7,"q1":95.7,"q2":95.7,"q3":95.7,"max":95.7,"minLabel":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","maxLabel":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q1Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q2Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q3Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)"},"time":{"mean":1567,"min":1567,"q1":1567,"q2":1567,"q3":1567,"max":1567,"minLabel":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","maxLabel":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q1Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q2Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q3Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)"},"writes":{"mean":967,"min":967,"q1":967,"q2":967,"q3":967,"max":967,"minLabel":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","maxLabel":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q1Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q2Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)","q3Label":"pipeline:TREE_GENERATION (RANDOM-LARGE on ten)"}}] };
+{"task_id":"1","hash":"d2\/4187d1","native_id":"50489","process":"pipeline:TCOFFEE_ANALYSIS:TCOFFEE_ALIGNER","module":"-","container":"fe94905825c8","tag":"psicoffee  on ten","name":"pipeline:TCOFFEE_ANALYSIS:TCOFFEE_ALIGNER (psicoffee  on ten)","status":"FAILED","exit":"1","submit":"1591518256151","start":"1591518256232","complete":"1591518259929","duration":"3778","realtime":"3697","%cpu":"-","%mem":"-","rss":"-","vmem":"-","peak_rss":"-","peak_vmem":"-","rchar":"-","wchar":"-","syscr":"-","syscw":"-","read_bytes":"-","write_bytes":"-","attempt":"1","workdir":"\/Users\/edgargarriga\/CBCRG\/nf_regressive_modules\/work\/d2\/4187d12ea8ebe2d570dd95dc8069a4","script":"\n        t_coffee -seq ten.fa -mode psicoffee > ten.tcoffee.psicoffee.aln\n        ","scratch":"-","queue":"-","cpus":"2","memory":"8589934592","disk":"-","time":"14400000","env":"PATH=\/Users\/edgargarriga\/CBCRG\/nf_regressive_modules\/bin:$PATH\n","error_action":"TERMINATE","vol_ctxt":"-","inv_ctxt":"-"}], "summary":[{"cpuUsage":null,"process":"TCOFFEE_ALIGNER","mem":null,"memUsage":null,"timeUsage":{"mean":0.03,"min":0.03,"q1":0.03,"q2":0.03,"q3":0.03,"max":0.03,"minLabel":"pipeline:TCOFFEE_ANALYSIS:TCOFFEE_ALIGNER (psicoffee  on ten)","maxLabel":"pipeline:TCOFFEE_ANALYSIS:TCOFFEE_ALIGNER (psicoffee  on ten)","q1Label":"pipeline:TCOFFEE_ANALYSIS:TCOFFEE_ALIGNER (psicoffee  on ten)","q2Label":"pipeline:TCOFFEE_ANALYSIS:TCOFFEE_ALIGNER (psicoffee  on ten)","q3Label":"pipeline:TCOFFEE_ANALYSIS:TCOFFEE_ALIGNER (psicoffee  on ten)"},"vmem":null,"reads":null,"cpu":null,"time":{"mean":3697,"min":3697,"q1":3697,"q2":3697,"q3":3697,"max":3697,"minLabel":"pipeline:TCOFFEE_ANALYSIS:TCOFFEE_ALIGNER (psicoffee  on ten)","maxLabel":"pipeline:TCOFFEE_ANALYSIS:TCOFFEE_ALIGNER (psicoffee  on ten)","q1Label":"pipeline:TCOFFEE_ANALYSIS:TCOFFEE_ALIGNER (psicoffee  on ten)","q2Label":"pipeline:TCOFFEE_ANALYSIS:TCOFFEE_ALIGNER (psicoffee  on ten)","q3Label":"pipeline:TCOFFEE_ANALYSIS:TCOFFEE_ALIGNER (psicoffee  on ten)"},"writes":null}] };
 
   </script>
 

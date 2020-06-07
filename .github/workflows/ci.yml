@@ -82,7 +82,7 @@ jobs:
         paramTreeMethod: ["--tree_methods=MBED,MAFFT-PARTTREE0,MAFFT-DPPARTTREE0,FAMSA-SLINK"]
         paramBucket: ["--buckets=10"]
         paramDynamic: ["--dynamicX=10000"]
-        paramsConfig: [--dynamicConfig=false]
+        paramsConfig: [--dynamicConfig=false,--dynamicConfig=true]
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow

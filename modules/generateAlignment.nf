@@ -116,3 +116,68 @@ process POOL_ALIGNER {
     script:
     template "${path_templates}/pool_align/pool_${align_method}.sh"
 }
+
+process TCOFFEE_ALIGNER{
+container 'fe94905825c8'
+    tag "$tc_mode  on $id"
+    publishDir "${params.outdir}/alignments", pattern: '*.aln'
+
+    input:
+    tuple val(id), path(seqs)
+    val tc_mode
+
+    output:
+    val tc_mode, emit: tcMode
+    tuple val (id), path ("${id}.tcoffee.*.aln"), emit: alignmentFile
+    path ".command.trace", emit: metricFile
+
+    script:    
+    if( tc_mode == 'default' )
+        """
+        t_coffee -seq $seqs > ${id}.tcoffee.${tc_mode}.aln
+        """ 
+    else if( tc_mode == 'quickaln' )
+        """
+        t_coffee -seq $seqs -mode quickaln > ${id}.tcoffee.${tc_mode}.aln
+        """    
+    else if( tc_mode == 'mcoffee' )
+        """
+        t_coffee -seq $seqs -mode mcoffee > ${id}.tcoffee.${tc_mode}.aln
+        """ 
+    else if( tc_mode == 'accurate' )
+        """
+        t_coffee -seq $seqs -mode accurate > ${id}.tcoffee.${tc_mode}.aln
+        """            
+    else if( tc_mode == 'fmcoffee' )
+        """
+        t_coffee -seq $seqs -mode fmcoffee > ${id}.tcoffee.${tc_mode}.aln
+        """
+    else if( tc_mode == 'psicoffee' )
+        """
+        t_coffee -seq $seqs -mode psicoffee > ${id}.tcoffee.${tc_mode}.aln
+        """
+    else if( tc_mode == 'expresso' )
+        """
+        t_coffee -seq $seqs -mode expresso -pdb_type dn > ${id}.tcoffee.${tc_mode}.aln
+        """ 
+    else if( tc_mode == 'procoffee' )
+        """
+        t_coffee -seq $seqs -mode procoffee > ${id}.tcoffee.${tc_mode}.aln
+        """        
+    else if( tc_mode == '3dcoffee' )
+        """
+        t_coffee -seq $seqs -method sap_pair -template_file sh3.template_file > ${id}.tcoffee.${tc_mode}.aln
+        """
+    else if( tc_mode == 'trmsd' )
+        """
+        t_coffee -seq $seqs -method mustang_pair -template_file crd.template_file
+
+        t_coffee -other_pg trmsd -aln crd.aln -template_file crd.template_file
+        """
+    else if( tc_mode == 'rcoffee' )
+        """
+        t_coffee -seq $seqs -mode rcoffee -outfile RNA_rcoffee.aln > ${id}.tcoffee.${tc_mode}.aln
+        """
+    else
+        error "Invalid alignment mode: ${tc_mode}"
+}

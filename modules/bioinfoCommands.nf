@@ -4,7 +4,7 @@ include set_templates_path from './functions.nf'
 path_templates = set_templates_path()
 
 process BLASTP {
-    container 'edgano/tcoffee:pdb'  //blast/pdb
+    container 'edgano/blast_pdb'
     label 'process_high'
     tag "$id - $params.db"
     publishDir "${params.outdir}"
@@ -25,7 +25,7 @@ process BLASTP {
 }
 
 process MAKEBLASTDB{
-    container 'edgano/tcoffee:pdb'  //blast/pdb
+    container 'edgano/blast_pdb'
     tag "$id - $params.db"
     publishDir "${params.outdir}/db", mode: 'copy', overwrite: true
 
@@ -46,7 +46,7 @@ process MAKEBLASTDB{
 }
 
 process CONVERT2GAP{
-    container '14c27fbd79b9'        // base with 
+    container '14c27fbd79b9'        // base with C
     tag "fasta2gap: ${fasta2gap} - $id"
     publishDir "${params.outdir}/aln2gap", mode: 'copy', overwrite: true
 

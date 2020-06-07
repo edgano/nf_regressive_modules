@@ -1,7 +1,7 @@
 FROM debian:jessie
 MAINTAINER Edgar Garriga <edgano@gmail.com>
 
-## Docker image for regressive multiple sequence aligment including all the requirements
+## 'edgano/tcoffee:trees'
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       ed \
@@ -25,17 +25,13 @@ RUN apt-get update && \
       libpng-dev \
       r-base \
       r-recommended \
-      r-cran-ape r-cran-segmented
-
-#RUN apt-get upgrade -y
+      r-cran-ape \
+      r-cran-segmented
 
 #install R packages
 RUN apt-get install -y --no-install-recommends libblas-dev liblapack-dev gfortran 
-#libgfortran
-
 RUN R -e "install.packages('seqinr', repos='http://R-Forge.R-project.org')"
                                     # repos="http://R-Forge.R-project.org")
-#RUN R -e "install.packages('ape', dependencies=TRUE, repos = 'http://cran.r-project.org')"
 
 # install argtable 2
 
@@ -63,7 +59,7 @@ RUN git clone https://github.com/refresh-bio/FAMSA.git && \
 # Install TCOFFEE
 RUN git clone https://github.com/edgano/tcoffee.git tcoffee && \
     cd tcoffee && \
-    git checkout 4372953c7597a6e558cd16b8f89579fa15839e33 && \
+    git checkout 5b7ce93991afd74073a8ab7874c5687795208aa1 && \
     cd t_coffee/src && \
     make t_coffee && \
     cp t_coffee /bin/.

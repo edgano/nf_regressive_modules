@@ -1,7 +1,7 @@
 FROM debian:jessie
 MAINTAINER Edgar Garriga <edgano@gmail.com>
 
-## Docker image for regressive multiple sequence aligment including all the requirements
+## 'edgano/tcoffee:pdb'
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       ed \
@@ -30,7 +30,7 @@ RUN apt-get update && \
 RUN R -e "install.packages('seqinr', repos='http://R-Forge.R-project.org')"
 RUN R -e "install.packages('ape', repos = 'http://ape-package.ird.fr/')"
 
-# install argtable 2
+# install argtable 2 (needed for clustal Omega)
 RUN wget http://prdownloads.sourceforge.net/argtable/argtable2-13.tar.gz && \
     tar -zxf argtable2-13.tar.gz && \
     cd argtable2-13 && \

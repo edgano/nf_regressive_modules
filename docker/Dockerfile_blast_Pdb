@@ -1,0 +1,38 @@
+FROM debian:jessie
+MAINTAINER Edgar Garriga <edgano@gmail.com>
+
+## 'edgano/blast_pdb'
+
+## Docker image for regressive multiple sequence aligment including all the requirements
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      ed \
+      less \
+      vim-tiny \
+      wget \
+      git \
+      python \
+      build-essential \
+      cmake \
+      curl \
+      libargtable2-0 \
+      ca-certificates \
+      libpng12-0 \
+      python-biopython \
+      python-numpy \ 
+      ruby \ 
+      python-setuptools \
+      default-jdk \
+      valgrind \
+      libpng-dev
+      
+# Install BLAST+
+RUN wget https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.10.0+-x64-linux.tar.gz && \
+    tar xvf ncbi-blast-2.10.0+-x64-linux.tar.gz && \
+    cp ncbi-blast-2.10.0+/bin/* /usr/bin/.
+
+# Install PDB DDBB
+RUN mkdir -p /database/pdb && \
+    cd /database/pdb && \
+    wget ftp://ftp.wwpdb.org/pub/pdb/derived_data/pdb_seqres.txt && \
+    makeblastdb -in pdb_seqres.txt -input_type fasta -dbtype prot

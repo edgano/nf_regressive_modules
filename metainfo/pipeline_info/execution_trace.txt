@@ -1,2 +1,2 @@
 task_id	hash	native_id	name	status	exit	submit	duration	realtime	%cpu	peak_rss	peak_vmem	rchar	wchar
-1	53/51c39d	42859	pipeline:TREE_GENERATION (RANDOM-LARGE on ten)	COMPLETED	0	2020-06-05 15:24:10.408	5s	1.6s	95.7%	15.7 MB	80 MB	6.2 MB	967 B
+1	d2/4187d1	50489	pipeline:TCOFFEE_ANALYSIS:TCOFFEE_ALIGNER (psicoffee  on ten)	FAILED	1	2020-06-07 10:24:16.151	3.8s	3.7s	-	-	-	-	-

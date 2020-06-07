@@ -1,8 +1,7 @@
 #!/bin/bash nextflow
 params.outdir = 'results'
 
-include COMBINE_SEQS        from './preprocess.nf'    
-include PROG_ALIGNER        from './generateAlignment.nf'   
+include TCOFFEE_ALIGNER     from './generateAlignment.nf'   
 include EVAL_ALIGNMENT      from './evaluateAlignment.nf'  
 include EASEL_INFO          from './evaluateAlignment.nf'  
 include GAPS_PROGRESSIVE    from './evaluateAlignment.nf'  
@@ -44,4 +43,13 @@ workflow PROG_ANALYSIS {
     if (params.easel){
       EASEL_INFO ("progressive", PROG_ALIGNER.out.alignmentFile, PROG_ALIGNER.out.alignMethod, PROG_ALIGNER.out.treeMethod,"NA")
     }
+}
+
+workflow TCOFFEE_ANALYSIS {
+  take:
+    seqs
+    tc_mode
+     
+  main: 
+    TCOFFEE_ALIGNER (seqs, tc_mode)
 }
