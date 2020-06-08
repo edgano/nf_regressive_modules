@@ -125,8 +125,8 @@ container '8c3c8bd24cb3'
     input:
     tuple val(id), path(seqs)
     each tcoffee_mode
-    file (template)
-    file (pdbFile)
+    tuple val(id), path (template)
+    tuple val(id), path (pdbFile)
 
     output:
     val tc_mode, emit: tcMode
