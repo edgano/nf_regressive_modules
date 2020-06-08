@@ -7,3 +7,4 @@ trace*
 .ipynb_checkpoints
 metainfo/
 results_test/
+resultTrees/

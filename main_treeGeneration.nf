@@ -55,7 +55,7 @@ params.trees = false
 //     CLUSTALW-QUICK,CLUSTALW  -> not working on PROG bc they are not rooted
 
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE0
-params.tree_methods = "MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE0"      
+params.tree_methods = "FAMSA-UPGMA,FAMSA-UPGMAmedoid,FAMSA-UPGMAparttree"
 
 params.outdir = "${baseDir}/resultTrees"
 log.info """\

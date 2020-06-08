@@ -47,14 +47,14 @@ params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/*.fa"
 
 params.refs = "/users/cn/egarriga/datasets/homfam/refs/*.ref"
 
-params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.{FAMSA,CLUSTALO,MAFFT_PARTTREE}.dnd"
+params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.FAMSA.dnd"
 //params.trees = false
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1
 params.align_methods = "CLUSTALO"//,FAMSA,MAFFT-FFTNS1" 
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE
 params.tree_methods = "MBED"      //TODO -> reuse trees for multiple methods.
 
-params.buckets = "35"
+params.buckets = "20"
 
 //  ## SLAVE parameters
                           //need to be lowercase -> direct to tcoffee
@@ -68,16 +68,16 @@ params.dynamicMasterAln="psicoffee_msa"
 params.dynamicMasterSize="50"
 params.dynamicSlaveAln="famsa_msa"
 params.dynamicSlaveSize="100000000"
-params.dynamicConfig=true
+params.dynamicConfig=false
 
           //uniref50, pdb or path
 params.db = "uniref50"        
 
 params.progressive_align = false
-params.regressive_align = false           //done
-params.pool_align=false                   //done
-params.slave_align=false    // ERROR _ child=parttree
-params.dynamic_align=true                //done
+params.regressive_align = false          
+params.pool_align=false                  
+params.slave_align=false    
+params.dynamic_align=true                
 
 params.evaluate=true
 params.homoplasy=true

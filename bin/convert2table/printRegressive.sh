@@ -5,7 +5,7 @@
 #################
 
 # >> HOMFAM
-declare -a all=(seatoxin) ## hip     scorptoxin      cyt3    rnasemam        bowman  toxin   ghf11   TNF     sti     Stap_Strp_toxin profilin        ricin   ghf22   ChtBD   ins     trfl    slectin phoslip ltn     il8     az      kringle cryst   DEATH   cah     mmp     rub     ghf10   tgfb    sodcu   KAS     DMRL_synthase   tms     GEL     kunitz  Sulfotransfer   mofe    Ald_Xan_dh_2    ghf5    phc     aadh    annexin serpin  cytb    asp     oxidored_q6     hpr     hormone_rec     hr      tim     glob    ace     cys     ghf1    sodfe   peroxidase      uce     flav    HMG_box OTCace  msb     icd     proteasome      cyclo   LIM     HLH     ldh     subt    int     lyase_1 gpdh    egf     blm     gluts   myb_DNA-binding tRNA-synt_2b    biotin_lipoyl   hom     ghf13   aldosered       hla     Rhodanese       PDZ     blmb    rhv     p450    adh     aat     rrm     Acetyltransf    sdr     zf-CCHH rvp)
+declare -a all=(seatoxin hip     scorptoxin      cyt3    rnasemam        bowman  toxin   ghf11   TNF     sti     Stap_Strp_toxin profilin        ricin   ghf22   ChtBD   ins     trfl    slectin phoslip ltn     il8     az      kringle cryst   DEATH   cah     mmp     rub     ghf10   tgfb    sodcu   KAS     DMRL_synthase   tms     GEL     kunitz  Sulfotransfer   mofe    Ald_Xan_dh_2    ghf5    phc     aadh    annexin serpin  cytb    asp     oxidored_q6     hpr     hormone_rec     hr      tim     glob    ace     cys     ghf1    sodfe   peroxidase      uce     flav    HMG_box OTCace  msb     icd     proteasome      cyclo   LIM     HLH     ldh     subt    int     lyase_1 gpdh    egf     blm     gluts   myb_DNA-binding tRNA-synt_2b    biotin_lipoyl   hom     ghf13   aldosered       hla     Rhodanese       PDZ     blmb    rhv     p450    adh     aat     rrm     Acetyltransf    sdr     zf-CCHH rvp)
 
 # declare -a over1000=(ltn     il8     az      kringle cryst   DEATH   cah     mmp     rub     ghf10   tgfb    sodcu   KAS     DMRL_synthase   tms     GEL     kunitz  Sulfotransfer   mofe    Ald_Xan_dh_2    ghf5    phc     aadh    annexin serpin  cytb    asp     oxidored_q6     hpr     hormone_rec     hr      tim     glob    ace     cys     ghf1    sodfe   peroxidase      uce     flav    HMG_box OTCace  msb     icd     proteasome      cyclo   LIM     HLH     ldh     subt    int     lyase_1 gpdh    egf     blm )
 
@@ -17,12 +17,12 @@ declare -a all=(seatoxin) ## hip     scorptoxin      cyt3    rnasemam        bow
 ################
 ##  ALIGNERS  ##
 ################
-declare -a aligner=(CLUSTALO MAFFT-FFTNS1 FAMSA)
+declare -a aligner=(MAFFT-SPARSECORE) #(CLUSTALO MAFFT-FFTNS1 FAMSA)
 
 ################
 ##    TREES   ##
 ################   
-declare -a tree=(MBED FAMSA-SLINK MAFFT-PARTTREE0)
+declare -a tree=(CLUSTALO MAFFT_PARTTREE FAMSA)
 #             (codnd dpparttreednd1 dpparttreednd2 dpparttreednd2size fastaparttreednd fftns1dnd fftns1dndmem fftns2dnd fftns2dndmem mafftdnd parttreednd0 parttreednd1 parttreednd2 parttreednd2size)
 
 ###############
@@ -99,7 +99,7 @@ do
         do
           for nSeq in ${bucket[@]}  ## loop all the buckets
           do
-            cat ../results/score/tc/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.tc | tr '' ';'| tr -d "[:space:]"
+            cat ../../results/score/tc/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.tc | tr '' ';'| tr -d "[:space:]"
             printf ";" 
           done
        	done
@@ -186,19 +186,19 @@ do
         do
           for nSeq in ${bucket[@]}  ## loop all the buckets
           do
-            cat ../results/easel/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.avgId | tr '' ';'| tr -d "[:space:]"
+            cat ../../results/easel/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.avgId | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.len | tr '' ';'| tr -d "[:space:]"
+            cat ../../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.len | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.ngap | tr '' ';'| tr -d "[:space:]"
+            cat ../../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.ngap | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.ngap2 | tr '' ';'| tr -d "[:space:]"
+            cat ../../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.ngap2 | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.homo | tr '' ';'| tr -d "[:space:]"
+            cat ../../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.homo | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.w_homo | tr '' ';'| tr -d "[:space:]"
+            cat ../../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.w_homo | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.w_homo2 | tr '' ';'| tr -d "[:space:]"
+            cat ../../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.w_homo2 | tr '' ';'| tr -d "[:space:]"
             printf ";" 
           done
        	done
