@@ -1,4 +1,0 @@
-task_id	hash	native_id	name	status	exit	submit	duration	realtime	%cpu	peak_rss	peak_vmem	rchar	wchar
-1	01/0ad909	6368	pipeline:DYNAMIC_ANALYSIS:GENERATE_DYNAMIC_CONFIG (CONFIG DYNAMIC)	COMPLETED	0	2020-06-07 22:09:33.310	2.4s	58ms	93.3%	0	0	36.9 KB	222 B
-2	9d/2c6ee0	6400	pipeline:TREE_GENERATION (MBED on seatoxin)	COMPLETED	0	2020-06-07 22:09:35.721	1.9s	314ms	103.1%	7.3 MB	175.2 MB	53.2 KB	10.3 KB
-3	94/876172	6426	pipeline:DYNAMIC_ANALYSIS:DYNAMIC_ALIGNER (CONFIG-POOL - MBED on seatoxin)	ABORTED	-	2020-06-07 22:09:38.788	-	-	-	-	-	-	-
