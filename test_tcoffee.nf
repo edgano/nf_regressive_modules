@@ -51,18 +51,19 @@ params.templates="${baseDir}/test/*_ref.template_list"
 params.pdbFiles="${baseDir}/test/*.pdb"
 
 //default,quickaln,mcoffee,fmcoffee,accurate,psicoffee,expresso,procoffee,3dcoffee,trmsd,rcoffee
-    //accurate,psicoffee,expresso
+    //accurate,expresso         Impossible to find EXPRESSO Templates Check that your blast server is properly installed [See documentation][FATAL:T-COFFEE] 
     //mcoffee -> poa is needed
     //trmsd --> templates
     //rcoffee --> RNAplfold
-params.tc_modes = "default"//,quickaln,fmcoffee,procoffee,3dcoffee"
+params.tc_modes = "default,quickaln,fmcoffee,psicoffee,procoffee,3dcoffee"
+//default,quickaln,fmcoffee,psicoffee,procoffee,3dcoffee"
 
 // output directory
 params.outdir = "$baseDir/results_test"
 
           //uniref50, pdb or path
 params.db = "pdb"        
-// define database path
+          // define database path
 uniref_path = "/users/cn/egarriga/datasets/db/uniref50.fasta"   // cluster path
 pdb_path = "/database/pdb/pdb_seqres.txt"                       // docker path
 
@@ -118,7 +119,7 @@ tcoffee_mode = params.tc_modes.tokenize(',')
 
 /*    main script flow    */
 workflow pipeline {
-      TCOFFEE_ANALYSIS(seqs_ch, tcoffee_mode, templates, pdbFiles)
+      TCOFFEE_ANALYSIS(seqs_ch, tcoffee_mode)
 }
 
 workflow {

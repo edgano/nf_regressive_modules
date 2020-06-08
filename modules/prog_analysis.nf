@@ -49,9 +49,7 @@ workflow TCOFFEE_ANALYSIS {
   take:
     seqs
     tc_mode
-    templates
-    pdbFiles
      
   main: 
-    TCOFFEE_ALIGNER (seqs, tc_mode, templates, pdbFiles)
+    TCOFFEE_ALIGNER (seqs, tc_mode)
 }

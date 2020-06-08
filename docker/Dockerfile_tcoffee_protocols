@@ -108,6 +108,25 @@ RUN wget http://www.clustal.org/download/current/clustalw-2.1.tar.gz && \
     make install && \
     rm /clustalw-2.1.tar.gz
 
+# install argtable 2 (needed for clustal Omega)
+RUN wget http://prdownloads.sourceforge.net/argtable/argtable2-13.tar.gz && \
+    tar -zxf argtable2-13.tar.gz && \
+    cd argtable2-13 && \
+    ./configure && \
+    make && \
+    make install && \
+    rm /argtable2-13.tar.gz
+    
+# install CLUSTAL OMEGA
+RUN wget http://www.clustal.org/omega/clustal-omega-1.2.4.tar.gz && \
+    tar -zxf clustal-omega-1.2.4.tar.gz && \
+    cd clustal-omega-1.2.4 && \
+    sed -i '1157s/1024/100/' src/clustal/muscle_tree.c && \
+    ./configure && \
+    make && \
+    make install && \
+    rm /clustal-omega-1.2.4.tar.gz
+
 ENV HOME '/'
 
 ENV FASTA_4_MAFFT '/bin/fasta35'

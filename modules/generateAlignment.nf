@@ -118,18 +118,18 @@ process POOL_ALIGNER {
 }
 
 process TCOFFEE_ALIGNER{
-container '8c3c8bd24cb3'
-    tag "$tc_mode  on $id"
+container 'bb0aed2ad176'
+    tag "$tcoffee_mode  on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
     input:
     tuple val(id), path(seqs)
     each tcoffee_mode
-    tuple val(id), path (template)
-    tuple val(id), path (pdbFile)
+    //tuple val(id), path (template)
+    //tuple val(id), path (pdbFile)
 
     output:
-    val tc_mode, emit: tcMode
+    val tcoffee_mode, emit: tcMode
     tuple val (id), path ("${id}.tcoffee.*.aln"), emit: alignmentFile
     path ".command.trace", emit: metricFile
 
@@ -148,7 +148,7 @@ container '8c3c8bd24cb3'
         """ 
     else if( tcoffee_mode == 'accurate' )
         """
-        t_coffee -seq $seqs -mode accurate -outfile ${id}.tcoffee.${tcoffee_mode}.aln
+        t_coffee -seq $seqs -mode accurate -blast_server LOCAL -protein_db ${params.database_path} -outfile ${id}.tcoffee.${tcoffee_mode}.aln
         """            
     else if( tcoffee_mode == 'fmcoffee' )
         """
@@ -156,11 +156,11 @@ container '8c3c8bd24cb3'
         """
     else if( tcoffee_mode == 'psicoffee' )
         """
-        t_coffee -seq $seqs -mode psicoffee -outfile ${id}.tcoffee.${tcoffee_mode}.aln
+        t_coffee -seq $seqs -mode psicoffee -blast_server LOCAL -protein_db ${params.database_path} -outfile ${id}.tcoffee.${tcoffee_mode}.aln
         """
     else if( tcoffee_mode == 'expresso' )
         """
-        t_coffee -seq $seqs -mode expresso -pdb_type dn -outfile ${id}.tcoffee.${tcoffee_mode}.aln
+        t_coffee -seq $seqs -mode expresso -pdb_type dn -blast_server LOCAL -protein_db ${params.database_path} -outfile ${id}.tcoffee.${tcoffee_mode}.aln
         """ 
     else if( tcoffee_mode == 'procoffee' )
         """
@@ -168,13 +168,13 @@ container '8c3c8bd24cb3'
         """        
     else if( tcoffee_mode == '3dcoffee' )
         """
-        t_coffee -seq $seqs -method sap_pair -template_file ${template} -outfile ${id}.tcoffee.${tcoffee_mode}.aln
+        t_coffee -seq $seqs -method sap_pair -template_file ${seqs} -outfile ${id}.tcoffee.${tcoffee_mode}.aln
         """
     else if( tcoffee_mode == 'trmsd' )
         """
-        t_coffee -seq $seqs -method mustang_pair -template_file ${template} -outfile ${id}.tcoffee.${tcoffee_mode}.aln
+        t_coffee -seq $seqs -method mustang_pair -template_file ${seqs} -outfile ${id}.tcoffee.${tcoffee_mode}.aln
 
-        t_coffee -other_pg trmsd -aln crd.aln -template_file ${template}
+        t_coffee -other_pg trmsd -aln crd.aln -template_file ${seqs}
         """
     else if( tcoffee_mode == 'rcoffee' )
         """
