@@ -54,7 +54,7 @@ params.align_methods = "CLUSTALO"//,FAMSA,MAFFT-FFTNS1"
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE
 params.tree_methods = "MBED"      //TODO -> reuse trees for multiple methods.
 
-params.buckets = "20"
+params.buckets = "35"
 
 //  ## SLAVE parameters
                           //need to be lowercase -> direct to tcoffee
@@ -71,7 +71,7 @@ params.dynamicSlaveSize="100000000"
 params.dynamicConfig=true
 
           //uniref50, pdb or path
-params.db = "pdb"        
+params.db = "uniref50"        
 
 params.progressive_align = false
 params.regressive_align = false           //done
