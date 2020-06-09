@@ -1,12 +1,14 @@
 #!/bin/bash nextflow
 params.outdir = 'results'
 
-include PRECOMPUTE_BLAST     from './preprocess.nf'   
-include TCOFFEE_ALIGNER     from './generateAlignment.nf'   
+include PROG_ALIGNER       from './generateAlignment.nf'   
 include EVAL_ALIGNMENT      from './evaluateAlignment.nf'  
 include EASEL_INFO          from './evaluateAlignment.nf'  
 include GAPS_PROGRESSIVE    from './evaluateAlignment.nf'  
 include METRICS             from './evaluateAlignment.nf' 
+
+include PRECOMPUTE_BLAST    from './preprocess.nf'   
+include TCOFFEE_ALIGNER     from './generateAlignment.nf'   
 
 workflow PROG_ANALYSIS {
   take:
