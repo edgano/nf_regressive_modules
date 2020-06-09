@@ -55,7 +55,7 @@ params.pdbFiles="${baseDir}/test/*.pdb"
     //mcoffee -> poa is needed
     //trmsd --> templates
     //rcoffee --> RNAplfold
-params.tc_modes = "default,quickaln,fmcoffee,psicoffee,procoffee,3dcoffee"
+params.tc_modes = "psicoffee"
 //default,quickaln,fmcoffee,psicoffee,procoffee,3dcoffee"
 
 // output directory
@@ -66,6 +66,9 @@ params.db = "pdb"
           // define database path
 uniref_path = "/users/cn/egarriga/datasets/db/uniref50.fasta"   // cluster path
 pdb_path = "/database/pdb/pdb_seqres.txt"                       // docker path
+
+//blast call cached
+params.blastOutdir="$baseDir/blast"
 
 if (params.db=='uniref50'){
   params.database_path = uniref_path

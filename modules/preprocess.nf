@@ -2,7 +2,7 @@
 params.outdir = 'results'
 
 process COMBINE_SEQS {
-    container 'edgano/homoplasy:latest'
+    container 'edgano/base:latest'
     tag "COMBINE SEQ on $id"
     publishDir params.outdir
 
@@ -26,7 +26,7 @@ process COMBINE_SEQS {
 }
 
 process GENERATE_DYNAMIC_CONFIG{
-    container 'edgano/homoplasy:latest'
+    container 'edgano/base:latest'
     tag "CONFIG DYNAMIC"
 
     input:
@@ -43,5 +43,22 @@ process GENERATE_DYNAMIC_CONFIG{
     """
     echo '${masterAln} ${masterSize}' > ${masterAln}.${masterSize}_${slaveAln}.${slaveSize}.config
     echo '${slaveAln} ${slaveSize}' >> ${masterAln}.${masterSize}_${slaveAln}.${slaveSize}.config
+    """
+}
+process PRECOMPUTE_BLAST{
+    container 'edgano/tcoffee:pdb'
+    tag "BLAST on $id"
+    publishDir "${params.blastOutdir}", mode: 'copy', overwrite: true, pattern: '*tmp.gz'
+
+    input:
+    tuple val(id), path(seqs)
+
+    output:
+    val "${id}", emit: id
+    path "*tmp.gz", emit: blast
+
+    script:
+    """
+    t_coffee -other_pg seq_reformat -in ${seqs} -action +compress +db ${params.database_path} +seq2blast
     """
 }

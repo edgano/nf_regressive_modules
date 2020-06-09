@@ -1,6 +1,7 @@
 #!/bin/bash nextflow
 params.outdir = 'results'
 
+include PRECOMPUTE_BLAST     from './preprocess.nf'   
 include TCOFFEE_ALIGNER     from './generateAlignment.nf'   
 include EVAL_ALIGNMENT      from './evaluateAlignment.nf'  
 include EASEL_INFO          from './evaluateAlignment.nf'  
@@ -51,5 +52,6 @@ workflow TCOFFEE_ANALYSIS {
     tc_mode
      
   main: 
-    TCOFFEE_ALIGNER (seqs, tc_mode)
+    PRECOMPUTE_BLAST (seqs)
+    TCOFFEE_ALIGNER (seqs, tc_mode, PRECOMPUTE_BLAST.out.id)
 }

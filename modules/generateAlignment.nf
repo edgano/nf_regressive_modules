@@ -118,13 +118,14 @@ process POOL_ALIGNER {
 }
 
 process TCOFFEE_ALIGNER{
-    container 'bb0aed2ad176'
+    container 'edgano/tcoffee:pdb'
     tag "$tcoffee_mode  on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
     input:
     tuple val(id), path(seqs)
     each tcoffee_mode
+    val(fakeId)
     //tuple val(id), path (template)
     //tuple val(id), path (pdbFile)
 
@@ -156,7 +157,7 @@ process TCOFFEE_ALIGNER{
         """
     else if( tcoffee_mode == 'psicoffee' )
         """
-        t_coffee -seq $seqs -mode psicoffee -blast_server LOCAL -protein_db ${params.database_path} -outfile ${id}.tcoffee.${tcoffee_mode}.aln
+        t_coffee -seq $seqs -mode psicoffee -blast_server LOCAL -protein_db ${params.database_path} -cache ${params.blastOutdir} -outfile ${id}.tcoffee.${tcoffee_mode}.aln
         """
     else if( tcoffee_mode == 'expresso' )
         """

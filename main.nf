@@ -105,6 +105,9 @@ params.easel=false
 // output directory
 params.outdir = "$baseDir/results"
 
+//blast call cached
+params.blastOutdir="$baseDir/blast"
+
 if (params.db=='uniref50'){
   params.database_path = uniref_path
 }else if(params.db=='pdb'){
