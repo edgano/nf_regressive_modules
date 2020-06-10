@@ -72,7 +72,7 @@ process DYNAMIC_ALIGNER {
     container 'edgano/tcoffee:pdb'
     tag "$align_method - $tree_method on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
-    label: 'process_medium'
+    label 'process_medium'
 
     input:
     tuple val(id), val(tree_method), path(seqs), path(guide_tree)

@@ -49,7 +49,7 @@ process PRECOMPUTE_BLAST{
     container 'edgano/tcoffee:pdb'
     tag "BLAST on $id"
     publishDir "${params.blastOutdir}", mode: 'copy', overwrite: true, pattern: '*tmp.gz'
-    label: 'process_medium'
+    label 'process_medium'
 
     input:
     tuple val(id), path(seqs)
