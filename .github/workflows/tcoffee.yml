@@ -22,4 +22,4 @@ jobs:
           sudo mv nextflow /usr/local/bin/
       - name: Run pipeline with minimal data to check PROGRESSIVE alignments
         run: |
-          nextflow run ${GITHUB_WORKSPACE}/test_tcoffee.nf -profile docker ${{matrix.paramsSeqs}} ${{matrix.paramsTcMode}}
+          nextflow run ${GITHUB_WORKSPACE}/test_tcoffee.nf -profile test,docker ${{matrix.paramsSeqs}} ${{matrix.paramsTcMode}}

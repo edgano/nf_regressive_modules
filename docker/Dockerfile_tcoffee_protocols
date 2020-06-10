@@ -76,16 +76,7 @@ RUN wget http://mafft.cbrc.jp/alignment/software/mafft-7.397-with-extensions-src
     cp /mafft/bin/* /bin/. && \
     mv /mafft-7.397-with-extensions /mafft && \
     rm /mafft-7.397-with-extensions-src.tgz
-
-# Install TCOFFEE
-RUN git clone https://github.com/cbcrg/tcoffee.git tcoffee && \
-    cd tcoffee && \
-    git checkout 6a0d31b82326819d4e1683aa3910c37068f5a3b6 && \
-    cd t_coffee/src && \
-    make t_coffee && \
-    cp t_coffee /bin/. && \
-    cp t_coffee *.pl /bin/. 
-
+ 
 # Install TMalign
 RUN wget https://zhanglab.ccmb.med.umich.edu/TM-align/TMalign.f && \
     gfortran -static -O3 -ffast-math -lm -o TMalign TMalign.f && \
@@ -99,15 +90,6 @@ RUN wget http://lcb.infotech.monash.edu.au/mustang/mustang_v3.2.3.tgz &&  \
    cp bin/mustang-3.2.3 /bin/mustang && \
    rm /mustang_v3.2.3.tgz
 
-#install CLUSTAL w2
-RUN wget http://www.clustal.org/download/current/clustalw-2.1.tar.gz && \
-    tar -zxf clustalw-2.1.tar.gz && \
-    cd clustalw-2.1 && \
-    ./configure && \
-    make && \
-    make install && \
-    rm /clustalw-2.1.tar.gz
-
 # install argtable 2 (needed for clustal Omega)
 RUN wget http://prdownloads.sourceforge.net/argtable/argtable2-13.tar.gz && \
     tar -zxf argtable2-13.tar.gz && \
@@ -116,7 +98,7 @@ RUN wget http://prdownloads.sourceforge.net/argtable/argtable2-13.tar.gz && \
     make && \
     make install && \
     rm /argtable2-13.tar.gz
-    
+
 # install CLUSTAL OMEGA
 RUN wget http://www.clustal.org/omega/clustal-omega-1.2.4.tar.gz && \
     tar -zxf clustal-omega-1.2.4.tar.gz && \
@@ -126,6 +108,32 @@ RUN wget http://www.clustal.org/omega/clustal-omega-1.2.4.tar.gz && \
     make && \
     make install && \
     rm /clustal-omega-1.2.4.tar.gz
+
+#install CLUSTAL w2
+RUN wget http://www.clustal.org/download/current/clustalw-2.1.tar.gz && \
+    tar -zxf clustalw-2.1.tar.gz && \
+    cd clustalw-2.1 && \
+    ./configure && \
+    make && \
+    make install && \
+    rm /clustalw-2.1.tar.gz
+    
+# Install Viena for RNAfold
+RUN wget https://www.tbi.univie.ac.at/RNA/download/sourcecode/2_4_x/ViennaRNA-2.4.14.tar.gz && \
+    tar -zxvf ViennaRNA-2.4.14.tar.gz && \
+    cd ViennaRNA-2.4.14 && \
+    ./configure && \
+    make && \
+    make install
+
+# Install TCOFFEE
+RUN git clone https://github.com/cbcrg/tcoffee.git tcoffee && \
+    cd tcoffee && \
+    git checkout 6a0d31b82326819d4e1683aa3910c37068f5a3b6 && \
+    cd t_coffee/src && \
+    make t_coffee && \
+    cp t_coffee /bin/. && \
+    cp t_coffee *.pl /bin/.
 
 ENV HOME '/'
 
