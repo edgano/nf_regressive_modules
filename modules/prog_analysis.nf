@@ -55,5 +55,5 @@ workflow TCOFFEE_ANALYSIS {
      
   main: 
     PRECOMPUTE_BLAST (seqs)
-    TCOFFEE_ALIGNER (seqs, tc_mode, PRECOMPUTE_BLAST.out.id)
+    //TCOFFEE_ALIGNER (seqs, tc_mode, PRECOMPUTE_BLAST.out.id)
 }
