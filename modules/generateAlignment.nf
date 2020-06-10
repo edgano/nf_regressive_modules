@@ -126,7 +126,7 @@ process TCOFFEE_ALIGNER{
     input:
     tuple val(id), path(seqs)
     each tcoffee_mode
-    val(fakeId)
+    val(fakeId)             //to ensure the process before when precompute Blast
     //tuple val(id), path (template)
     //tuple val(id), path (pdbFile)
 
@@ -149,8 +149,9 @@ process TCOFFEE_ALIGNER{
         t_coffee -seq $seqs -mode mcoffee -outfile ${id}.tcoffee.${tcoffee_mode}.aln
         """ 
     else if( tcoffee_mode == 'accurate' )
+    //t_coffee -in=data_93c5fbb0.in -mode=accurate -blast=LOCAL -pdb_db=/db/pdb/derived_data_format/blast/latest/pdb_seqres.fa -protein_db=/db/ncbi/201511/blast/db/nr.fa 
         """
-        t_coffee -seq $seqs -mode accurate -pdb_type d -blast LOCAL -pdb_db ${params.database_path} -outfile ${id}.tcoffee.${tcoffee_mode}.aln
+        t_coffee -seq $seqs -mode accurate -blast LOCAL -pdb_db ${params.database_path} -outfile ${id}.tcoffee.${tcoffee_mode}.aln
         """            
     else if( tcoffee_mode == 'fmcoffee' )
         """

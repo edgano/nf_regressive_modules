@@ -12,7 +12,7 @@ jobs:
     if: "contains(github.event.head_commit.message, '[tcoffee test]')"
     strategy:
       matrix:
-        paramsSeqs: ["--seqs ${baseDir}/test/three.fa"]
+        paramsSeqs: ["--seqs ${GITHUB_WORKSPACE}/test/three.fa"]
         paramsTcMode: ["--tc_modes default","--tc_modes quickaln","--tc_modes fmcoffee","--tc_modes psicoffee","--tc_modes expresso","--tc_modes procoffee","--tc_modes 3dcoffee"] 
     steps:
       - uses: actions/checkout@v2
