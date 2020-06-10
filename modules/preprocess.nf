@@ -60,6 +60,6 @@ process PRECOMPUTE_BLAST{
 
     script:
     """
-    t_coffee -other_pg seq_reformat -in ${seqs} -action +compress +db ${params.database_path} +seq2blast
+    t_coffee -other_pg seq_reformat -in ${seqs} -action +compress +db ${params.database_path} -thread 4 +seq2blast
     """
 }

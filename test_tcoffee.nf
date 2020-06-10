@@ -36,12 +36,13 @@ nextflow.preview.dsl = 2
 /*
  * defaults parameter definitions
  */
+ small ="seatoxin,hip,scorptoxin,cyt3,rnasemam,bowman,toxin,ghf11,TNF,sti,Stap_Strp_toxin,profilin,ricin,ghf22,ChtBD,ins,trfl,slectin,phoslip"
 // input sequences to align in fasta format
-//params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/{${top20fam}}.fa"
-params.seqs ="${baseDir}/test/three.fa"
+params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/{${small}}.fa"
+//params.seqs ="${baseDir}/test/three.fa"
 
-//params.refs = "/users/cn/egarriga/datasets/homfam/refs/{${top20fam}}.ref"
-params.refs ="${baseDir}/test/three.ref"
+params.refs = "/users/cn/egarriga/datasets/homfam/refs/{${small}}.ref"
+//params.refs ="${baseDir}/test/three.ref"
 
 //params.trees ="/Users/edgargarriga/CBCRG/nf_regressive_modules/results/trees/*.dnd"
 params.tree="${baseDir}/test/three.MBED.dnd"
@@ -68,6 +69,7 @@ uniref_path = "/users/cn/egarriga/datasets/db/uniref50.fasta"   // cluster path
 pdb_path = "/database/pdb/pdb_seqres.txt"                       // docker path
 
 //blast call cached
+params.generateBlast=true
 params.blastOutdir="$baseDir/blast"
 
 if (params.db=='uniref50'){
