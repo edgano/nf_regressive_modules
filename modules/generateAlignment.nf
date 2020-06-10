@@ -119,7 +119,7 @@ process POOL_ALIGNER {
 }
 
 process TCOFFEE_ALIGNER{
-    container 'edgano/tcoffee:pdb'
+    container 'edgano/tcoffee:protocols'
     tag "$tcoffee_mode  on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
@@ -150,7 +150,7 @@ process TCOFFEE_ALIGNER{
         """ 
     else if( tcoffee_mode == 'accurate' )
         """
-        t_coffee -seq $seqs -mode accurate -blast_server LOCAL -protein_db ${params.database_path} -outfile ${id}.tcoffee.${tcoffee_mode}.aln
+        t_coffee -seq $seqs -mode accurate -pdb_type d -blast LOCAL -pdb_db ${params.database_path} -outfile ${id}.tcoffee.${tcoffee_mode}.aln
         """            
     else if( tcoffee_mode == 'fmcoffee' )
         """
@@ -162,7 +162,7 @@ process TCOFFEE_ALIGNER{
         """
     else if( tcoffee_mode == 'expresso' )
         """
-        t_coffee -seq $seqs -mode expresso -pdb_type dn -blast_server LOCAL -protein_db ${params.database_path} -outfile ${id}.tcoffee.${tcoffee_mode}.aln
+        t_coffee -seq $seqs -mode expresso -pdb_type d -blast LOCAL -pdb_db ${params.database_path} -outfile ${id}.tcoffee.${tcoffee_mode}.aln
         """ 
     else if( tcoffee_mode == 'procoffee' )
         """

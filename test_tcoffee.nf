@@ -38,11 +38,11 @@ nextflow.preview.dsl = 2
  */
  small ="seatoxin,hip,scorptoxin,cyt3,rnasemam,bowman,toxin,ghf11,TNF,sti,Stap_Strp_toxin,profilin,ricin,ghf22,ChtBD,ins,trfl,slectin,phoslip"
 // input sequences to align in fasta format
-params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/{${small}}.fa"
-//params.seqs ="${baseDir}/test/three.fa"
+//params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/{${small}}.fa"
+params.seqs ="${baseDir}/test/three.fa"
 
-params.refs = "/users/cn/egarriga/datasets/homfam/refs/{${small}}.ref"
-//params.refs ="${baseDir}/test/three.ref"
+//params.refs = "/users/cn/egarriga/datasets/homfam/refs/{${small}}.ref"
+params.refs ="${baseDir}/test/three.ref"
 
 //params.trees ="/Users/edgargarriga/CBCRG/nf_regressive_modules/results/trees/*.dnd"
 params.tree="${baseDir}/test/three.MBED.dnd"
@@ -52,12 +52,12 @@ params.templates="${baseDir}/test/*_ref.template_list"
 params.pdbFiles="${baseDir}/test/*.pdb"
 
 //default,quickaln,mcoffee,fmcoffee,accurate,psicoffee,expresso,procoffee,3dcoffee,trmsd,rcoffee
-    //accurate,expresso         Impossible to find EXPRESSO Templates Check that your blast server is properly installed [See documentation][FATAL:T-COFFEE] 
+    //accurate       
     //mcoffee -> poa is needed
     //trmsd --> templates
     //rcoffee --> RNAplfold
-params.tc_modes = "psicoffee"
-//default,quickaln,fmcoffee,psicoffee,procoffee,3dcoffee"
+params.tc_modes = "accurate"
+//default,quickaln,fmcoffee,psicoffee,expresso,procoffee,3dcoffee"
 
 // output directory
 params.outdir = "$baseDir/results_test"
@@ -69,7 +69,7 @@ uniref_path = "/users/cn/egarriga/datasets/db/uniref50.fasta"   // cluster path
 pdb_path = "/database/pdb/pdb_seqres.txt"                       // docker path
 
 //blast call cached
-params.generateBlast=true
+params.generateBlast=false
 params.blastOutdir="$baseDir/blast"
 
 if (params.db=='uniref50'){

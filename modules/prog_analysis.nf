@@ -54,6 +54,10 @@ workflow TCOFFEE_ANALYSIS {
     tc_mode
      
   main: 
+  if(params.generateBlast){
     PRECOMPUTE_BLAST (seqs)
     //TCOFFEE_ALIGNER (seqs, tc_mode, PRECOMPUTE_BLAST.out.id)
+  }else{
+    TCOFFEE_ALIGNER (seqs, tc_mode, "NA")
+  }
 }
