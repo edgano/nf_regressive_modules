@@ -52,12 +52,13 @@ workflow TCOFFEE_ANALYSIS {
   take:
     seqs
     tc_mode
-     
+    templates
+
   main: 
   if(params.generateBlast){
     PRECOMPUTE_BLAST (seqs)
-    //TCOFFEE_ALIGNER (seqs, tc_mode, PRECOMPUTE_BLAST.out.id)
+    //TCOFFEE_ALIGNER (seqs, tc_mode, pdbFiles, PRECOMPUTE_BLAST.out.id)
   }else{
-    TCOFFEE_ALIGNER (seqs, tc_mode, "NA")
+    TCOFFEE_ALIGNER (seqs, tc_mode, templates, "NA")
   }
 }

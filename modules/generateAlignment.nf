@@ -126,6 +126,7 @@ process TCOFFEE_ALIGNER{
     input:
     tuple val(id), path(seqs)
     each tcoffee_mode
+    val (templates)
     val(fakeId)             //to ensure the process before when precompute Blast
     //tuple val(id), path (template)
     //tuple val(id), path (pdbFile)
@@ -174,15 +175,21 @@ process TCOFFEE_ALIGNER{
         t_coffee -seq $seqs -method sap_pair -template_file ${templates} -outfile ${id}.tcoffee.${tcoffee_mode}.aln
         """
     else if( tcoffee_mode == 'trmsd' )
+    // TODO -> check to output
         """
         t_coffee -seq $seqs -method mustang_pair -template_file ${templates} -outfile ${id}.tcoffee.${tcoffee_mode}.aln
 
-        t_coffee -other_pg trmsd -aln crd.aln -template_file ${templates}
+        t_coffee -other_pg trmsd -aln ${id}.tcoffee.${tcoffee_mode}.aln -template_file ${templates}
         """
     else if( tcoffee_mode == 'rcoffee' )
         """
         t_coffee -seq $seqs -mode rcoffee -outfile ${id}.tcoffee.${tcoffee_mode}.aln
         """
+    else if( tcoffee_mode == 'rcoffee_consan' )
+        """
+        t_coffee -seq $seqs -mode rcoffee_consan -outfile ${id}.tcoffee.${tcoffee_mode}.aln
+        """
+        
     else
         error "Invalid alignment mode: ${tcoffee_mode}"
 }

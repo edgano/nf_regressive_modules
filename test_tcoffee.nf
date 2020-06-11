@@ -39,6 +39,7 @@ nextflow.preview.dsl = 2
  small ="seatoxin,hip,scorptoxin,cyt3,rnasemam,bowman,toxin,ghf11,TNF,sti,Stap_Strp_toxin,profilin,ricin,ghf22,ChtBD,ins,trfl,slectin,phoslip"
 // input sequences to align in fasta format
 //params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/{${small}}.fa"
+//params.seqs ="${baseDir}/test/RNA_set.fa"   //-->for rcoffee, rcoffee_consan
 params.seqs ="${baseDir}/test/three.fa"
 
 //params.refs = "/users/cn/egarriga/datasets/homfam/refs/{${small}}.ref"
@@ -47,17 +48,16 @@ params.refs ="${baseDir}/test/three.ref"
 //params.trees ="/Users/edgargarriga/CBCRG/nf_regressive_modules/results/trees/*.dnd"
 params.tree="${baseDir}/test/three.MBED.dnd"
 
-params.templates="${baseDir}/test/*_ref.template_list"
+params.templates="PDB" //"${baseDir}/test/*_ref.template_list"
 
 params.pdbFiles="${baseDir}/test/*.pdb"
 
-//default,quickaln,mcoffee,fmcoffee,accurate,psicoffee,expresso,procoffee,3dcoffee,trmsd,rcoffee
+//default,quickaln,mcoffee,fmcoffee,accurate,psicoffee,expresso,procoffee,3dcoffee,trmsd,rcoffee,rcoffee_consan
     //accurate       
-    //mcoffee -> poa is needed
-    //trmsd --> templates
-    //rcoffee --> RNAplfold
-params.tc_modes = "accurate"
-//default,quickaln,fmcoffee,psicoffee,expresso,procoffee,3dcoffee"
+params.tc_modes = "default,quickaln,mcoffee,fmcoffee,psicoffee,expresso,procoffee,3dcoffee,trmsd"
+//default,quickaln,mcoffee,fmcoffee,psicoffee,expresso,procoffee,3dcoffee,trmsd,rcoffee,rcoffee_consan"
+
+params.pairMethods = "sap_pair,tmalign_pair,slow_pair"
 
 // output directory
 params.outdir = "$baseDir/results_test"
@@ -124,7 +124,7 @@ tcoffee_mode = params.tc_modes.tokenize(',')
 
 /*    main script flow    */
 workflow pipeline {
-      TCOFFEE_ANALYSIS(seqs_ch, tcoffee_mode)
+      TCOFFEE_ANALYSIS(seqs_ch, tcoffee_mode,templates)
 }
 
 workflow {

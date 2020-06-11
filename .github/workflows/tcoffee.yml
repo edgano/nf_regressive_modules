@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         paramsSeqs: ["--seqs ${GITHUB_WORKSPACE}/test/three.fa"]
-        paramsTcMode: ["--tc_modes default","--tc_modes quickaln","--tc_modes fmcoffee","--tc_modes psicoffee","--tc_modes expresso","--tc_modes procoffee","--tc_modes 3dcoffee"] 
+        paramsTcMode: ["--tc_modes default","--tc_modes quickaln","--tc_modes mcoffee","--tc_modes fmcoffee","--tc_modes psicoffee","--tc_modes expresso","--tc_modes procoffee","--tc_modes 3dcoffee","--tc_modes trmsd"] 
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow
