@@ -53,7 +53,7 @@ params.templates="PDB" //"${baseDir}/test/*_ref.template_list"
 params.pdbFiles="${baseDir}/test/*.pdb"
 
 //default,quickaln,mcoffee,fmcoffee,accurate,psicoffee,expresso,procoffee,3dcoffee,trmsd,rcoffee,rcoffee_consan
-    //accurate       
+    //accurate    --> TODO       
 params.tc_modes = "default,quickaln,mcoffee,fmcoffee,psicoffee,expresso,procoffee,3dcoffee,trmsd"
 //default,quickaln,mcoffee,fmcoffee,psicoffee,expresso,procoffee,3dcoffee,trmsd,rcoffee,rcoffee_consan"
 
