@@ -243,3 +243,20 @@ alnLenFile.close()
 numSeqFile.close()
     """
 }
+
+process IRMSD{
+    container 'edgano/tcoffee:protocols'
+    tag "iRMSD on $id - $mode"
+    publishDir "${params.outdir}/iRMSD/${id}"
+    
+    input:
+    set val(id), path(alignment), path(template), val(mode)
+    
+    output:
+    path("*.irmsd")
+    
+    script:
+    """
+    t_coffee -other_pg irmsd ${alignment} -template_file ${template} -io_format s >${id}_${mode}.irmsd
+    """
+}

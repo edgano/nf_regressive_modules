@@ -36,19 +36,37 @@ nextflow.preview.dsl = 2
 /*
  * defaults parameter definitions
  */
+
 // input sequences to align in fasta format
 //params.seqs ="${baseDir}/test/RNA_set.fa"   //-->for rcoffee, rcoffee_consan
 params.seqs ="${baseDir}/test/three.fa"
 
-//TODO -> implement the input of template/files 
-params.templates="PDB" //"${baseDir}/test/*_ref.template_list"
-params.pdbFiles="${baseDir}/test/*.pdb"
+// input the alignments file
+params.msafile="/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/sh3.fasta"
+
+// Input the templates
+params.templates="/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/sh3.template_file"
+
+//Input for the pdb files
+params.pdb="/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/PDBs/*.pdb"
+
+//##--##--#   INTRAMOL_MATRIX_GENERATION    #--##--##
+  params.threedTreeMode       = "4"     // 1-6
+  params.threedTreeNoWeights  = "2"     // (2=square; 3=cubic)
+  params.threedTreeModeExp    = "1"
+
+  params.replicatesNum        = "1"
+  params.evaluate3DVal        = "contacts"    //"contacts,distances,strike"
+//##--##--##--##--####--##--##--##--####--##--##--##--##
+
+params.pairMethods = "sap_pair,tmalign_pair,mustang_pair,slow_pair"
+
+//sap, TMalign, mustang
 
 //default,quickaln,mcoffee,fmcoffee,psicoffee,expresso,procoffee,3dcoffee,trmsd,rcoffee,rcoffee_consan"
     //accurate    --> TODO       
 params.tc_modes = "default,quickaln,mcoffee,fmcoffee,psicoffee,expresso,procoffee,3dcoffee,trmsd"
 
-params.pairMethods = "sap_pair,tmalign_pair,slow_pair"  //TODO -> implement it
 
 // output directory
 params.outdir = "$baseDir/results_test"
@@ -85,36 +103,51 @@ log.info """\
          .stripIndent()
 
 // import analysis pipelines
-include TCOFFEE_ANALYSIS from './modules/prog_analysis'    params(params)
+include CLANS_ANALYSIS from './modules/prog_analysis'    params(params) 
+include TCOFFEE_TEST from './modules/prog_analysis'    params(params)
 
-// Channels containing sequences
 seqs_ch = Channel.fromPath( params.seqs, checkIfExists: true ).map { item -> [ item.baseName, item] }
+
+if ( params.msafile ) {
+  Channel
+  .fromPath(params.msafile)
+  .map { item -> [ item.simpleName , item] }
+  .set { fastaAln }
+}
 
 if ( params.templates ) {
   Channel
   .fromPath(params.templates)
-//  .map { item -> [ item.baseName.replace('_ref','') , item] }
-  .set { templates }
-}else { 
-  Channel.empty().set { templates }
+  .map { item -> [ item.simpleName, item] }
+  .set { templates}
 }
 
-if ( params.pdbFiles ) {
+if ( params.pdb ) {
   Channel
-  .fromPath(params.pdbFiles)
-//  .map { item -> [ item.simpleName , item] }
-  .collect()
-  .set { pdbFiles }
-}else { 
-  Channel.empty().set { pdbFiles }
+  .fromPath(params.pdb)
+  .map { item -> [ item.simpleName , item] }
+  .groupTuple()
+  .set { pdbFiles}
 }
+
+fastaAln
+  .combine(templates, by: 0)
+  .set{ aln_templates}
+
+/*fastaAln
+  .combine(templates, by: 0)
+  .combine(pdbFiles, by: 0)
+  .set{ aln_templates_pdb}
+*/
 
 // tokenize params 
 tcoffee_mode = params.tc_modes.tokenize(',')
+pair_method = params.pairMethods.tokenize(',')
 
 /*    main script flow    */
 workflow pipeline {
-      TCOFFEE_ANALYSIS(seqs_ch, tcoffee_mode,templates)
+      TCOFFEE_TEST(seqs_ch, tcoffee_mode, aln_templates, pair_method)
+      //CLANS_ANALYSIS(seqs_ch, tcoffee_mode, aln_templates, pair_method)
 }
 
 workflow {

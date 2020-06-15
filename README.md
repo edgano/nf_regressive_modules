@@ -1,7 +1,7 @@
 # NF Regressive Modules
 
-![nf_reg_modules CI](https://github.com/edgano/nf_regressive_modules/workflows/nf_reg_modules%20CI/badge.svg)
-
+![Regressive Modules CI](https://github.com/edgano/nf_regressive_modules/workflows/nf_reg_modules%20CI/badge.svg)
+![Tcoffee CI](https://github.com/edgano/nf_regressive_modules/workflows/tcoffee%20CI/badge.svg)
 
 This repository aims to group all the new modes of the Regressive algorithm, presented in the manuscript "Fast and accurate large multiple sequence alignments using root-to-leave regressive computation".
 
