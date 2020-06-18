@@ -4,21 +4,22 @@ name: tcoffee CI
 on: [push, pull_request]
 
 jobs:
-  test_progressive:
+  test_Tcoffee_Modes:
     env:
       NXF_VER: '20.04.1'
       NXF_ANSI_LOG: false
     runs-on: ubuntu-latest
-    if: "contains(github.event.head_commit.message, '[tc test]')"
+    if: "contains(github.event.head_commit.message, '[tcoffee test]')"
     strategy:
       matrix:
-        paramsTcMode: ["--progressive_align=false --regressive_align=true --slave_align=false --dynamic_align=false --pool_align=false"] 
+        paramsSeqs: ["--seqs ${GITHUB_WORKSPACE}/test/three.fa"]
+        paramsTcMode: ["--tc_modes default","--tc_modes quickaln","--tc_modes mcoffee","--tc_modes fmcoffee","--tc_modes psicoffee","--tc_modes expresso","--tc_modes procoffee","--tc_modes 3dcoffee","--tc_modes trmsd"] 
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-      - name: Run pipeline with minimal data to check PROGRESSIVE alignments
+      - name: Run pipeline with minimal data to check TCOFFEE modes
         run: |
-          nextflow run ${GITHUB_WORKSPACE}/test_tcoffee.nf -profile test,docker ${{matrix.paramsTcMode}}
+          nextflow run ${GITHUB_WORKSPACE}/test_tcoffee.nf -profile test_tc,docker ${{matrix.paramsSeqs}} ${{matrix.paramsTcMode}}
