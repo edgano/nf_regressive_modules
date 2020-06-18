@@ -22,16 +22,32 @@ RUN apt-get update && \
       python-setuptools \
       default-jdk \
       valgrind \
-      libpng-dev \
-      r-base \
-      r-recommended \
-      r-cran-ape \
-      r-cran-segmented
+      libpng-dev
+
+
+# Install R
+RUN echo "deb http://cloud.r-project.org/bin/linux/debian buster-cran40/" | tee -a /etc/apt/sources.list && \
+    apt-key adv --keyserver keys.gnupg.net --recv-key 'E19F5F87128899B192B1A2C2AD5F960A256A04AF'
+
+#RUN apt-get update && apt-get install -y r-base-core r-recommended r-cran-nlme r-cran-lattice libblas-dev liblapack-dev gfortran
+  
+RUN apt-get install -y r-base r-base-dev r-cran-ape 
+
+RUN R -e "install.packages('apTreeshape', dependencies=TRUE, repos='https://cran.rediris.es')"
 
 #install R packages
-RUN apt-get install -y --no-install-recommends libblas-dev liblapack-dev gfortran 
-RUN R -e "install.packages('seqinr', repos='http://R-Forge.R-project.org')"
-                                    # repos="http://R-Forge.R-project.org")
+#RUN apt-get install -y --no-install-recommends libblas-dev liblapack-dev gfortran 
+#RUN R -e "install.packages('seqinr', repos='http://R-Forge.R-project.org')"
+
+# RUN R -e "install.packages('MatrixModels', repos='http://R-Forge.R-project.org')"
+# RUN R -e "install.packages('quantreg', repos='http://R-Forge.R-project.org')"
+# RUN R -e "install.packages('pbapply', repos='http://R-Forge.R-project.org')"
+
+# RUN wget https://cran.r-project.org/src/contrib/apTreeshape_1.5-0.tar.gz
+
+#RUN R -e "install.packages('apTreeshape', dependencies='true', repos='http://R-Forge.R-project.org')"
+
+
 
 # install argtable 2
 
@@ -46,23 +62,23 @@ RUN R -e "install.packages('seqinr', repos='http://R-Forge.R-project.org')"
 # install MAFFT
 
 # install FAMSA
-RUN git clone https://github.com/refresh-bio/FAMSA.git && \
-  cd FAMSA && \ 
-  git checkout e2442bb34a5d5894e300bbec78c259b9cfffa8f0 && \ 
-  sed -i 's/all: famsa famsa-gpu/all: famsa/' makefile && \
-  sed -i 's/NO_AVX = false/NO_AVX = true/' makefile && \
-  sed -i 's/NO_AVX2 = false/NO_AVX2 = true/' makefile && \
-  sed -i 's/NO_GPU = false/NO_GPU = true/' makefile && \
-  make && \
-  cp famsa /bin/.
+#RUN git clone https://github.com/refresh-bio/FAMSA.git && \
+#  cd FAMSA && \ 
+#  git checkout e2442bb34a5d5894e300bbec78c259b9cfffa8f0 && \ 
+#  sed -i 's/all: famsa famsa-gpu/all: famsa/' makefile && \
+#  sed -i 's/NO_AVX = false/NO_AVX = true/' makefile && \
+#  sed -i 's/NO_AVX2 = false/NO_AVX2 = true/' makefile && \
+#  sed -i 's/NO_GPU = false/NO_GPU = true/' makefile && \
+#  make && \
+#  cp famsa /bin/.
 
 # Install TCOFFEE
-RUN git clone https://github.com/edgano/tcoffee.git tcoffee && \
-    cd tcoffee && \
-    git checkout 5b7ce93991afd74073a8ab7874c5687795208aa1 && \
-    cd t_coffee/src && \
-    make t_coffee && \
-    cp t_coffee /bin/.
+#RUN git clone https://github.com/edgano/tcoffee.git tcoffee && \
+#    cd tcoffee && \
+#    git checkout 5b7ce93991afd74073a8ab7874c5687795208aa1 && \
+#    cd t_coffee/src && \
+#    make t_coffee && \
+#    cp t_coffee /bin/.
 
 ENV HOME '/'
 

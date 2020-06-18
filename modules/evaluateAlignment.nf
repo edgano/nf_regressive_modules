@@ -260,3 +260,33 @@ process IRMSD{
     t_coffee -other_pg irmsd ${alignment} -template_file ${template} -io_format s >${id}_${mode}.irmsd
     """
 }
+
+process SACKIN_INDEX {
+    container 'edgano/r_base:latest'
+    tag "sackin on $id - $tree"
+    publishDir "${params.outdir}/sackin"
+    
+    input:
+    tuple val(id), val(tree_method), path(seqs), path(guide_tree)
+    
+    output:
+    path("*_sackin")
+
+    script:
+    """
+    #!/usr/bin/env Rscript
+
+    library(apTreeshape)
+
+    tree <- as.treeshape(read.tree("${guide_tree}"))
+
+            ## Index of Sackin of a PDA tree :    info https://rdrr.io/cran/apTreeshape/man/shape.statistic.html
+    sackin_pda <- sackin(tree,norm="pda")
+    sackin_yule <- sackin(tree,norm="yule")
+
+    sackin.test(tree,model='pda')
+    sackin.test(tree,model='yule')
+
+    write(sackin_pda, file = "${id}_${tree_method}.pda_sackin", append = FALSE, sep = " ")
+    """
+}

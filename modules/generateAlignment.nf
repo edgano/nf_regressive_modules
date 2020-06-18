@@ -119,15 +119,15 @@ process POOL_ALIGNER {
 }
 
 process TCOFFEE_ALIGNER{
-    container 'edgano/tcoffee:protocols'
+    container '44d0bbaf546c'//'edgano/tcoffee:protocols'
     tag "$tcoffee_mode  on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
     input:
     tuple val(id), path(seqs)
     each tcoffee_mode
-    val (templates)
-    path(lib)
+    set val(id), file(fasta), file(template)
+    //path(lib)
     val(fakeId)             //to ensure the process before when precompute Blast
     //tuple val(id), path (template)
     //tuple val(id), path (pdbFile)

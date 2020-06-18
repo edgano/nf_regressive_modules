@@ -50,6 +50,8 @@ params.templates="/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/sh3.t
 //Input for the pdb files
 params.pdb="/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/PDBs/*.pdb"
 
+params.pairs ="/Users/edgargarriga/CBCRG/nf_regressive_modules/test/*.pair"
+
 //##--##--#   INTRAMOL_MATRIX_GENERATION    #--##--##
   params.threedTreeMode       = "4"     // 1-6
   params.threedTreeNoWeights  = "2"     // (2=square; 3=cubic)
@@ -65,7 +67,7 @@ params.pairMethods = "sap_pair,tmalign_pair,mustang_pair,slow_pair"
 
 //default,quickaln,mcoffee,fmcoffee,psicoffee,expresso,procoffee,3dcoffee,trmsd,rcoffee,rcoffee_consan"
     //accurate    --> TODO       
-params.tc_modes = "default,quickaln,mcoffee,fmcoffee,psicoffee,expresso,procoffee,3dcoffee,trmsd"
+params.tc_modes = "accurate"//"default,quickaln,mcoffee,fmcoffee,psicoffee,expresso,procoffee,3dcoffee,trmsd"
 
 
 // output directory
@@ -105,6 +107,7 @@ log.info """\
 // import analysis pipelines
 include CLANS_ANALYSIS from './modules/prog_analysis'    params(params) 
 include TCOFFEE_TEST from './modules/prog_analysis'    params(params)
+include TCOFFEE_ANALYSIS from './modules/prog_analysis'    params(params)
 
 seqs_ch = Channel.fromPath( params.seqs, checkIfExists: true ).map { item -> [ item.baseName, item] }
 
@@ -130,6 +133,14 @@ if ( params.pdb ) {
   .set { pdbFiles}
 }
 
+if ( params.pairs ) {
+  Channel
+  .fromPath(params.pairs)
+  .map { item -> [ item.simpleName , item] }
+  .view()
+  .set { pairFile}
+}
+
 fastaAln
   .combine(templates, by: 0)
   .set{ aln_templates}
@@ -146,7 +157,8 @@ pair_method = params.pairMethods.tokenize(',')
 
 /*    main script flow    */
 workflow pipeline {
-      TCOFFEE_TEST(seqs_ch, tcoffee_mode, aln_templates, pair_method)
+      TCOFFEE_ANALYSIS(seqs_ch, tcoffee_mode, aln_templates, pair_method)
+      //TCOFFEE_TEST(seqs_ch, tcoffee_mode, aln_templates, pair_method, pairFile)
       //CLANS_ANALYSIS(seqs_ch, tcoffee_mode, aln_templates, pair_method)
 }
 
