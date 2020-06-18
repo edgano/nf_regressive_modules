@@ -38,10 +38,10 @@ nextflow.preview.dsl = 2
  */
  small ="seatoxin,hip,scorptoxin,cyt3,rnasemam,bowman,toxin,ghf11,TNF,sti,Stap_Strp_toxin,profilin,ricin,ghf22,ChtBD,ins,trfl,slectin,phoslip"
 // input sequences to align in fasta format
-params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/{${small}}.fa"
-//params.seqs ="${baseDir}/test/three.fa"
+//params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/{${small}}.fa"
+params.seqs ="/users/cn/egarriga/datasets/homfam/combinedSeqs/{scorptoxin,cyt3}.fa"
 
-params.refs = "/users/cn/egarriga/datasets/homfam/refs/{${small}}.ref"
+params.refs = "/users/cn/egarriga/datasets/homfam/refs/{scorptoxin,cyt3}.ref"
 //params.refs ="${baseDir}/test/three.ref"
 
 //params.trees ="/Users/edgargarriga/CBCRG/nf_regressive_modules/results/trees/*.dnd"

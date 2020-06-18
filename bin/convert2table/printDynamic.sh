@@ -17,8 +17,8 @@ declare -a all=(seatoxin hip     scorptoxin      cyt3    rnasemam        bowman 
 ################
 ##  ALIGNERS  ##
 ################
-declare -a aligner=(DEFAULT_uniref50)
-
+declare -a aligner=(psicoffee_msa.50_famsa_msa.100000000_uniref50)
+# cynamic.35_100000.psicoffee_msa.50_famsa_msa.100000000_uniref50.with.FAMSA.tree.tc
 ################
 ##    TREES   ##
 ################   
@@ -27,7 +27,7 @@ declare -a tree=(FAMSA)
 ###############
 ##   Nseq    ##
 ###############
-declare -a bucket=(20_100000) 
+declare -a bucket=(35_100000) 
 
 ##############
 ## Prog/REG ##
@@ -96,7 +96,7 @@ do
         do
           for nSeq in ${bucket[@]}  ## loop all the buckets
           do
-            cat ../results/score/tc/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.tc | tr '' ';'| tr -d "[:space:]"
+            cat ../../results/score/tc/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.tc | tr '' ';'| tr -d "[:space:]"
             printf ";" 
           done
        	done
@@ -184,7 +184,7 @@ do
         do
           for nSeq in ${bucket[@]}  ## loop all the buckets
           do
-            cat ../results/easel/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.avgId | tr '' ';'| tr -d "[:space:]"
+            cat ../../results/easel/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.avgId | tr '' ';'| tr -d "[:space:]"
             printf ";" 
             cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.len | tr '' ';'| tr -d "[:space:]"
             printf ";" 

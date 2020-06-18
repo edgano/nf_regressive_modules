@@ -47,14 +47,14 @@ params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/*.fa"
 
 params.refs = "/users/cn/egarriga/datasets/homfam/refs/*.ref"
 
-params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.{FAMSA,CLUSTALO,MAFFT_PARTTREE}.dnd"
+params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.FAMSA.dnd"
 //params.trees = false
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1
 params.align_methods = "CLUSTALO"//,FAMSA,MAFFT-FFTNS1" 
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE
 params.tree_methods = "MBED"      //TODO -> reuse trees for multiple methods.
 
-params.buckets = "35"
+params.buckets = "50"
 
 //  ## SLAVE parameters
                           //need to be lowercase -> direct to tcoffee
