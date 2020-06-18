@@ -263,7 +263,7 @@ process IRMSD{
 
 process SACKIN_INDEX {
     container 'edgano/r_base:latest'
-    tag "sackin on $id - $tree"
+    tag "sackin on $id - $tree_method"
     publishDir "${params.outdir}/sackin"
     
     input:

@@ -39,8 +39,8 @@ nextflow.preview.dsl = 2
 // input sequences to align in fasta format
 params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/*.fa"
 
-//params.trees ="/Users/edgargarriga/CBCRG/nf_regressive_modules/results/trees/*.dnd"
-params.trees = false
+params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.{CLUSTALO,FAMSA,MAFFT_PARTTREE}.dnd"
+//params.trees = false
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE0
 params.tree_methods = "FAMSA-SLINK"
 
