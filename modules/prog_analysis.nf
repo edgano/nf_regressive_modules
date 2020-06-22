@@ -80,6 +80,8 @@ workflow TCOFFEE_ANALYSIS {
     //PRECOMPUTE_BLAST (seqs)
     //TCOFFEE_ALIGNER (seqs, tc_mode, pdbFiles, PRECOMPUTE_BLAST.out.id)
   }else{
+    aln_templates.view()
+    
     TCOFFEE_ALIGNER (seqs, tc_mode, aln_templates, "NA")
   }
 }

@@ -37,9 +37,9 @@ nextflow.preview.dsl = 2
  * defaults parameter definitions
  */
 // input sequences to align in fasta format
-params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/{zf-CCHH,rvp}.fa"
+params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/*.fa"
 
-params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.FAMSA.dnd"
+params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.{CLUSTALO,FAMSA,MAFFT_PARTTREE}.dnd"
 //params.trees = false
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE0
 params.tree_methods = "FAMSA-SLINK"
@@ -91,7 +91,6 @@ workflow pipeline {
         .set { seqs_and_trees }
     }
 
-    
       SACKIN_INDEX(seqs_and_trees)
     
 }

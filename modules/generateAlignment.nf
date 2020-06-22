@@ -126,7 +126,7 @@ process TCOFFEE_ALIGNER{
     input:
     tuple val(id), path(seqs)
     each tcoffee_mode
-    set val(id), file(fasta), file(template)
+    tuple val(id), file(fasta), file(template)
     //path(lib)
     val(fakeId)             //to ensure the process before when precompute Blast
     //tuple val(id), path (template)
@@ -158,7 +158,7 @@ process TCOFFEE_ALIGNER{
         """            
     else if( tcoffee_mode == 'fmcoffee' )
         """
-        t_coffee -seq $seqs -mode fmcoffee -outfile ${id}.tcoffee.${tcoffee_mode}.aln ${params.paramsfmcoffee}
+        t_coffee -seq $seqs -mode fmcoffee -outfile ${id}.tcoffee.${tcoffee_mode}.aln ${params.params4fmcoffee}
         """
     else if( tcoffee_mode == 'psicoffee' )
         """
