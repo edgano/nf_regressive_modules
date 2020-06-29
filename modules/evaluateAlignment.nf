@@ -250,14 +250,15 @@ process IRMSD{
     publishDir "${params.outdir}/iRMSD/${id}"
     
     input:
-    set val(id), path(alignment), path(template), val(mode)
+    set val(id), path(alignment), path(template)
+    val(mode)
     
     output:
     path("*.irmsd")
     
     script:
     """
-    t_coffee -other_pg irmsd ${alignment} -template_file ${template} -io_format s >${id}_${mode}.irmsd
+    t_coffee -other_pg irmsd ${alignment} -template_file ${template} -io_format s
     """
 }
 

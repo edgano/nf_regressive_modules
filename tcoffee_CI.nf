@@ -80,9 +80,6 @@ params.db = "pdb"
 uniref_path = "/users/cn/egarriga/datasets/db/uniref50.fasta"   // cluster path
 pdb_path = "/database/pdb/pdb_seqres.txt"                       // docker path
 
-//blast call cached
-params.generateBlast=false
-params.blastOutdir="$baseDir/blast"
 
 if (params.db=='uniref50'){
   params.database_path = uniref_path
@@ -91,7 +88,6 @@ if (params.db=='uniref50'){
 }else{
   params.database_path = params.db
 }
-
 
 log.info """\
          PIPELINE  ~  version 0.1"
@@ -107,9 +103,20 @@ log.info """\
          .stripIndent()
 
 // import analysis pipelines
-include CLANS_ANALYSIS from './modules/leila_analysis'       params(params) 
-include TCOFFEE_TEST from './modules/prog_analysis'         params(params)
-include TCOFFEE_ANALYSIS from './modules/prog_analysis'     params(params) 
+include TCOFFEE_DEFAULT         from './modules/tcoffeeModes.nf'   
+include TCOFFEE_QUICKALN        from './modules/tcoffeeModes.nf'   
+include TCOFFEE_MCOFFEE         from './modules/tcoffeeModes.nf'   
+include TCOFFEE_ACCURATE        from './modules/tcoffeeModes.nf'   
+include TCOFFEE_FMCOFFEE        from './modules/tcoffeeModes.nf'   
+include TCOFFEE_PSICOFFEE       from './modules/tcoffeeModes.nf'   
+include TCOFFEE_EXPRESSO        from './modules/tcoffeeModes.nf'   
+include TCOFFEE_PROCOFFEE       from './modules/tcoffeeModes.nf'   
+include TCOFFEE_3DCOFFEE        from './modules/tcoffeeModes.nf'   
+include TCOFFEE_TRMSD           from './modules/tcoffeeModes.nf'   
+include TCOFFEE_RCOFFEE         from './modules/tcoffeeModes.nf'   
+include TCOFFEE_RCOFFEE_CONSAN  from './modules/tcoffeeModes.nf'   
+include TCOFFEE_3DALIGN         from './modules/tcoffeeModes.nf'   
+include TCOFFEE_3DMALIGN        from './modules/tcoffeeModes.nf'   
 
 seqs_ch = Channel.fromPath( params.seqs, checkIfExists: true ).map { item -> [ item.baseName, item] }
 
@@ -117,61 +124,77 @@ if ( params.templates ) {
   Channel
   .fromPath(params.templates, checkIfExists: true)
   .map { item -> [ item.simpleName, item] }
-  .set { templates_ch}
-}else { 
-  Channel.empty()
   .set { templates_ch }
+}else { 
+  Channel
+    .empty()
+    .set { templates_ch }
 }
+
 if ( params.pdb ) {
   Channel
-  .fromPath(params.pdb)
+  .fromPath(params.pdb, checkIfExists: true)
   .map { item -> [ item.simpleName , item] }
   .groupTuple()
   .set { pdbFiles}
 }else { 
-  Channel.empty()
+  Channel
+    .empty()
     .set { pdbFiles }
 }
+
 if ( params.pairFile ) {
   Channel
-  .fromPath(params.pairFile)
+  .fromPath(params.pairFile, checkIfExists: true)
   .map { item -> [ item.simpleName , item] }
   .groupTuple()
   .set { pair_file}
 }else { 
-  Channel.empty()
+  Channel
+    .empty()
     .set { pair_file }
 }
+
 if ( params.libs ) {
   Channel
-  .fromPath(params.libs)
+  .fromPath(params.libs, checkIfExists: true)
   .map { item -> [ item.simpleName , item] }
   .groupTuple()
-  .set { libs }
+  .set { libs_ch }
 }else { 
-  Channel.empty()
-    .set { libs }
+  Channel
+    .empty()
+    .set { libs_ch }
 }
 
-if ( params.trees ) {
-  trees_ch = Channel.fromPath(params.trees)
-    .map { item -> [ item.baseName.tokenize('.')[0], item.baseName.tokenize('.')[1], item] }
-}else { 
-  Channel.empty().set { trees_ch }
-}
 // tokenize params 
-//tcoffee_mode = params.tc_modes.tokenize(',')
 //pair_method = params.pairMethods.tokenize(',')
-tree_method = params.tree_methods.tokenize(',')
-bucket_list = params.buckets.toString().tokenize(',')     //int to string
 
 /*    main script flow    */
 workflow pipeline {
+    seqs_ch
+      .join(templates_ch, remainder: true)
+      .set { seqs_templates }
 
-      //TCOFFEE_ANALYSIS(seqs_ch, templates, pdbFiles, pair_file, libs, tcoffee_mode, pair_method)
-      //TCOFFEE_TEST(seqs_ch, templates, pdbFiles, pair_file, libs, tcoffee_mode, pair_method)
-      //CLANS_ANALYSIS(seqs_ch, trees_ch, tree_method, bucket_list,templates_ch)
+    seqs_templates
+      .join(libs_ch, remainder: true)
+      //.view()
+      .set { seqs_templates_libs }
 
+    TCOFFEE_DEFAULT(seqs_templates_libs,"NA")
+    TCOFFEE_QUICKALN(seqs_templates_libs,"NA")
+    TCOFFEE_MCOFFEE(seqs_templates_libs,"NA")
+    //TCOFFEE_ACCURATE(seqs_templates_libs,"NA")
+    TCOFFEE_FMCOFFEE(seqs_templates_libs,"NA")
+    TCOFFEE_PSICOFFEE(seqs_templates_libs,"NA")
+    TCOFFEE_EXPRESSO(seqs_templates_libs,"NA")
+    TCOFFEE_PROCOFFEE(seqs_templates_libs,"NA")
+    TCOFFEE_3DCOFFEE(seqs_templates_libs,"NA")
+    TCOFFEE_TRMSD(seqs_templates_libs,"NA")
+    //TCOFFEE_RCOFFEE(seqs_templates_libs,"NA")
+    //TCOFFEE_RCOFFEE_CONSAN(seqs_templates_libs,"NA")
+    TCOFFEE_3DALIGN(seqs_templates_libs,"NA")
+    TCOFFEE_3DMALIGN(seqs_templates_libs,"NA")
 }
 
 workflow {

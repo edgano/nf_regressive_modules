@@ -8,7 +8,6 @@ include GAPS_PROGRESSIVE    from './evaluateAlignment.nf'
 include METRICS             from './evaluateAlignment.nf' 
 
 include PRECOMPUTE_BLAST    from './preprocess.nf'   
-include TCOFFEE_ALIGNER     from './generateAlignment.nf'   
 
 include INTRAMOL_MATRIX_GENERATION   from './preprocess.nf'
 include SELECTED_PAIRS_OF_COLUMNS_MATRIX   from './preprocess.nf'
@@ -72,37 +71,16 @@ workflow TCOFFEE_ANALYSIS {
   take:
     seqs
     tc_mode
-    aln_templates
+    templates
     pair_method
 
   main: 
+
   if(params.generateBlast){
-    //PRECOMPUTE_BLAST (seqs)
+    PRECOMPUTE_BLAST (seqs)
     //TCOFFEE_ALIGNER (seqs, tc_mode, pdbFiles, PRECOMPUTE_BLAST.out.id)
   }else{
-    aln_templates.view()
-    
-    TCOFFEE_ALIGNER (seqs, tc_mode, aln_templates, "NA")
   }
+
 }
 
-workflow CLANS_ANALYSIS {
-  take:
-    seqs
-    tc_mode
-    aln_templates
-    pair_method
-
-  main: 
-  LIBRARY_GENERATION(aln_templates)
-
-  TCOFFEE_ALIGNER(tcoffee_mode == '3d_align')   //COMPUTE_3D_ALING()
-
-  TCOFFEE_ALIGNER(tcoffee_mode == '3dM_align')  //COMPUTE_3DM_ALING()
-
-  REG_ALIGNER                                   //3d
-
-  REG_ALIGNER                                   //3dm
-
-  COMPUTE_IRMSD
-}
