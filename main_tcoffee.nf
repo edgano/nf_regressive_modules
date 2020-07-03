@@ -162,7 +162,7 @@ if ( params.trees ) {
 // tokenize params 
 //tcoffee_mode = params.tc_modes.tokenize(',')
 //pair_method = params.pairMethods.tokenize(',')
-tree_method = params.tree_methods.tokenize(',')
+tree_method = params.tree_methods.tokenize(',' as char)
 bucket_list = params.buckets.toString().tokenize(',')     //int to string
 
 /*    main script flow    */

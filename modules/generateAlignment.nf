@@ -5,7 +5,7 @@ include set_templates_path from './functions.nf'
 path_templates = set_templates_path()
 
 process REG_ALIGNER {
-    container 'edgano/tcoffee:pdb'
+    container '03/18e7a2'//'edgano/tcoffee:pdb'
     tag "$align_method - $tree_method - $bucket_size on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
 

@@ -51,7 +51,7 @@ params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.{FAMSA,CLUSTALO,MAFFT_
 //params.trees = false
                       //TODO FIX -> reg_UPP
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE,MAFFT,MSAPROBS,PROBCONS,TCOFFEE,UPP,MUSCLE
-params.align_methods = "CLUSTALO,FAMSA,MAFFT-FFTNS1"
+params.align_methods = "CLUSTALO"
                       
 //CLUSTALW-QUICK,CLUSTALW                    
 //FAMSA-SLINK,FAMSA-SLINKmedoid,FAMSA-SLINKparttree,FAMSA-UPGMA,FAMSA-UPGMAmedoid,FAMSA-UPGMAparttree   
@@ -65,7 +65,7 @@ params.align_methods = "CLUSTALO,FAMSA,MAFFT-FFTNS1"
 //     CLUSTALW-QUICK,CLUSTALW  -> not working on PROG bc they are not rooted
 
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE0
-params.tree_methods = "FAMSA-SLINK,MBED,MAFFT-PARTTREE0"      
+params.tree_methods = "MBED"      
 
 params.buckets = "1000"
 
@@ -90,10 +90,10 @@ uniref_path = "/users/cn/egarriga/datasets/db/uniref50.fasta"   // cluster path
 pdb_path = "/database/pdb/pdb_seqres.txt"                       // docker path
 
 
-params.progressive_align = true
+params.progressive_align = false
 params.regressive_align = true           
-params.pool_align=true                  
-params.slave_align=true   
+params.pool_align=false                  
+params.slave_align=false   
 params.dynamic_align=false               
 
 params.evaluate=true
@@ -148,7 +148,8 @@ log.info """\
 
 // import analysis pipelines
 include TREE_GENERATION from './modules/treeGeneration'        params(params)
-include REG_ANALYSIS from './modules/reg_analysis'        params(params)
+//include REG_ANALYSIS from './modules/reg_analysis'        params(params)
+include REG_ANALYSIS from './modules/regressiveAnalysis'        params(params)
 include PROG_ANALYSIS from './modules/prog_analysis'      params(params)
 include SLAVE_ANALYSIS from './modules/reg_analysis'      params(params)
 include DYNAMIC_ANALYSIS from './modules/reg_analysis'    params(params)
@@ -193,7 +194,6 @@ workflow pipeline {
         .map { it -> [ it[1][0], it[1][1], it[0][1], it[1][2] ] }
         .set { seqs_and_trees }
     }
-
     if (params.regressive_align){
       REG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
     }
