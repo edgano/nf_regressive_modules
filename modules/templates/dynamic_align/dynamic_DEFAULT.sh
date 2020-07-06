@@ -8,4 +8,5 @@ t_coffee -reg -reg_method dynamic_msa \
          -reg_nseq ${bucket_size} \
          -dynamic ${dynamicX} \
          -reg_homoplasy \
+         -cache ${params.blastOutdir} \
          -outfile ${id}.dynamic_${params.db}_${bucket_size}.dynamicX.${dynamicX}.DEFAULT.with.${tree_method}.tree.aln

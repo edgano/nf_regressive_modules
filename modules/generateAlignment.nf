@@ -8,6 +8,8 @@ process REG_ALIGNER {
     container '03/18e7a2'//'edgano/tcoffee:pdb'
     tag "$align_method - $tree_method - $bucket_size on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
+    publishDir "${params.outdir}/templates", pattern: '*.template_list'
+    publishDir "${params.outdir}/templates", pattern: '*.prf'
 
     input:
     tuple val(id), val(tree_method), path(seqs), path(guide_tree)
@@ -21,6 +23,9 @@ process REG_ALIGNER {
     tuple val (id), path ("${id}.reg_${bucket_size}.${align_method}.with.${tree_method}.tree.aln"), emit: alignmentFile
     path "${id}.homoplasy", emit: homoplasyFile
     path ".command.trace", emit: metricFile
+    path "*.template_list", emit: templateFile
+    path "*.prf", emit: templateProfile
+    
 
     script:
     template "${path_templates}/regressive_align/reg_${align_method}.sh"   

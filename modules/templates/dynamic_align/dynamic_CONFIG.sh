@@ -19,6 +19,7 @@ export VERBOSE_4_DYNAMIC=1
           -dynamic ${dynamicX} \
           -reg_homoplasy \
           -dynamic_config ${dynamicConfig} \
+          -cache ${params.blastOutdir} \
         -psitrim 100 \
         -psiJ 3 \
         -prot_min_cov 90 \
