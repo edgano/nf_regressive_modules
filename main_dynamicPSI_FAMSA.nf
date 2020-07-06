@@ -43,7 +43,7 @@ top20fam="gluts,myb_DNA-binding,tRNA-synt_2b,biotin_lipoyl,hom,ghf13,aldosered,h
 //params.seqs ="/users/cn/egarriga/datasets/homfam/combinedSeqs/{${seq2improve}}.fa"
 
 // input sequences to align in fasta format
-params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/*.fa"
+params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/seatoxin.fa"
 
 params.refs = "/users/cn/egarriga/datasets/homfam/refs/*.ref"
 

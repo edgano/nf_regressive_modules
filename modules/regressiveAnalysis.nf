@@ -112,7 +112,7 @@ workflow REG_ANALYSIS {
     //for(align in align_method){
         ALIGN_REG(seqs_and_trees,align_method,tree_method,bucket_size)
         
-        //ALIGN_REG.out.reg_alignmentFile.view()
+        ALIGN_REG.out.reg_alignmentFile.view()
         
         //EVAL_REG(refs_ch)
         //ALIGN_REG.out.reg_alignmentFile, refs_ch, ALIGN_REG.out.flavour, ALIGN_REG.out.reg_alignmentM, ALIGN_REG.out.reg_tree_method, ALIGN_REG.out.reg_bucket)
