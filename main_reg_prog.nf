@@ -51,7 +51,7 @@ params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.{FAMSA,CLUSTALO,MAFFT_
 //params.trees = false
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE,MAFFT,MSAPROBS,PROBCONS,TCOFFEE,UPP,MUSCLE
                       //TODO -> reg MSAPROBS,UPP
-params.align_methods = "CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE,MAFFT,PROBCONS,MUSCLE"
+params.align_methods = "CLUSTALO"//,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE,MAFFT,PROBCONS,MUSCLE"
                       
 //CLUSTALW-QUICK,CLUSTALW                    
 //FAMSA-SLINK,FAMSA-SLINKmedoid,FAMSA-SLINKparttree,FAMSA-UPGMA,FAMSA-UPGMAmedoid,FAMSA-UPGMAparttree   
@@ -90,10 +90,10 @@ uniref_path = "/users/cn/egarriga/datasets/db/uniref50.fasta"   // cluster path
 pdb_path = "/database/pdb/pdb_seqres.txt"                       // docker path
 
 
-params.progressive_align = true
-params.regressive_align = true           
+params.progressive_align = false
+params.regressive_align = false           
 params.pool_align=false                  
-params.slave_align=false   
+params.slave_align=true   
 params.dynamic_align=false               
 
 params.evaluate=true
@@ -152,7 +152,7 @@ include TREE_GENERATION from './modules/treeGeneration'        params(params)
 include REG_ANALYSIS from './modules/analysis_regressive'        params(params)
 //include PROG_ANALYSIS from './modules/prog_analysis'      params(params)
 include PROG_ANALYSIS from './modules/analysis_progressive'      params(params)
-//include SLAVE_ANALYSIS from './modules/reg_analysis'      params(params)
+include SLAVE_ANALYSIS from './modules/analysis_slaveTree'      params(params)
 //include DYNAMIC_ANALYSIS from './modules/reg_analysis'    params(params)
 //include POOL_ANALYSIS from './modules/reg_analysis'       params(params)
 
@@ -200,10 +200,10 @@ workflow pipeline {
     }
     if (params.progressive_align){
       PROG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, "NA")
-    }/*
+    }
     if (params.slave_align){
       SLAVE_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list, slave_method)
-    }
+    }/*
     if (params.dynamic_align){
       DYNAMIC_ANALYSIS(seqs_and_trees, refs_ch, tree_method, bucket_list, dynamicX)
     }
