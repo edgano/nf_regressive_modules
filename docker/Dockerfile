@@ -40,10 +40,11 @@ RUN wget http://prdownloads.sourceforge.net/argtable/argtable2-13.tar.gz && \
     rm /argtable2-13.tar.gz
 
 # Install BLAST+
-RUN wget https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.10.0+-x64-linux.tar.gz && \
-    tar xvf ncbi-blast-2.10.0+-x64-linux.tar.gz && \
-    cp ncbi-blast-2.10.0+/bin/* /usr/bin/.
-
+RUN wget https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.10.1+-x64-linux.tar.gz && \
+    tar -xvf ncbi-blast-2.10.1+-x64-linux.tar.gz && \
+    rm ncbi-blast-2.10.1+-x64-linux.tar.gz && \
+    cp ncbi-blast-2.10.1+/bin/* /usr/bin/.
+    
 # Install PDB DDBB
 RUN mkdir -p /database/pdb && \
     cd /database/pdb && \
@@ -171,7 +172,7 @@ RUN git clone https://github.com/refresh-bio/FAMSA.git && \
 # Install TCOFFEE
 RUN git clone https://github.com/cbcrg/tcoffee.git tcoffee && \
     cd tcoffee && \
-    git checkout 1abece22d28dcd9d9c52b56ed600566dbb2e77de && \
+    git checkout a798cb9f31609d8611508b91ceca75db6e336533 && \
     cd t_coffee/src && \
     make t_coffee && \
     cp t_coffee /bin/.

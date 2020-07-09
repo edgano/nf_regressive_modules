@@ -38,11 +38,9 @@ nextflow.preview.dsl = 2
  */
 
 // input sequences to align in fasta format
-//params.seqs ="${baseDir}/test/RNA_set.fa"   //-->for rcoffee, rcoffee_consan
-params.seqs ="${baseDir}/test/three.fa"
 
 // input the alignments file
-params.msafile="/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/sh3.fasta"
+params.seqs="/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/sh3.fasta"
 
 // Input the templates
 params.templates="/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/sh3.template_file"
@@ -59,14 +57,19 @@ params.pdb="/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/PDBs/*.pdb"
   params.evaluate3DVal        = "contacts"    //"contacts,distances,strike"
 //##--##--##--##--####--##--##--##--####--##--##--##--##
 
-params.pairMethods = "sap_pair,tmalign_pair,mustang_pair,slow_pair"
+params.pairMethods = "sap_pair,tmalign_pair,mustang_pair,slow_pair"         //sap, TMalign, mustang
 
-//sap, TMalign, mustang
+params.pairFile=""
+
+params.libs=""
 
 //default,quickaln,mcoffee,fmcoffee,psicoffee,expresso,procoffee,3dcoffee,trmsd,rcoffee,rcoffee_consan"
-    //accurate    --> TODO       
-params.tc_modes = "default,quickaln,mcoffee,fmcoffee,psicoffee,expresso,procoffee,3dcoffee,trmsd"
+    //accurate    --> TODO   
+    //3d_align, 3dM_align    
+params.tc_modes = "default"//,quickaln,mcoffee,fmcoffee,psicoffee,expresso,procoffee"//3dcoffee,trmsd"
 
+// params for tcofee methods
+params.params4tcoffee = ''
 
 // output directory
 params.outdir = "$baseDir/results_test"
@@ -77,9 +80,6 @@ params.db = "pdb"
 uniref_path = "/users/cn/egarriga/datasets/db/uniref50.fasta"   // cluster path
 pdb_path = "/database/pdb/pdb_seqres.txt"                       // docker path
 
-//blast call cached
-params.generateBlast=false
-params.blastOutdir="$baseDir/blast"
 
 if (params.db=='uniref50'){
   params.database_path = uniref_path
@@ -103,51 +103,98 @@ log.info """\
          .stripIndent()
 
 // import analysis pipelines
-include CLANS_ANALYSIS from './modules/prog_analysis'    params(params) 
-include TCOFFEE_TEST from './modules/prog_analysis'    params(params)
+include TCOFFEE_DEFAULT         from './modules/tcoffeeModes.nf'   
+include TCOFFEE_QUICKALN        from './modules/tcoffeeModes.nf'   
+include TCOFFEE_MCOFFEE         from './modules/tcoffeeModes.nf'   
+include TCOFFEE_ACCURATE        from './modules/tcoffeeModes.nf'   
+include TCOFFEE_FMCOFFEE        from './modules/tcoffeeModes.nf'   
+include TCOFFEE_PSICOFFEE       from './modules/tcoffeeModes.nf'   
+include TCOFFEE_EXPRESSO        from './modules/tcoffeeModes.nf'   
+include TCOFFEE_PROCOFFEE       from './modules/tcoffeeModes.nf'   
+include TCOFFEE_3DCOFFEE        from './modules/tcoffeeModes.nf'   
+include TCOFFEE_TRMSD           from './modules/tcoffeeModes.nf'   
+include TCOFFEE_RCOFFEE         from './modules/tcoffeeModes.nf'   
+include TCOFFEE_RCOFFEE_CONSAN  from './modules/tcoffeeModes.nf'   
+include TCOFFEE_3DALIGN         from './modules/tcoffeeModes.nf'   
+include TCOFFEE_3DMALIGN        from './modules/tcoffeeModes.nf'   
 
 seqs_ch = Channel.fromPath( params.seqs, checkIfExists: true ).map { item -> [ item.baseName, item] }
 
-if ( params.msafile ) {
-  Channel
-  .fromPath(params.msafile)
-  .map { item -> [ item.simpleName , item] }
-  .set { fastaAln }
-}
-
 if ( params.templates ) {
   Channel
-  .fromPath(params.templates)
+  .fromPath(params.templates, checkIfExists: true)
   .map { item -> [ item.simpleName, item] }
-  .set { templates}
+  .set { templates_ch }
+}else { 
+  Channel
+    .empty()
+    .set { templates_ch }
 }
 
 if ( params.pdb ) {
   Channel
-  .fromPath(params.pdb)
+  .fromPath(params.pdb, checkIfExists: true)
   .map { item -> [ item.simpleName , item] }
   .groupTuple()
   .set { pdbFiles}
+}else { 
+  Channel
+    .empty()
+    .set { pdbFiles }
 }
 
-fastaAln
-  .combine(templates, by: 0)
-  .set{ aln_templates}
+if ( params.pairFile ) {
+  Channel
+  .fromPath(params.pairFile, checkIfExists: true)
+  .map { item -> [ item.simpleName , item] }
+  .groupTuple()
+  .set { pair_file}
+}else { 
+  Channel
+    .empty()
+    .set { pair_file }
+}
 
-/*fastaAln
-  .combine(templates, by: 0)
-  .combine(pdbFiles, by: 0)
-  .set{ aln_templates_pdb}
-*/
+if ( params.libs ) {
+  Channel
+  .fromPath(params.libs, checkIfExists: true)
+  .map { item -> [ item.simpleName , item] }
+  .groupTuple()
+  .set { libs_ch }
+}else { 
+  Channel
+    .empty()
+    .set { libs_ch }
+}
 
 // tokenize params 
-tcoffee_mode = params.tc_modes.tokenize(',')
-pair_method = params.pairMethods.tokenize(',')
+//pair_method = params.pairMethods.tokenize(',')
 
 /*    main script flow    */
 workflow pipeline {
-      TCOFFEE_TEST(seqs_ch, tcoffee_mode, aln_templates, pair_method)
-      //CLANS_ANALYSIS(seqs_ch, tcoffee_mode, aln_templates, pair_method)
+    seqs_ch
+      .join(templates_ch, remainder: true)
+      .set { seqs_templates }
+
+    seqs_templates
+      .join(libs_ch, remainder: true)
+      //.view()
+      .set { seqs_templates_libs }
+
+    TCOFFEE_DEFAULT(seqs_templates_libs,"NA")
+    TCOFFEE_QUICKALN(seqs_templates_libs,"NA")
+    TCOFFEE_MCOFFEE(seqs_templates_libs,"NA")
+    //TCOFFEE_ACCURATE(seqs_templates_libs,"NA")
+    TCOFFEE_FMCOFFEE(seqs_templates_libs,"NA")
+    TCOFFEE_PSICOFFEE(seqs_templates_libs,"NA")
+    TCOFFEE_EXPRESSO(seqs_templates_libs,"NA")
+    TCOFFEE_PROCOFFEE(seqs_templates_libs,"NA")
+    TCOFFEE_3DCOFFEE(seqs_templates_libs,"NA")
+    TCOFFEE_TRMSD(seqs_templates_libs,"NA")
+    //TCOFFEE_RCOFFEE(seqs_templates_libs,"NA")
+    //TCOFFEE_RCOFFEE_CONSAN(seqs_templates_libs,"NA")
+    TCOFFEE_3DALIGN(seqs_templates_libs,"NA")
+    TCOFFEE_3DMALIGN(seqs_templates_libs,"NA")
 }
 
 workflow {

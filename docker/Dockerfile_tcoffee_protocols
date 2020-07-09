@@ -2,6 +2,7 @@ FROM debian:jessie
 MAINTAINER Edgar Garriga <edgano@gmail.com>
 
 ## 'edgano/tcoffee:protocols'
+
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       ed \
@@ -37,6 +38,24 @@ RUN mkdir -p /database/pdb && \
     wget ftp://ftp.wwpdb.org/pub/pdb/derived_data/pdb_seqres.txt && \
     makeblastdb -in pdb_seqres.txt -input_type fasta -dbtype prot
 
+# Install TMalign
+RUN wget https://zhanglab.ccmb.med.umich.edu/TM-align/TMalign.f && \
+    gfortran -static -O3 -ffast-math -lm -o TMalign TMalign.f && \
+    mv TMalign /bin/.
+
+# Install Mustang
+RUN wget http://lcb.infotech.monash.edu.au/mustang/mustang_v3.2.3.tgz &&  \
+   tar -zxvf mustang_v3.2.3.tgz && \
+   cd MUSTANG_v3.2.3/ && \
+   make && \
+   cp bin/mustang-3.2.3 /bin/mustang && \
+   rm /mustang_v3.2.3.tgz
+
+# Install SAP
+RUN apt-get install -y autoconf
+RUN git clone https://github.com/mathbio-nimr-mrc-ac-uk/SAP.git && \
+    cd SAP/ && autoreconf -fvi && ./configure && make && make install
+
 # Install Kalign2
 RUN wget http://msa.sbc.su.se/downloads/kalign/current.tar.gz && \
     mkdir kalign2 && \
@@ -53,45 +72,7 @@ RUN wget https://drive5.com/muscle/downloads3.8.31/muscle3.8.31_i86linux32.tar.g
     mv muscle3.8.31_i86linux32 muscle && \
     rm muscle3.8.31_i86linux32.tar.gz && \
     mv muscle /bin/
-
-#install fasta35 (needed for mafft)
-RUN wget https://faculty.virginia.edu/wrpearson/fasta/fasta33-35/fasta-35.4.12.tar.gz --no-check-certificate && \
-    tar -zxf fasta-35.4.12.tar.gz && \
-    cd fasta-35.4.12/src && \
-    make -f ../make/Makefile.linux_sse2 && \
-    cp ../bin/* /bin/. && \
-    rm /fasta-35.4.12.tar.gz
-
-# install MAFFT
-RUN wget http://mafft.cbrc.jp/alignment/software/mafft-7.397-with-extensions-src.tgz && \
-    tar xfvz mafft-7.397-with-extensions-src.tgz && \
-    cd mafft-7.397-with-extensions/core/ && \
-    sed -i "s/PREFIX = \/usr\/local/PREFIX = \/mafft/g" Makefile && \
-    sed -i "s/BINDIR = \$(PREFIX)\/bin/BINDIR = \/mafft\/bin/g" Makefile && \
-    make clean && \
-    make && \
-    make install && \
-    wget http://mafft.cbrc.jp/alignment/software/newick2mafft.rb && \
-    chmod +x newick2mafft.rb && \
-    cp newick2mafft.rb /bin/. && \
-    export "PATH=$PATH:/mafft/bin" && \ 
-    cp /mafft/bin/* /bin/. && \
-    mv /mafft-7.397-with-extensions /mafft && \
-    rm /mafft-7.397-with-extensions-src.tgz
  
-# Install TMalign
-RUN wget https://zhanglab.ccmb.med.umich.edu/TM-align/TMalign.f && \
-    gfortran -static -O3 -ffast-math -lm -o TMalign TMalign.f && \
-    mv TMalign /bin/.
-
-# Install Mustang
-RUN wget http://lcb.infotech.monash.edu.au/mustang/mustang_v3.2.3.tgz &&  \
-   tar -zxvf mustang_v3.2.3.tgz && \
-   cd MUSTANG_v3.2.3/ && \
-   make && \
-   cp bin/mustang-3.2.3 /bin/mustang && \
-   rm /mustang_v3.2.3.tgz
-
 # Install POA 
 RUN wget https://sourceforge.net/projects/poamsa/files/latest/download && \
     tar -xvf download  && \
@@ -109,35 +90,7 @@ RUN wget https://www.tbi.univie.ac.at/RNA/download/sourcecode/2_4_x/ViennaRNA-2.
     make && \
     make install
 
-# install argtable 2 (needed for clustal Omega)
-RUN wget http://prdownloads.sourceforge.net/argtable/argtable2-13.tar.gz && \
-    tar -zxf argtable2-13.tar.gz && \
-    cd argtable2-13 && \
-    ./configure && \
-    make && \
-    make install && \
-    rm /argtable2-13.tar.gz
-
-# install CLUSTAL OMEGA
-RUN wget http://www.clustal.org/omega/clustal-omega-1.2.4.tar.gz && \
-    tar -zxf clustal-omega-1.2.4.tar.gz && \
-    cd clustal-omega-1.2.4 && \
-    sed -i '1157s/1024/100/' src/clustal/muscle_tree.c && \
-    ./configure && \
-    make && \
-    make install && \
-    rm /clustal-omega-1.2.4.tar.gz
-
-#install CLUSTAL w2
-RUN wget http://www.clustal.org/download/current/clustalw-2.1.tar.gz && \
-    tar -zxf clustalw-2.1.tar.gz && \
-    cd clustalw-2.1 && \
-    ./configure && \
-    make && \
-    make install && \
-    rm /clustalw-2.1.tar.gz
-
-#install Dialign-T
+# Install Dialign-T
 RUN wget http://dialign-tx.gobics.de/DIALIGN-T_0.1.3.tar.gz && \
     tar xvf DIALIGN-T_0.1.3.tar.gz && \
     rm DIALIGN-T_0.1.3.tar.gz && \
@@ -174,6 +127,59 @@ RUN wget http://eddylab.org/software/consan/consan-1.2.tar.gz && \
     make install && \
     cp ./bin/* /bin/.
 
+# Install fasta35 (needed for mafft)
+RUN wget https://faculty.virginia.edu/wrpearson/fasta/fasta33-35/fasta-35.4.12.tar.gz --no-check-certificate && \
+    tar -zxf fasta-35.4.12.tar.gz && \
+    cd fasta-35.4.12/src && \
+    make -f ../make/Makefile.linux_sse2 && \
+    cp ../bin/* /bin/. && \
+    rm /fasta-35.4.12.tar.gz
+
+# Install MAFFT
+RUN wget http://mafft.cbrc.jp/alignment/software/mafft-7.397-with-extensions-src.tgz && \
+    tar xfvz mafft-7.397-with-extensions-src.tgz && \
+    cd mafft-7.397-with-extensions/core/ && \
+    sed -i "s/PREFIX = \/usr\/local/PREFIX = \/mafft/g" Makefile && \
+    sed -i "s/BINDIR = \$(PREFIX)\/bin/BINDIR = \/mafft\/bin/g" Makefile && \
+    make clean && \
+    make && \
+    make install && \
+    wget http://mafft.cbrc.jp/alignment/software/newick2mafft.rb && \
+    chmod +x newick2mafft.rb && \
+    cp newick2mafft.rb /bin/. && \
+    export "PATH=$PATH:/mafft/bin" && \ 
+    cp /mafft/bin/* /bin/. && \
+    mv /mafft-7.397-with-extensions /mafft && \
+    rm /mafft-7.397-with-extensions-src.tgz
+
+# Install argtable 2 (needed for clustal Omega)
+RUN wget http://prdownloads.sourceforge.net/argtable/argtable2-13.tar.gz && \
+    tar -zxf argtable2-13.tar.gz && \
+    cd argtable2-13 && \
+    ./configure && \
+    make && \
+    make install && \
+    rm /argtable2-13.tar.gz
+
+# Install CLUSTAL OMEGA
+RUN wget http://www.clustal.org/omega/clustal-omega-1.2.4.tar.gz && \
+    tar -zxf clustal-omega-1.2.4.tar.gz && \
+    cd clustal-omega-1.2.4 && \
+    sed -i '1157s/1024/100/' src/clustal/muscle_tree.c && \
+    ./configure && \
+    make && \
+    make install && \
+    rm /clustal-omega-1.2.4.tar.gz
+
+# Install CLUSTAL w2
+RUN wget http://www.clustal.org/download/current/clustalw-2.1.tar.gz && \
+    tar -zxf clustalw-2.1.tar.gz && \
+    cd clustalw-2.1 && \
+    ./configure && \
+    make && \
+    make install && \
+    rm /clustalw-2.1.tar.gz
+
 # Install TCOFFEE
 RUN git clone https://github.com/cbcrg/tcoffee.git tcoffee && \
     cd tcoffee && \
@@ -184,17 +190,18 @@ RUN git clone https://github.com/cbcrg/tcoffee.git tcoffee && \
     cp t_coffee *.pl /bin/.
 
 ENV HOME '/'
-
 ENV FASTA_4_MAFFT '/bin/fasta35'
-
 ENV HOME_4_TCOFFEE '/tmp/.tcoffee/'
 ENV CACHE_4_TCOFFEE '/tmp/.tcoffee/cache'
 ENV LOCKDIR_4_TCOFFEE '/tmp/.tcoffee/lock'
 ENV TMP_4_TCOFFEE '/tmp/.tcoffee/tmp'
 ENV TRASH_4_TCOFFEE '/tmp/.tcoffee/trash'
-
 #unset MAFFT_BINARIES
 ENV MAFFT_BINARIES ''
 
-#configure perl5 to BLAST templates
+# Configure perl5 to BLAST templates
+ENV EMAIL_4_TCOFFEE 'test@gmail.com' 
 ENV PERL5LIB '/usr/share/perl5:/tcoffee/perl/lib/perl5'
+RUN apt-get install -y cpanminus libexpat1-dev && \
+    cpanm XML::Simple
+

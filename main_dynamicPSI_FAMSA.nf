@@ -43,18 +43,18 @@ top20fam="gluts,myb_DNA-binding,tRNA-synt_2b,biotin_lipoyl,hom,ghf13,aldosered,h
 //params.seqs ="/users/cn/egarriga/datasets/homfam/combinedSeqs/{${seq2improve}}.fa"
 
 // input sequences to align in fasta format
-params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/*.fa"
+params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/{seatoxin,hip,scorptoxin,cyt3,rnasemam,bowman,toxin,ghf11,TNF,sti}.fa"
 
 params.refs = "/users/cn/egarriga/datasets/homfam/refs/*.ref"
 
-params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.{FAMSA,CLUSTALO,MAFFT_PARTTREE}.dnd"
+params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.FAMSA.dnd"
 //params.trees = false
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1
 params.align_methods = "CLUSTALO"//,FAMSA,MAFFT-FFTNS1" 
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE
 params.tree_methods = "MBED"      //TODO -> reuse trees for multiple methods.
 
-params.buckets = "35"
+params.buckets = "50"
 
 //  ## SLAVE parameters
                           //need to be lowercase -> direct to tcoffee

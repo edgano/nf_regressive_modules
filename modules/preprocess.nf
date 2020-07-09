@@ -94,8 +94,8 @@ process SELECTED_PAIRS_OF_COLUMNS_MATRIX {     //TODO
 
     input:
     tuple val(id), path(fasta)
-    val (pair)
-    path (template)
+    tuple val(id), path (pair)
+    set val(id), file(fasta), file(template)
     val (numReplicates)
 
     output:

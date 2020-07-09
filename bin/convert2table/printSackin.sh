@@ -17,17 +17,17 @@ declare -a all=(seatoxin hip     scorptoxin      cyt3    rnasemam        bowman 
 ################
 ##  ALIGNERS  ##
 ################
-declare -a aligner=(tcoffee_msa.100_famsa_msa.100000000_uniref50)
+declare -a aligner=()
 # cynamic.35_100000.psicoffee_msa.50_famsa_msa.100000000_uniref50.with.FAMSA.tree.tc
 ################
 ##    TREES   ##
 ################   
-declare -a tree=(FAMSA)
+declare -a tree=(CLUSTALO FAMSA MAFFT_PARTTREE)
 
 ###############
 ##   Nseq    ##
 ###############
-declare -a bucket=(100_100000) 
+declare -a bucket=() 
 
 ##############
 ## Prog/REG ##
@@ -44,162 +44,24 @@ printf "\t\t########################\n"
 ###   NSeq | 1000 | 2000 | 1000 | 2000 |
 #####
 
-## print 1st line -> ALIGN
-printf "ALIG;"
-for x in ${aligner[@]} 
-do
-  for y in ${tree[@]}
-  do
-    for z in ${bucket[@]}
-    do
-      printf ${x}";"
-    done
-  done
-done
-printf "\n"
-
 #print 2nd line -> TREE
 printf "TREE;"
-for x in ${aligner[@]}
-do
   for y in ${tree[@]}
   do
-    for z in ${bucket[@]}
-    do
       printf ${y}";"
-    done
   done
-done
-printf "\n"
 
-##print 3r line -> nSeq
-printf "nSeq;"
-for x in ${aligner[@]}
-do
-  for y in ${tree[@]}
-  do
-    for z in ${bucket[@]}
-    do
-      printf ${z}";"
-    done
-  done
-done
 printf "\n\n"
 
 for family in ${all[@]} ## loop for all families
 do
   printf "${family};"
 	
-	for align_method in ${aligner[@]} ## loop each alignment
-    do
         for tree_method in ${tree[@]} ## loop each tree
         do
-          for nSeq in ${bucket[@]}  ## loop all the buckets
-          do
-            cat ../../results/score/tc/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.tc | tr '' ';'| tr -d "[:space:]"
+            cat ../../results/sackin/${family}_${tree_method}.pda_sackin | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-          done
        	done
-    done
     printf "\n"
 done
 
-printf "\n"
-printf "\t\t########################\n"
-printf "\t\t## Homoplasy -- EASEL ##\n"
-printf "\t\t########################\n"
-printf "\n"
-## print 1st line -> ALIGN
-printf "ALIG;"
-for x in ${aligner[@]} 
-do
-  for y in ${tree[@]}
-  do
-    for z in ${bucket[@]}
-    do
-      for i in {1..7}
-      do
-        printf ${x}";"
-      done
-    done
-  done
-done
-printf "\n"
-
-#print 2nd line -> TREE
-printf "TREE;"
-for x in ${aligner[@]}
-do
-  for y in ${tree[@]}
-  do
-    for z in ${bucket[@]}
-    do
-      for i in {1..7}
-      do
-        printf ${y}";"
-      done
-    done
-  done
-done
-printf "\n"
-
-##print 3r line -> nSeq
-printf "nSeq;"
-for x in ${aligner[@]}
-do
-  for y in ${tree[@]}
-  do
-    for z in ${bucket[@]}
-    do
-      for i in {1..7}
-      do
-        printf ${z}";"
-      done
-    done
-  done
-done
-printf "\n"
-##print 4r line -> homoplasy
-printf "nSeq;"
-for x in ${aligner[@]}
-do
-  for y in ${tree[@]}
-  do
-    for z in ${bucket[@]}
-    do
-      printf "avgID;len;ngap;ngap2;homo;w_homo;w_homo2;"
-    done
-  done
-done
-
-printf "\n\n"
-
-for family in ${all[@]} ## loop for all families
-do
-  printf "${family};"
-  
-	for align_method in ${aligner[@]} ## loop each alignment
-    do
-        for tree_method in ${tree[@]} ## loop each tree
-        do
-          for nSeq in ${bucket[@]}  ## loop all the buckets
-          do
-            cat ../../results/easel/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.avgId | tr '' ';'| tr -d "[:space:]"
-            printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.len | tr '' ';'| tr -d "[:space:]"
-            printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.ngap | tr '' ';'| tr -d "[:space:]"
-            printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.ngap2 | tr '' ';'| tr -d "[:space:]"
-            printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.homo | tr '' ';'| tr -d "[:space:]"
-            printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.w_homo | tr '' ';'| tr -d "[:space:]"
-            printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.w_homo2 | tr '' ';'| tr -d "[:space:]"
-            printf ";" 
-          done
-       	done
-    done
-    printf "\n"
-done

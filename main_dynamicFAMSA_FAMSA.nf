@@ -47,14 +47,14 @@ params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/*.fa"
 
 params.refs = "/users/cn/egarriga/datasets/homfam/refs/*.ref"
 
-params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.{FAMSA,CLUSTALO,MAFFT_PARTTREE}.dnd"
+params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.FAMSA.dnd"
 //params.trees = false
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1
 params.align_methods = "CLUSTALO"//,FAMSA,MAFFT-FFTNS1" 
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE
 params.tree_methods = "MBED"      //TODO -> reuse trees for multiple methods.
 
-params.buckets = "20"
+params.buckets = "100"
 
 //  ## SLAVE parameters
                           //need to be lowercase -> direct to tcoffee
@@ -64,14 +64,14 @@ params.slave_tree_methods="mbed,famsadnd,parttree"
 //  ## DYNAMIC parameters
 params.dynamicX = "100000"
           //TODO -> make 2 list? one with aligners and the other with sizes? (to have more than 2 aligners)
-params.dynamicMasterAln="famsa_msa"
-params.dynamicMasterSize="50"
+params.dynamicMasterAln="tcoffee_msa"
+params.dynamicMasterSize="100"
 params.dynamicSlaveAln="famsa_msa"
 params.dynamicSlaveSize="100000000"
 params.dynamicConfig=true
 
           //uniref50, pdb or path
-params.db = "pdb"        
+params.db = "uniref50"        
 
 params.progressive_align = false
 params.regressive_align = false           //done
