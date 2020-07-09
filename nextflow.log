@@ -1,0 +1,141 @@
+Jul-07 11:14:05.662 [main] DEBUG nextflow.cli.Launcher - $> nextflow run edgano/nf_regressive_modules/main_reg_prog.nf -profile test,docker -resume
+Jul-07 11:14:06.055 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 20.04.1
+Jul-07 11:14:06.206 [main] INFO  nextflow.cli.CmdRun - Pulling edgano/nf_regressive_modules ...
+Jul-07 11:14:06.207 [main] DEBUG nextflow.scm.RepositoryProvider - Request [credentials -:-] -> https://api.github.com/repos/edgano/nf_regressive_modules/contents/main_reg_prog.nf
+Jul-07 11:14:08.038 [main] DEBUG nextflow.scm.RepositoryProvider - Request [credentials -:-] -> https://api.github.com/repos/edgano/nf_regressive_modules
+Jul-07 11:14:08.238 [main] DEBUG nextflow.scm.AssetManager - Pulling edgano/nf_regressive_modules -- Using remote clone url: https://github.com/edgano/nf_regressive_modules.git
+Jul-07 11:14:12.240 [main] INFO  nextflow.cli.CmdRun -  downloaded from https://github.com/edgano/nf_regressive_modules.git
+Jul-07 11:14:13.780 [main] DEBUG nextflow.scm.AssetManager - Git config: /Users/edgargarriga/.nextflow/assets/edgano/nf_regressive_modules/.git/config; branch: master; remote: origin; url: https://github.com/edgano/nf_regressive_modules.git
+Jul-07 11:14:13.780 [main] INFO  nextflow.cli.CmdRun - Launching `edgano/nf_regressive_modules` [serene_mestorf] - revision: 08148beef6 [master]
+Jul-07 11:14:13.871 [main] DEBUG nextflow.config.ConfigBuilder - Found config base: /Users/edgargarriga/.nextflow/assets/edgano/nf_regressive_modules/nextflow.config
+Jul-07 11:14:13.872 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /Users/edgargarriga/CBCRG/nf_regressive_modules/nextflow.config
+Jul-07 11:14:13.873 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /Users/edgargarriga/.nextflow/assets/edgano/nf_regressive_modules/nextflow.config
+Jul-07 11:14:13.873 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /Users/edgargarriga/CBCRG/nf_regressive_modules/nextflow.config
+Jul-07 11:14:13.890 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `test,docker`
+Jul-07 11:14:14.180 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `test,docker`
+Jul-07 11:14:14.276 [main] DEBUG nextflow.config.ConfigBuilder - Available config profiles: [debug, test, conda, crg, singularity, test_tc, homfam, exthomfam, docker]
+Jul-07 11:14:14.445 [main] DEBUG nextflow.Session - Session uuid: b1292a95-73ec-4dee-8f51-474c79eb3795
+Jul-07 11:14:14.445 [main] DEBUG nextflow.Session - Run name: serene_mestorf
+Jul-07 11:14:14.445 [main] DEBUG nextflow.Session - Executor pool size: 4
+Jul-07 11:14:19.565 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 20.04.1 build 5335
+  Created: 03-05-2020 19:37 UTC (21:37 CEST)
+  System: Mac OS X 10.15.5
+  Runtime: Groovy 2.5.8 on Java HotSpot(TM) 64-Bit Server VM 11.0.6+8-LTS
+  Encoding: UTF-8 (UTF-8)
+  Process: 33655@Edgars-MacBook-Air.local [192.168.1.40]
+  CPUs: 4 - Mem: 8 GB (29.5 MB) - Swap: 3 GB (1 GB)
+Jul-07 11:14:19.657 [main] DEBUG nextflow.Session - Work-dir: /Users/edgargarriga/CBCRG/nf_regressive_modules/work [Mac OS X]
+Jul-07 11:14:19.798 [main] DEBUG nextflow.Session - Observer factory: TowerFactory
+Jul-07 11:14:19.810 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Jul-07 11:14:20.637 [main] DEBUG nextflow.Session - Session start invoked
+Jul-07 11:14:20.655 [main] DEBUG nextflow.trace.TraceFileObserver - Flow starting -- trace file: /Users/edgargarriga/CBCRG/nf_regressive_modules/metainfo/pipeline_info/execution_trace.txt
+Jul-07 11:14:21.209 [main] WARN  nextflow.NextflowMeta$Preview - DSL 2 IS AN EXPERIMENTAL FEATURE UNDER DEVELOPMENT -- SYNTAX MAY CHANGE IN FUTURE RELEASE
+Jul-07 11:14:21.218 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Jul-07 11:14:21.276 [main] INFO  nextflow.Nextflow - PIPELINE  ~  version 0.1"
+======================================="
+Input sequences (FASTA)                        : https://raw.githubusercontent.com/edgano/datasets-test/homfam/seatoxin.fa
+Input references (Aligned FASTA))              : https://raw.githubusercontent.com/edgano/datasets-test/homfam/seatoxin.ref
+Input trees (NEWICK)                           : false
+Alignment methods                              : CLUSTALO
+Tree methods                                   : MBED
+Bucket size                                    : 1000
+--##--
+Generate Progressive alignments                : false
+Generate Regressive alignments                 : true
+Generate Slave tree alignments                 : false
+         Slave tree methods                    : mbed,parttree,famsadnd
+Generate Dynamic alignments                    : false
+         Dynamic size                          : 10000
+         Dynamic config file                   : true
+                 master align - boundary       : psicoffee_msa - 50
+                 slave align  - boundary       : famsa_msa - 100000000
+         Dynamic DDBB                          : pdb
+         DDBB path                             : /database/pdb/pdb_seqres.txt
+Generate Pool alignments                       : false
+--##--
+Perform evaluation? Requires reference         : true
+Check homoplasy? Only for regressive           : true
+Check gapCount? For progressive                : true
+Check metrics?                                 : true
+Check easel info?                              : true
+--##--
+Output directory (DIRECTORY)                   : /Users/edgargarriga/.nextflow/assets/edgano/nf_regressive_modules/results
+
+Jul-07 11:14:24.833 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: REG_MAFFT-GINSI, POOL_ALIGNER, REG_PSICOFFEE, PRECOMPUTE_BLAST, SLAVE_ALIGNER, REG_MUSCLE, INTRAMOL_MATRIX_GENERATION, REG_PROBCONS, ALN_2_PHYLIP, REG_MAFFT_FFTNS1, LIBRARY_GENERATION, REG_UPP, REG_MAFFT, DYNAMIC_ALIGNER, COMBINE_SEQS, SACKIN_INDEX, EVAL_ALIGNMENT, REG_TCOFFEE, TREE_GENERATION, REG_ALIGNER, EASEL_INFO, METRICS, SELECTED_PAIRS_OF_COLUMNS_MATRIX, PROG_ALIGNER, REG_MSAPROBS, REG_MAFFT-SPARSECORE, GAPS_PROGRESSIVE, HOMOPLASY, REG_CLUSTALO, REG_FAMSA, REG_3DMALIGN, IRMSD, GENERATE_DYNAMIC_CONFIG, REG_3DALIGN
+Jul-07 11:14:25.004 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-07 11:14:25.005 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-07 11:14:25.028 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Jul-07 11:14:25.053 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=4; memory=8 GB; capacity=4; pollInterval=100ms; dumpInterval=5m
+Jul-07 11:14:25.191 [main] DEBUG nextflow.processor.TaskProcessor - Creating *combiner* operator for each param(s) at index(es): [1]
+Jul-07 11:14:25.323 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-07 11:14:25.323 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-07 11:14:25.325 [main] DEBUG nextflow.processor.TaskProcessor - Creating *combiner* operator for each param(s) at index(es): [1]
+Jul-07 11:14:25.337 [main] DEBUG nextflow.Session - Session aborted -- Cause: Unknown workflow parameter definition: REG_ANALYSIS
+Jul-07 11:14:25.377 [main] DEBUG nextflow.Session - The following nodes are still active:
+  [operator] map
+  [operator] map
+  [operator] cross
+  [operator] map
+
+Jul-07 11:14:25.405 [main] ERROR nextflow.cli.Launcher - Unknown workflow parameter definition: REG_ANALYSIS
+java.lang.IllegalArgumentException: Unknown workflow parameter definition: REG_ANALYSIS
+	at nextflow.script.WorkflowParamsResolver.invokeMethod(WorkflowDef.groovy:249)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeOnDelegationObjects(ClosureMetaClass.java:397)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:339)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1041)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:821)
+	at groovy.lang.GroovyObjectSupport.invokeMethod(GroovyObjectSupport.java:44)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeOnDelegationObjects(ClosureMetaClass.java:413)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:339)
+	at org.codehaus.groovy.runtime.callsite.PogoMetaClassSite.callCurrent(PogoMetaClassSite.java:64)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallCurrent(CallSiteArray.java:51)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(AbstractCallSite.java:156)
+	at Script_c56771ec$_runScript_closure5$_closure8.doCall(Script_c56771ec:198)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:101)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:263)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1041)
+	at groovy.lang.Closure.call(Closure.java:405)
+	at groovy.lang.Closure.call(Closure.java:399)
+	at nextflow.script.WorkflowDef.run0(WorkflowDef.groovy:204)
+	at nextflow.script.WorkflowDef.run(WorkflowDef.groovy:191)
+	at nextflow.script.BindableDef.invoke_a(BindableDef.groovy:51)
+	at nextflow.script.ComponentDef.invoke_o(ComponentDef.groovy:40)
+	at nextflow.script.WorkflowBinding.invokeMethod(WorkflowBinding.groovy:87)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeOnDelegationObjects(ClosureMetaClass.java:397)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:339)
+	at org.codehaus.groovy.runtime.callsite.PogoMetaClassSite.callCurrent(PogoMetaClassSite.java:64)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallCurrent(CallSiteArray.java:51)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(AbstractCallSite.java:156)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(AbstractCallSite.java:160)
+	at Script_c56771ec$_runScript_closure6$_closure13.doCall(Script_c56771ec:215)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:101)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:263)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1041)
+	at groovy.lang.Closure.call(Closure.java:405)
+	at groovy.lang.Closure.call(Closure.java:399)
+	at nextflow.script.WorkflowDef.run0(WorkflowDef.groovy:204)
+	at nextflow.script.WorkflowDef.run(WorkflowDef.groovy:191)
+	at nextflow.script.BindableDef.invoke_a(BindableDef.groovy:51)
+	at nextflow.script.ChainableDef$invoke_a.call(Unknown Source)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:47)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:115)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:127)
+	at nextflow.script.BaseScript.runDsl2(BaseScript.groovy:180)
+	at nextflow.script.BaseScript.run(BaseScript.groovy:189)
+	at nextflow.script.ScriptParser.runScript(ScriptParser.groovy:225)
+	at nextflow.script.ScriptRunner.run(ScriptRunner.groovy:218)
+	at nextflow.script.ScriptRunner.execute(ScriptRunner.groovy:126)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:273)
+	at nextflow.cli.Launcher.run(Launcher.groovy:460)
+	at nextflow.cli.Launcher.main(Launcher.groovy:642)

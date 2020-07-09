@@ -111,7 +111,6 @@ process TCOFFEE_PSICOFFEE {
 
     input:
     tuple val(id), file(seqs), file(template), file(library)
-    val(fakeId)             //to ensure the process before when precompute Blast
 
     output:
     tuple val (id), path ("*.aln"), emit: alignmentFile
