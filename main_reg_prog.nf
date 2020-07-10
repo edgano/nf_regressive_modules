@@ -49,9 +49,9 @@ params.refs = "/users/cn/egarriga/datasets/homfam/refs/*.ref"
 
 params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.{FAMSA,CLUSTALO,MAFFT_PARTTREE}.dnd"
 //params.trees = false
-                      //TODO FIX -> reg_UPP
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE,MAFFT,MSAPROBS,PROBCONS,TCOFFEE,UPP,MUSCLE
-params.align_methods = "CLUSTALO"
+                      //TODO -> reg MSAPROBS,UPP
+params.align_methods = "CLUSTALO"//,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE,MAFFT,PROBCONS,MUSCLE"
                       
 //CLUSTALW-QUICK,CLUSTALW                    
 //FAMSA-SLINK,FAMSA-SLINKmedoid,FAMSA-SLINKparttree,FAMSA-UPGMA,FAMSA-UPGMAmedoid,FAMSA-UPGMAparttree   
@@ -67,7 +67,7 @@ params.align_methods = "CLUSTALO"
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE0
 params.tree_methods = "MBED"      
 
-params.buckets = "1000"
+params.buckets = "1000,2000"
 
 //  ## SLAVE parameters
                           //need to be lowercase -> direct to tcoffee
@@ -91,16 +91,16 @@ pdb_path = "/database/pdb/pdb_seqres.txt"                       // docker path
 
 
 params.progressive_align = false
-params.regressive_align = true           
+params.regressive_align = false           
 params.pool_align=false                  
-params.slave_align=false   
+params.slave_align=true   
 params.dynamic_align=false               
 
 params.evaluate=true
-params.homoplasy=true
-params.gapCount=true
-params.metrics=true
-params.easel=true
+params.homoplasy=false
+params.gapCount=false
+params.metrics=false
+params.easel=false
 
 // output directory
 params.outdir = "$baseDir/results"
@@ -149,11 +149,12 @@ log.info """\
 // import analysis pipelines
 include TREE_GENERATION from './modules/treeGeneration'        params(params)
 //include REG_ANALYSIS from './modules/reg_analysis'        params(params)
-include REG_ANALYSIS from './modules/regressiveAnalysis'        params(params)
-include PROG_ANALYSIS from './modules/prog_analysis'      params(params)
-include SLAVE_ANALYSIS from './modules/reg_analysis'      params(params)
-include DYNAMIC_ANALYSIS from './modules/reg_analysis'    params(params)
-include POOL_ANALYSIS from './modules/reg_analysis'       params(params)
+include REG_ANALYSIS from './modules/analysis_regressive'        params(params)
+//include PROG_ANALYSIS from './modules/prog_analysis'      params(params)
+include PROG_ANALYSIS from './modules/analysis_progressive'      params(params)
+include SLAVE_ANALYSIS from './modules/analysis_slaveTree'      params(params)
+//include DYNAMIC_ANALYSIS from './modules/reg_analysis'    params(params)
+//include POOL_ANALYSIS from './modules/reg_analysis'       params(params)
 
 // Channels containing sequences
 seqs_ch = Channel.fromPath( params.seqs, checkIfExists: true ).map { item -> [ item.baseName, item] }
@@ -198,17 +199,17 @@ workflow pipeline {
       REG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
     }
     if (params.progressive_align){
-      PROG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method)
+      PROG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, "NA")
     }
     if (params.slave_align){
       SLAVE_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list, slave_method)
-    }
+    }/*
     if (params.dynamic_align){
       DYNAMIC_ANALYSIS(seqs_and_trees, refs_ch, tree_method, bucket_list, dynamicX)
     }
     if (params.pool_align){
       POOL_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
-    }
+    }*/
 }
 
 workflow {
