@@ -1,19 +1,12 @@
 #!/bin/bash nextflow
 params.outdir = 'results'
 
-include PROG_ALIGNER       from './generateAlignment.nf'   
 include EVAL_ALIGNMENT      from './evaluateAlignment.nf'  
 include EASEL_INFO          from './evaluateAlignment.nf'  
 include GAPS_PROGRESSIVE    from './evaluateAlignment.nf'  
 include METRICS             from './evaluateAlignment.nf' 
 
-include PRECOMPUTE_BLAST    from './preprocess.nf'   
-
-include INTRAMOL_MATRIX_GENERATION   from './preprocess.nf'
-include SELECTED_PAIRS_OF_COLUMNS_MATRIX   from './preprocess.nf'
-include LIBRARY_GENERATION   from './preprocess.nf'
-include ALN_2_PHYLIP   from './preprocess.nf'
-
+include PROG_ALIGNER       from './generateAlignment.nf'   
 workflow PROG_ANALYSIS {
   take:
     seqs_and_trees
@@ -52,6 +45,10 @@ workflow PROG_ANALYSIS {
     }
 }
 
+include INTRAMOL_MATRIX_GENERATION   from './preprocess.nf'
+include SELECTED_PAIRS_OF_COLUMNS_MATRIX   from './preprocess.nf'
+include LIBRARY_GENERATION   from './preprocess.nf'
+include ALN_2_PHYLIP   from './preprocess.nf'
 workflow TCOFFEE_TEST {
   take:
     seqs
@@ -67,6 +64,7 @@ workflow TCOFFEE_TEST {
     //ALN_2_PHYLIP(seqs)
 }
 
+include PRECOMPUTE_BLAST    from './preprocess.nf'   
 workflow TCOFFEE_ANALYSIS {
   take:
     seqs
@@ -84,7 +82,7 @@ workflow TCOFFEE_ANALYSIS {
 
 }
 
-include TCOFFEE       from './generateAlignment.nf'   
+include TCOFFEE_ALIGNER       from './generateAlignment.nf'   
 workflow TCOFFEE_CI {
    take: 
     seqs_trees_templates_libs
@@ -92,7 +90,7 @@ workflow TCOFFEE_CI {
     tc_mode  
 
   main: 
-    //def template_filter = template.name != 'input.3' ? "-template_file $template" : ''
-    //def libs_filter = library.name != 'input.4' ? "-lib $library" : ''
-    TCOFFEE (seqs_trees_templates_libs, tc_mode)
+
+    TCOFFEE_ALIGNER (seqs_trees_templates_libs, tc_mode)
+    //TCOFFEE.out[2].view()
 }

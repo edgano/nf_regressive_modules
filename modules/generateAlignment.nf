@@ -118,7 +118,7 @@ process POOL_ALIGNER {
     template "${path_templates}/pool_align/pool_${align_method}.sh"
 }
 
-process TCOFFEE {
+process TCOFFEE_ALIGNER {
     container 'edgano/tcoffee:protocols'
     tag "$tc_mode  on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
@@ -131,6 +131,8 @@ process TCOFFEE {
     output:
     tuple val (id), path ("*.aln"), emit: alignmentFile
     path ".command.trace", emit: metricFile
+    path "*.aln" optional true          //TCOFFEE.out[2].view()
+
 
     script:
     template "${path_templates}/tcoffee_align/tcoffee_${tc_mode}.sh"

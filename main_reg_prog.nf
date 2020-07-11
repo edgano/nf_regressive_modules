@@ -43,7 +43,7 @@ top20fam="gluts,myb_DNA-binding,tRNA-synt_2b,biotin_lipoyl,hom,ghf13,aldosered,h
 //params.seqs ="/users/cn/egarriga/datasets/homfam/combinedSeqs/{${seq2improve}}.fa"
 
 // input sequences to align in fasta format
-params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/*.fa"
+params.seqs = "/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/sh3.fasta"
 
 params.refs = "/users/cn/egarriga/datasets/homfam/refs/*.ref"
 
@@ -85,9 +85,9 @@ params.dynamicConfig=true
 // ## TCOFFEE
                   //3DALIGN,3DCOFFEE,3DMALIGN,ACCURATE,DEFAULT,EXPRESSO,FMCOFFEE,MCOFFEE,PROCOFFEE,PSICOFFEE,QUICKALN,RCOFFEE_CONSAN,RCOFFEE,TRMSD"
   //need template -> 3DMALIGN
-params.tc_modes = "3DALIGN,3DCOFFEE,DEFAULT,EXPRESSO,FMCOFFEE,MCOFFEE,PROCOFFEE,PSICOFFEE,QUICKALN"
-params.templates = ''
-params.pdb = ''
+params.tc_modes = "DEFAULT"
+params.templates = '/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/sh3.template_file'
+params.pdb = '/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/PDBs/*.pdb'
 params.libs = ''
 params.pairFile = ''
 params.params4tcoffee = ''   
@@ -115,6 +115,10 @@ params.easel=true
 
 // output directory
 params.outdir = "$baseDir/results"
+
+//blast call cached
+params.generateBlast=false
+params.blastOutdir="$baseDir/blast"
 
 if (params.db=='uniref50'){
   params.database_path = uniref_path

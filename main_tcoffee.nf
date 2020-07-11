@@ -38,47 +38,48 @@ nextflow.preview.dsl = 2
  */
 
 // input sequences to align in fasta format
+params.seqs = "/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/sh3.fasta"
 
-// input the alignments file
-params.seqs="/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/sh3.fasta"
+params.refs = "/users/cn/egarriga/datasets/homfam/refs/*.ref"
 
-// Input the templates
-params.templates="/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/sh3.template_file"
+params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.{FAMSA,CLUSTALO,MAFFT_PARTTREE}.dnd"
+//params.trees = false
 
-//Input for the pdb files
-params.pdb="/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/PDBs/*.pdb"
+//CLUSTALW-QUICK,CLUSTALW                    
+//FAMSA-SLINK,FAMSA-SLINKmedoid,FAMSA-SLINKparttree,FAMSA-UPGMA,FAMSA-UPGMAmedoid,FAMSA-UPGMAparttree   
+//MAFFT-DPPARTTREE0,MAFFT-DPPARTTREE1,MAFFT-DPPARTTREE2,MAFFT-DPPARTTREE2size
+//MAFFT-FASTAPARTTREE,MAFFT-FFTNS1,MAFFT-FFTNS1mem,MAFFT-FFTNS2,MAFFT-FFTNS2mem
+//MAFFT-PARTTREE0,MAFFT-PARTTREE1,MAFFT-PARTTREE2,MAFFT-PARTTREE2size
+//MAFFT,MBED
+//TCOFFEE-BLENGTH,TCOFFEE-ISWLCAT,TCOFFEE-KM,TCOFFEE-LONGCAT,TCOFFEE-NJ,TCOFFEE-REG,TCOFFEE-SHORTCAT,TCOFFEE-SWL,TCOFFEE-SWLcat,TCOFFEE-UPGMA
 
-//##--##--#   INTRAMOL_MATRIX_GENERATION    #--##--##
-  params.threedTreeMode       = "4"     // 1-6
-  params.threedTreeNoWeights  = "2"     // (2=square; 3=cubic)
-  params.threedTreeModeExp    = "1"
+//TODO -> test tcoffee trees
+//                    CLUSTALW-QUICK,CLUSTALW  -> not working on PROG bc they are not rooted
+                      //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE0
+params.tree_methods = "FAMSA-SLINK"      
 
-  params.replicatesNum        = "1"
-  params.evaluate3DVal        = "contacts"    //"contacts,distances,strike"
-//##--##--##--##--####--##--##--##--####--##--##--##--##
-
-params.pairMethods = "sap_pair,tmalign_pair,mustang_pair,slow_pair"         //sap, TMalign, mustang
-
-params.pairFile=""
-
-params.libs=""
-
-//default,quickaln,mcoffee,fmcoffee,psicoffee,expresso,procoffee,3dcoffee,trmsd,rcoffee,rcoffee_consan"
-    //accurate    --> TODO   
-    //3d_align, 3dM_align    
-params.tc_modes = "default"//,quickaln,mcoffee,fmcoffee,psicoffee,expresso,procoffee"//3dcoffee,trmsd"
-
-// params for tcofee methods
-params.params4tcoffee = ''
-
-// output directory
-params.outdir = "$baseDir/results_test"
+// ## TCOFFEE
+                  //3DALIGN,3DCOFFEE,3DMALIGN,ACCURATE,DEFAULT,EXPRESSO,FMCOFFEE,MCOFFEE,PROCOFFEE,PSICOFFEE,QUICKALN,RCOFFEE_CONSAN,RCOFFEE,TRMSD"
+  //need template -> 3DMALIGN
+params.tc_modes = "DEFAULT"
+params.templates = '/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/sh3.template_file'
+params.pdb = '/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/PDBs/*.pdb'
+params.libs = ''
+params.pairFile = ''
+params.params4tcoffee = ''   
+params.cache_path = ''
 
           //uniref50, pdb or path
 params.db = "pdb"        
-          // define database path
+          // define default database path
 uniref_path = "/users/cn/egarriga/datasets/db/uniref50.fasta"   // cluster path
 pdb_path = "/database/pdb/pdb_seqres.txt"                       // docker path
+
+  
+params.tcoffee_align = true            
+
+// output directory
+params.outdir = "$baseDir/results"
 
 //blast call cached
 params.generateBlast=false
@@ -92,26 +93,28 @@ if (params.db=='uniref50'){
   params.database_path = params.db
 }
 
-
 log.info """\
          PIPELINE  ~  version 0.1"
          ======================================="
          Input sequences (FASTA)                        : ${params.seqs}
          Input references (Aligned FASTA))              : ${params.refs}
          Input trees (NEWICK)                           : ${params.trees}
-         Tcoffee methods                                : ${params.tc_modes}
-         Template files                                 : ${params.templates}
-         PDB files                                      : ${params.pdbFiles}
+         Tree methods                                   : ${params.tree_methods}
+         --##--
+         Generate TCoffee alignments                    : ${params.tcoffee_align}
+                  TCoffee modes                         : ${params.tc_modes}
+         --##--
          Output directory (DIRECTORY)                   : ${params.outdir}
          """
          .stripIndent()
 
-// import analysis pipelines
-include CLANS_ANALYSIS from './modules/leila_analysis'       params(params) 
-include TCOFFEE_TEST from './modules/prog_analysis'         params(params)
-include TCOFFEE_ANALYSIS from './modules/prog_analysis'     params(params) 
+
 
 seqs_ch = Channel.fromPath( params.seqs, checkIfExists: true ).map { item -> [ item.baseName, item] }
+
+if ( params.refs ) {
+  refs_ch = Channel.fromPath( params.refs ).map { item -> [ item.baseName, item] }
+}
 
 if ( params.templates ) {
   Channel
@@ -147,10 +150,10 @@ if ( params.libs ) {
   .fromPath(params.libs)
   .map { item -> [ item.simpleName , item] }
   .groupTuple()
-  .set { libs }
+  .set { libs_ch }
 }else { 
   Channel.empty()
-    .set { libs }
+    .set { libs_ch }
 }
 
 if ( params.trees ) {
@@ -159,19 +162,45 @@ if ( params.trees ) {
 }else { 
   Channel.empty().set { trees_ch }
 }
-// tokenize params 
-//tcoffee_mode = params.tc_modes.tokenize(',')
-//pair_method = params.pairMethods.tokenize(',')
-tree_method = params.tree_methods.tokenize(',')
-bucket_list = params.buckets.toString().tokenize(',')     //int to string
 
-/*    main script flow    */
+// tokenize params 
+tree_method = params.tree_methods.tokenize(',')
+align_method = params.align_methods.tokenize(',')
+tc_mode = params.tc_modes.tokenize(',')
+
+
+ // import analysis pipelines
+include TREE_GENERATION from './modules/treeGeneration'        params(params)
+include TCOFFEE_CI from './modules/prog_analysis'      params(params)
+
+/*   main script flow     */
 workflow pipeline {
 
-      //TCOFFEE_ANALYSIS(seqs_ch, templates, pdbFiles, pair_file, libs, tcoffee_mode, pair_method)
-      //TCOFFEE_TEST(seqs_ch, templates, pdbFiles, pair_file, libs, tcoffee_mode, pair_method)
-      //CLANS_ANALYSIS(seqs_ch, trees_ch, tree_method, bucket_list,templates_ch)
+    if (!params.trees){
+      TREE_GENERATION (seqs_ch, tree_method) 
+      seqs_ch
+        .cross(TREE_GENERATION.out)
+        .map { it -> [ it[1][0], it[1][1], it[0][1], it[1][2] ] }
+        .set { seqs_and_trees }
+    }else{
+      seqs_ch
+        .cross(trees)
+        .map { it -> [ it[1][0], it[1][1], it[0][1], it[1][2] ] }
+        .set { seqs_and_trees }
+    }
 
+    if (params.tcoffee_align){
+
+      seqs_and_trees
+        .join(templates_ch, remainder: true)
+        .set { seqs_trees_templates }
+
+      seqs_trees_templates
+        .join(libs_ch, remainder: true)
+        .set { seqs_trees_templates_libs }
+
+      TCOFFEE_CI(seqs_trees_templates_libs, refs_ch, tc_mode)
+    }
 }
 
 workflow {
@@ -183,4 +212,5 @@ workflow {
  */
 workflow.onComplete {
 	log.info ( workflow.success ? "\nDone!\n" : "Oops .. something went wrong" )
+  //TODO script to generate CSV from individual files
 }
