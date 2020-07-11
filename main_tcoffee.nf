@@ -66,8 +66,8 @@ params.blastOutdir="$baseDir/blast"
                   //3DALIGN,3DCOFFEE,3DMALIGN,ACCURATE,DEFAULT,EXPRESSO,FMCOFFEE,MCOFFEE,PROCOFFEE,PSICOFFEE,QUICKALN,RCOFFEE_CONSAN,RCOFFEE,TRMSD"
   //need template -> 3DMALIGN
 params.tc_modes = "DEFAULT"
-params.templates = '/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/sh3.template_file'
-params.pdb = '/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/PDBs/*.pdb'
+params.templates = ''//   '/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/sh3.template_file'
+params.pdb = ''     //   '/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/PDBs/*.pdb'
 params.libs = ''
 params.pairFile = ''
 params.params4tcoffee = ''   
