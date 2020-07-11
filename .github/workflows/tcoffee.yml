@@ -22,4 +22,4 @@ jobs:
           sudo mv nextflow /usr/local/bin/
       - name: Run pipeline with minimal data to check TCOFFEE modes
         run: |
-          nextflow run ${GITHUB_WORKSPACE}/test_tcoffee.nf -profile test_tc,docker ${{matrix.paramsSeqs}} ${{matrix.paramsTcMode}}
+          nextflow run ${GITHUB_WORKSPACE}/main_tcoffee.nf -profile test_tc,docker ${{matrix.paramsSeqs}} ${{matrix.paramsTcMode}}
