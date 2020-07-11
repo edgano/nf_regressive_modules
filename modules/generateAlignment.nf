@@ -118,3 +118,20 @@ process POOL_ALIGNER {
     template "${path_templates}/pool_align/pool_${align_method}.sh"
 }
 
+process TCOFFEE {
+    container 'edgano/tcoffee:protocols'
+    tag "$tc_mode  on $id"
+    publishDir "${params.outdir}/alignments", pattern: '*.aln'
+    //publishDir "${params.cache_path}", pattern: '*.aln'
+
+    input:
+    tuple val(id), val(tree_method), file(seqs), file(guide_tree), file(template), file(library)
+    each tc_mode         
+
+    output:
+    tuple val (id), path ("*.aln"), emit: alignmentFile
+    path ".command.trace", emit: metricFile
+
+    script:
+    template "${path_templates}/tcoffee_align/tcoffee_${tc_mode}.sh"
+}

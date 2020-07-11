@@ -84,3 +84,15 @@ workflow TCOFFEE_ANALYSIS {
 
 }
 
+include TCOFFEE       from './generateAlignment.nf'   
+workflow TCOFFEE_CI {
+   take: 
+    seqs_trees_templates_libs
+    refs_ch
+    tc_mode  
+
+  main: 
+    //def template_filter = template.name != 'input.3' ? "-template_file $template" : ''
+    //def libs_filter = library.name != 'input.4' ? "-lib $library" : ''
+    TCOFFEE (seqs_trees_templates_libs, tc_mode)
+}

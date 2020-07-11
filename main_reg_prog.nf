@@ -51,8 +51,8 @@ params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.{FAMSA,CLUSTALO,MAFFT_
 //params.trees = false
                       //TODO FIX -> reg_UPP
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE,MAFFT,MSAPROBS,PROBCONS,TCOFFEE,UPP,MUSCLE
-params.align_methods = "CLUSTALO,FAMSA,MAFFT-FFTNS1"
-                      
+params.align_methods = "CLUSTALO,FAMSA,MAFFT-FFTNS1"   
+
 //CLUSTALW-QUICK,CLUSTALW                    
 //FAMSA-SLINK,FAMSA-SLINKmedoid,FAMSA-SLINKparttree,FAMSA-UPGMA,FAMSA-UPGMAmedoid,FAMSA-UPGMAparttree   
 //MAFFT-DPPARTTREE0,MAFFT-DPPARTTREE1,MAFFT-DPPARTTREE2,MAFFT-DPPARTTREE2size
@@ -62,15 +62,13 @@ params.align_methods = "CLUSTALO,FAMSA,MAFFT-FFTNS1"
 //TCOFFEE-BLENGTH,TCOFFEE-ISWLCAT,TCOFFEE-KM,TCOFFEE-LONGCAT,TCOFFEE-NJ,TCOFFEE-REG,TCOFFEE-SHORTCAT,TCOFFEE-SWL,TCOFFEE-SWLcat,TCOFFEE-UPGMA
 
 //TODO -> test tcoffee trees
-//     CLUSTALW-QUICK,CLUSTALW  -> not working on PROG bc they are not rooted
-
+//                    CLUSTALW-QUICK,CLUSTALW  -> not working on PROG bc they are not rooted
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE0
-params.tree_methods = "FAMSA-SLINK,MBED,MAFFT-PARTTREE0"      
+params.tree_methods = "FAMSA-SLINK"      
 
 params.buckets = "1000"
 
-//  ## SLAVE parameters
-                          //need to be lowercase -> direct to tcoffee
+//  ## SLAVE parameters               //need to be lowercase -> direct to tcoffee
                           //mbed,parttree,famsadnd,cwdnd,dpparttree,fastparttree,mafftdnd,fftns1dnd,fftns2dnd,nj 
                           //mbed,parttree,famsadnd
 params.slave_tree_methods="mbed,parttree,famsadnd" 
@@ -83,6 +81,18 @@ params.dynamicSlaveAln="famsa_msa"
 params.dynamicSlaveSize="100000000"
 params.dynamicConfig=true
 
+
+// ## TCOFFEE
+                  //3DALIGN,3DCOFFEE,3DMALIGN,ACCURATE,DEFAULT,EXPRESSO,FMCOFFEE,MCOFFEE,PROCOFFEE,PSICOFFEE,QUICKALN,RCOFFEE_CONSAN,RCOFFEE,TRMSD"
+  //need template -> 3DMALIGN
+params.tc_modes = "3DALIGN,3DCOFFEE,DEFAULT,EXPRESSO,FMCOFFEE,MCOFFEE,PROCOFFEE,PSICOFFEE,QUICKALN"
+params.templates = ''
+params.pdb = ''
+params.libs = ''
+params.pairFile = ''
+params.params4tcoffee = ''   
+params.cache_path = ''
+
           //uniref50, pdb or path
 params.db = "pdb"        
           // define default database path
@@ -90,11 +100,12 @@ uniref_path = "/users/cn/egarriga/datasets/db/uniref50.fasta"   // cluster path
 pdb_path = "/database/pdb/pdb_seqres.txt"                       // docker path
 
 
-params.progressive_align = true
-params.regressive_align = true           
-params.pool_align=true                  
-params.slave_align=true   
-params.dynamic_align=false               
+params.progressive_align = false
+params.regressive_align = false           
+params.pool_align=false                  
+params.slave_align=false   
+params.dynamic_align=false   
+params.tcoffee_align = true            
 
 params.evaluate=true
 params.homoplasy=true
@@ -135,6 +146,8 @@ log.info """\
                   Dynamic DDBB                          : ${params.db}
                   DDBB path                             : ${params.database_path}
          Generate Pool alignments                       : ${params.pool_align}
+         Generate TCoffee alignments                    : ${params.tcoffee_align}
+                  TCoffee modes                         : ${params.tc_modes}
          --##--
          Perform evaluation? Requires reference         : ${params.evaluate}
          Check homoplasy? Only for regressive           : ${params.homoplasy}
@@ -153,20 +166,59 @@ include PROG_ANALYSIS from './modules/prog_analysis'      params(params)
 include SLAVE_ANALYSIS from './modules/reg_analysis'      params(params)
 include DYNAMIC_ANALYSIS from './modules/reg_analysis'    params(params)
 include POOL_ANALYSIS from './modules/reg_analysis'       params(params)
+include TCOFFEE_CI from './modules/prog_analysis'      params(params)
 
-// Channels containing sequences
 seqs_ch = Channel.fromPath( params.seqs, checkIfExists: true ).map { item -> [ item.baseName, item] }
 
 if ( params.refs ) {
   refs_ch = Channel.fromPath( params.refs ).map { item -> [ item.baseName, item] }
 }
 
-// Channels for user provided trees or empty channel if trees are to be generated [OPTIONAL]
+if ( params.templates ) {
+  Channel
+  .fromPath(params.templates, checkIfExists: true)
+  .map { item -> [ item.simpleName, item] }
+  .set { templates_ch}
+}else { 
+  Channel.empty()
+  .set { templates_ch }
+}
+if ( params.pdb ) {
+  Channel
+  .fromPath(params.pdb)
+  .map { item -> [ item.simpleName , item] }
+  .groupTuple()
+  .set { pdbFiles}
+}else { 
+  Channel.empty()
+    .set { pdbFiles }
+}
+if ( params.pairFile ) {
+  Channel
+  .fromPath(params.pairFile)
+  .map { item -> [ item.simpleName , item] }
+  .groupTuple()
+  .set { pair_file}
+}else { 
+  Channel.empty()
+    .set { pair_file }
+}
+if ( params.libs ) {
+  Channel
+  .fromPath(params.libs)
+  .map { item -> [ item.simpleName , item] }
+  .groupTuple()
+  .set { libs_ch }
+}else { 
+  Channel.empty()
+    .set { libs_ch }
+}
+
 if ( params.trees ) {
-  trees = Channel.fromPath(params.trees)
+  trees_ch = Channel.fromPath(params.trees)
     .map { item -> [ item.baseName.tokenize('.')[0], item.baseName.tokenize('.')[1], item] }
 }else { 
-  Channel.empty().set { trees }
+  Channel.empty().set { trees_ch }
 }
 
 // tokenize params 
@@ -175,6 +227,8 @@ align_method = params.align_methods.tokenize(',')
 bucket_list = params.buckets.toString().tokenize(',')     //int to string
 slave_method = params.slave_tree_methods.tokenize(',')
 dynamicX = params.dynamicX.toString().tokenize(',')       //int to string
+
+tc_mode = params.tc_modes.tokenize(',')
 
 /* 
  * main script flow
@@ -209,6 +263,20 @@ workflow pipeline {
     if (params.pool_align){
       POOL_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
     }
+    if (params.tcoffee_align){
+
+      seqs_and_trees
+        .join(templates_ch, remainder: true)
+        .set { seqs_trees_templates }
+
+      seqs_trees_templates
+        .join(libs_ch, remainder: true)
+        .set { seqs_trees_templates_libs }
+
+      //seqs_trees_templates_libs.view()
+      TCOFFEE_CI(seqs_trees_templates_libs, refs_ch, tc_mode)
+    }
+    
 }
 
 workflow {
