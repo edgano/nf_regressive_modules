@@ -58,6 +58,10 @@ params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.{FAMSA,CLUSTALO,MAFFT_
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE0
 params.tree_methods = "FAMSA-SLINK"      
 
+//blast call cached
+params.generateBlast=false
+params.blastOutdir="$baseDir/blast"
+
 // ## TCOFFEE
                   //3DALIGN,3DCOFFEE,3DMALIGN,ACCURATE,DEFAULT,EXPRESSO,FMCOFFEE,MCOFFEE,PROCOFFEE,PSICOFFEE,QUICKALN,RCOFFEE_CONSAN,RCOFFEE,TRMSD"
   //need template -> 3DMALIGN
@@ -67,7 +71,7 @@ params.pdb = '/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/PDBs/*.pd
 params.libs = ''
 params.pairFile = ''
 params.params4tcoffee = ''   
-params.cache_path = ''
+params.cache_path = "${params.blastOutdir}"
 
           //uniref50, pdb or path
 params.db = "pdb"        
@@ -80,10 +84,6 @@ params.tcoffee_align = true
 
 // output directory
 params.outdir = "$baseDir/results"
-
-//blast call cached
-params.generateBlast=false
-params.blastOutdir="$baseDir/blast"
 
 if (params.db=='uniref50'){
   params.database_path = uniref_path
@@ -165,7 +165,6 @@ if ( params.trees ) {
 
 // tokenize params 
 tree_method = params.tree_methods.tokenize(',')
-align_method = params.align_methods.tokenize(',')
 tc_mode = params.tc_modes.tokenize(',')
 
 
