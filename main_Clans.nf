@@ -90,16 +90,6 @@ log.info """\
          """
          .stripIndent()
 
-// import analysis pipelines 
-include LIBRARY_GENERATION      from './modules/preprocess.nf'
-include TREE_GENERATION         from './modules/treeGeneration'    
-include TCOFFEE_3DALIGN         from './modules/tcoffeeModes.nf'
-include TCOFFEE_3DMALIGN        from './modules/tcoffeeModes.nf'
-include REG_3DALIGN             from './modules/regressiveAlignments.nf'
-include REG_3DMALIGN            from './modules/regressiveAlignments.nf'
-include IRMSD                   from './modules/evaluateAlignment.nf'
-
-
 seqs_ch = Channel.fromPath( params.seqs, checkIfExists: true ).map { item -> [ item.baseName, item] }
 
 if ( params.templates ) {
@@ -159,8 +149,19 @@ if ( params.trees ) {
 tree_method = params.tree_methods.tokenize(',')
 bucket_list = params.buckets.toString().tokenize(',')     //int to string
 
+// import analysis pipelines 
+include   LIBRARY_GENERATION                           from './modules/preprocess.nf'
+include   TREE_GENERATION                              from './modules/treeGeneration'   
+include { TCOFFEE_ALIGNER as TCOFFEE_3DALIGN ; 
+          TCOFFEE_ALIGNER as TCOFFEE_3DMALIGN }        from './modules/generateAlignment.nf'
+include { REG_ALIGNER as REG_3DALIGN ; 
+          REG_ALIGNER as REG_3DMALIGN }                from './modules/generateAlignment.nf'
+include { IRMSD as IRMSD_3DALIGN ;
+          IRMSD as IRMSD_3DMALIGN }                      from './modules/evaluateAlignment.nf'
+
 /*    main script flow    */
 workflow pipeline {
+
     seqs_ch
       .join(templates_ch, remainder: true)
       .set { seqs_templates }
@@ -169,40 +170,46 @@ workflow pipeline {
 
     seqs_templates
       .join(LIBRARY_GENERATION.out.sap_lib, remainder: true)
-      //.view()
       .set { seqs_templates_libs }
-        //TODO -> is needed to merge all the LIBS   ???
+    //TODO -> is needed to merge all the LIBS  -->   sap/mustang/tmalign  ???
 
-    TCOFFEE_3DALIGN(seqs_templates_libs,"NA") //COMPUTE_3D_ALING()
+//##  add nulls for tcoffee
+    seqs_templates_libs
+      .join(trees_ch, remainder: true)
+      .set { seqs_trees_dummy }
+    seqs_trees_dummy
+      .join(trees_ch, remainder: true)
+      .map { it -> [it[0],it[4],it[1],it[5],it[2],it[3]] }
+      //.view()
+      .set { seqs_templates_libs_4tc }    
 
-    TCOFFEE_3DMALIGN(seqs_templates_libs,"NA")//COMPUTE_3DM_ALING()
+// ** Input:
+//      tuple val(id), val(tree_method), file(seqs), file(guide_tree), file(template), file(library)
+//      each tc_mode  
+    TCOFFEE_3DALIGN(seqs_templates_libs_4tc,"3DALIGN")        //COMPUTE_3D_ALING()
+    TCOFFEE_3DMALIGN(seqs_templates_libs_4tc,"3DMALIGN")      //COMPUTE_3DM_ALING()
 
-    if (!params.trees){
-      TREE_GENERATION (seqs_ch, tree_method) 
-      seqs_ch
-        .cross(TREE_GENERATION.out)
-        .map { it -> [ it[1][0], it[1][1], it[1][2] ] }
-        .set { seqs_and_trees }
-    }else{
-      seqs_ch
-        .cross(trees)
-        .map { it -> [ it[1][0], it[1][1], it[1][2] ] }
-        .set { seqs_and_trees }
-    }
-    seqs_and_trees
-      .join(seqs_templates_libs, remainder: true)
-      .view()
-      .set { seqs_trees_templates_libs }
+// ** Input:
+//    tuple val(id), val(tree_method), file(seqs), file(guide_tree), file(template), file(library)
+//    each align_method
+//    each bucket_size
+    REG_3DALIGN(seqs_templates_libs_4tc,"3DCOFFEE","1000")                                  
+    //REG_3DMALIGN(seqs_templates_libs_4tc,"3DMCOFFEE","1000") 
 
-    REG_3DALIGN(seqs_trees_templates_libs,"1000")                                  
-
-    //REG_3DMALIGN(seqs_trees_templates_libs,"1000") 
-
+    /*
     REG_3DALIGN.out.alignmentFile
       .join(templates_ch, remainder: true)
       .set { aln_templates }
+    */
+    /*
+    REG_3DMALIGN.out.alignmentFile
+      .join(templates_ch, remainder: true)
+      .set { aln_templates }
+    */
 
-    IRMSD(aln_templates,"3dAlign")
+    //IRMSD_3DALIGN(aln_templates,"3dAlign")
+    //IRMSD_3DMALIGN(aln_templates,"3dMAlign")
+  
 }
 
 workflow {
