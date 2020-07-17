@@ -5,12 +5,12 @@ include set_templates_path from './functions.nf'
 path_templates = set_templates_path()
 
 process REG_ALIGNER {
-    container 'edgano/tcoffee:pdb'
+    container 'e2a670731db7'//'edgano/tcoffee:protocols'//'edgano/tcoffee:pdb'
     tag "$align_method - $tree_method - $bucket_size on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
     input:
-    tuple val(id), val(tree_method), path(seqs), path(guide_tree)
+    tuple val(id), val(tree_method), file(seqs), file(guide_tree), file(template), file(library)
     each align_method
     each bucket_size
 
@@ -18,7 +18,7 @@ process REG_ALIGNER {
     val align_method, emit: alignMethod
     val tree_method, emit: treeMethod
     val bucket_size, emit: bucketSize
-    tuple val (id), path ("${id}.reg_${bucket_size}.${align_method}.with.${tree_method}.tree.aln"), emit: alignmentFile
+    tuple val (id), path ("${id}.*.aln"), emit: alignmentFile
     path "${id}.homoplasy", emit: homoplasyFile
     path ".command.trace", emit: metricFile
 
@@ -119,7 +119,7 @@ process POOL_ALIGNER {
 }
 
 process TCOFFEE_ALIGNER {
-    container 'edgano/tcoffee:protocols'
+    container 'e2a670731db7'//'edgano/tcoffee:protocols'
     tag "$tc_mode  on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
     //publishDir "${params.cache_path}", pattern: '*.aln'

@@ -38,12 +38,12 @@ nextflow.preview.dsl = 2
  */
 
 // input sequences to align in fasta format
-params.seqs = "/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/sh3.fasta"
+params.seqs = ""  //  "/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/sh3.fasta"
 
-params.refs = "/users/cn/egarriga/datasets/homfam/refs/*.ref"
+params.refs = ""  //  "/users/cn/egarriga/datasets/homfam/refs/*.ref"
 
-params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.{FAMSA,CLUSTALO,MAFFT_PARTTREE}.dnd"
-//params.trees = false
+//params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.{FAMSA,CLUSTALO,MAFFT_PARTTREE}.dnd"
+params.trees = false
 
 //CLUSTALW-QUICK,CLUSTALW                    
 //FAMSA-SLINK,FAMSA-SLINKmedoid,FAMSA-SLINKparttree,FAMSA-UPGMA,FAMSA-UPGMAmedoid,FAMSA-UPGMAparttree   
