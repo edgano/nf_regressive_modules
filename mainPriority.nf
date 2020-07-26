@@ -40,14 +40,17 @@ nextflow.preview.dsl = 2
 //    ## subdatsets
 seq2improve="cryst,blmb,rrm,subt,ghf5,sdr,tRNA-synt_2b,zf-CCHH,egf,Acetyltransf,ghf13,p450,Rhodanese,aat,az,cytb,proteasome,GEL"
 top20fam="gluts,myb_DNA-binding,tRNA-synt_2b,biotin_lipoyl,hom,ghf13,aldosered,hla,Rhodanese,PDZ,blmb,rhv,p450,adh,aat,rrm,Acetyltransf,sdr,zf-CCHH,rvp"
-//params.seqs ="/users/cn/egarriga/datasets/homfam/combinedSeqs/{${seq2improve}}.fa"
+smallTest="seatoxin,hip,scorptoxin,cyt3,rnasemam,bowman,toxin,ghf11,TNF,sti"
+
+
+params.seqs ="/users/cn/egarriga/datasets/homfam/combinedSeqs/{${smallTest}}.fa"
 
 // input sequences to align in fasta format
-params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/*.fa"
+//params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/*.fa"
 
 params.refs = "/users/cn/egarriga/datasets/homfam/refs/*.ref"
 
-params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.FAMSA.dnd"
+params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.CLUSTALO.dnd"
 //params.trees = false
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1
 params.align_methods = "PSI,PSI_FLAG"//,FAMSA,MAFFT-FFTNS1" 
@@ -72,6 +75,7 @@ params.dynamicConfig=false
 
           //uniref50, pdb or path
 params.db = "uniref50"        
+params.blastOutdir = "$baseDir/Blast"
 
 params.progressive_align = false
 params.regressive_align = false          
