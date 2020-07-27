@@ -7,4 +7,5 @@ t_coffee -method psicoffee_msa \
          -seq ${seqs} \
          -cache ${params.blastOutdir} \
          -psitrim 100 -psiJ 3  -prot_min_cov 90  -prot_max_sim 100         -prot_min_sim 0 \
+         -blast=LOCAL -protein_db=${params.database_path} \
          -outfile ${id}.prog.${align_method}.with.${tree_method}.tree.aln

@@ -57,7 +57,6 @@ params.tree_methods = "MBED"      //TODO -> reuse trees for multiple methods.
 
 params.buckets = "50"
 
-
           //uniref50, pdb or path
 params.db = "uniref50"        
 
@@ -109,14 +108,15 @@ log.info """\
          Check easel info?                              : ${params.easel}
          --##--
          Output directory (DIRECTORY)                   : ${params.outdir}
+         Output Blast directory (DIRECTORY)             : ${params.blastOutdir}
          """
          .stripIndent()
 
 // import analysis pipelines
-include TREE_GENERATION from './modules/treeGeneration'        params(params)
-include REG_ANALYSIS from './modules/reg_analysis'        params(params)
-include PROG_ANALYSIS from './modules/prog_analysis'      params(params)
-include DYNAMIC_ANALYSIS from './modules/reg_analysis'    params(params)
+include {TREE_GENERATION} from './modules/treeGeneration'        params(params)
+include {REG_ANALYSIS} from './modules/reg_analysis'        params(params)
+include {PROG_ANALYSIS} from './modules/prog_analysis'      params(params)
+include {DYNAMIC_ANALYSIS} from './modules/reg_analysis'    params(params)
 
 // Channels containing sequences
 seqs_ch = Channel.fromPath( params.seqs, checkIfExists: true ).map { item -> [ item.baseName, item] }

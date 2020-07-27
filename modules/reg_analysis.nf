@@ -1,12 +1,12 @@
 #!/bin/bash nextflow
 //params.outdir = 'results_REG'
 
-include COMBINE_SEQS      from './preprocess.nf'    
-include REG_ALIGNER       from './generateAlignment.nf'   
-include EVAL_ALIGNMENT    from './evaluateAlignment.nf'  
-include EASEL_INFO        from './evaluateAlignment.nf'  
-include HOMOPLASY         from './evaluateAlignment.nf'  
-include METRICS           from './evaluateAlignment.nf'  
+include {COMBINE_SEQS}      from './preprocess.nf'    
+include {REG_ALIGNER}       from './generateAlignment.nf'   
+include {EVAL_ALIGNMENT}    from './evaluateAlignment.nf'  
+include {EASEL_INFO}        from './evaluateAlignment.nf'  
+include {HOMOPLASY}         from './evaluateAlignment.nf'  
+include {METRICS}           from './evaluateAlignment.nf'  
 
 workflow REG_ANALYSIS {
   take:
@@ -58,7 +58,7 @@ workflow REG_ANALYSIS {
     }
 }
 
-include SLAVE_ALIGNER   from './generateAlignment.nf'   
+include {SLAVE_ALIGNER}   from './generateAlignment.nf'   
 workflow SLAVE_ANALYSIS {
   take:
     seqs_and_trees
@@ -108,8 +108,8 @@ workflow SLAVE_ANALYSIS {
     }
 }
 
-include GENERATE_DYNAMIC_CONFIG      from './preprocess.nf'    
-include DYNAMIC_ALIGNER             from './generateAlignment.nf'   
+include {GENERATE_DYNAMIC_CONFIG}      from './preprocess.nf'    
+include {DYNAMIC_ALIGNER}             from './generateAlignment.nf'   
 workflow DYNAMIC_ANALYSIS {
   take:
     seqs_and_trees
@@ -174,7 +174,7 @@ workflow DYNAMIC_ANALYSIS {
     }
 }
 
-include POOL_ALIGNER   from './generateAlignment.nf'   
+include {POOL_ALIGNER}   from './generateAlignment.nf'   
 workflow POOL_ANALYSIS {
   take:
     seqs_and_trees
