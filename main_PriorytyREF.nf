@@ -44,12 +44,12 @@ smallTest="hip,scorptoxin,cyt3,rnasemam,bowman,toxin,ghf11,TNF,sti"
 
 // input sequences to align in fasta format
 //params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/*.fa"
-params.seqs ="/users/cn/egarriga/datasets/homfam/refs_fasta/${${smallTest}}.ref"
+params.seqs ="/users/cn/egarriga/datasets/homfam/refs_fasta/{${smallTest}}.ref"
 
 params.refs = "/users/cn/egarriga/datasets/homfam/refs/*.ref"
 
-params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.MBED.dnd"
-//params.trees = false
+//params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.CLUSTALO.dnd"
+params.trees = false
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1
 params.align_methods = "TCOFFEE,PSI,PSI_FLAG"//,FAMSA,MAFFT-FFTNS1" 
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE
