@@ -40,55 +40,39 @@ nextflow.preview.dsl = 2
 //    ## subdatsets
 seq2improve="cryst,blmb,rrm,subt,ghf5,sdr,tRNA-synt_2b,zf-CCHH,egf,Acetyltransf,ghf13,p450,Rhodanese,aat,az,cytb,proteasome,GEL"
 top20fam="gluts,myb_DNA-binding,tRNA-synt_2b,biotin_lipoyl,hom,ghf13,aldosered,hla,Rhodanese,PDZ,blmb,rhv,p450,adh,aat,rrm,Acetyltransf,sdr,zf-CCHH,rvp"
-//params.seqs ="/users/cn/egarriga/datasets/homfam/combinedSeqs/{${seq2improve}}.fa"
+smallTest="hip,scorptoxin,cyt3,rnasemam,bowman,toxin,ghf11,TNF,sti"
 
 // input sequences to align in fasta format
-//params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/{seatoxin,hip,scorptoxin,cyt3,rnasemam,bowman,toxin,ghf11,TNF,sti}.fa"
-
-params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/{cyt3,ghf11,sti}.fa"
+//params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/*.fa"
+params.seqs ="/users/cn/egarriga/datasets/homfam/refs_fasta/{${smallTest}}.ref"
 
 params.refs = "/users/cn/egarriga/datasets/homfam/refs/*.ref"
 
-params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.FAMSA.dnd"
-//params.trees = false
+//params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.CLUSTALO.dnd"
+params.trees = false
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1
-params.align_methods = "CLUSTALO"//,FAMSA,MAFFT-FFTNS1" 
+params.align_methods = "TCOFFEE,PSI,PSI_FLAG"//,FAMSA,MAFFT-FFTNS1" 
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE
 params.tree_methods = "MBED"      //TODO -> reuse trees for multiple methods.
 
 params.buckets = "50"
 
-//  ## SLAVE parameters
-                          //need to be lowercase -> direct to tcoffee
-                          //mbed,parttree,famsadnd
-params.slave_tree_methods="mbed,famsadnd,parttree" 
-
-//  ## DYNAMIC parameters
-params.dynamicX = "100000"
-          //TODO -> make 2 list? one with aligners and the other with sizes? (to have more than 2 aligners)
-params.dynamicMasterAln="psicoffee_msa"
-params.dynamicMasterSize="50"
-params.dynamicSlaveAln="famsa_msa"
-params.dynamicSlaveSize="100000000"
-params.dynamicConfig=true
-
           //uniref50, pdb or path
 params.db = "uniref50"        
 
-params.progressive_align = false
-params.regressive_align = false           //done
-params.pool_align=false                   //done
-params.slave_align=false    // ERROR _ child=parttree
-params.dynamic_align=true                //done
+params.progressive_align = true
+params.regressive_align = true           
 
 params.evaluate=true
-params.homoplasy=true
+params.homoplasy=false
 params.gapCount=false
-params.metrics=true
-params.easel=true
+params.metrics=false
+params.easel=false
 
 // output directory
-params.outdir = "$baseDir/results"
+params.outdir = "$baseDir/resultsREF"
+//blast call cached
+params.blastOutdir="$baseDir/blastRef"
 
 // define database path
 uniref_path = "/users/cn/egarriga/datasets/db/uniref50.fasta"   // cluster path
@@ -114,16 +98,8 @@ log.info """\
          --##--
          Generate Progressive alignments                : ${params.progressive_align}
          Generate Regressive alignments                 : ${params.regressive_align}
-         Generate Slave tree alignments                 : ${params.slave_align}
-                  Slave tree methods                    : ${params.slave_tree_methods}
-         Generate Dynamic alignments                    : ${params.dynamic_align}
-                  Dynamic size                          : ${params.dynamicX}
-                  Dynamic config file                   : ${params.dynamicConfig}
-                          master align - boundary       : ${params.dynamicMasterAln} - ${params.dynamicMasterSize}
-                          slave align  - boundary       : ${params.dynamicSlaveAln} - ${params.dynamicSlaveSize}
                   Dynamic DDBB                          : ${params.db}
                   DDBB path                             : ${params.database_path}
-         Generate Pool alignments                       : ${params.pool_align}
          --##--
          Perform evaluation? Requires reference         : ${params.evaluate}
          Check homoplasy? Only for regressive           : ${params.homoplasy}
@@ -132,16 +108,15 @@ log.info """\
          Check easel info?                              : ${params.easel}
          --##--
          Output directory (DIRECTORY)                   : ${params.outdir}
+         Output Blast directory (DIRECTORY)             : ${params.blastOutdir}
          """
          .stripIndent()
 
 // import analysis pipelines
-include TREE_GENERATION from './modules/treeGeneration'        params(params)
-include REG_ANALYSIS from './modules/reg_analysis'        params(params)
-include PROG_ANALYSIS from './modules/prog_analysis'      params(params)
-include SLAVE_ANALYSIS from './modules/reg_analysis'      params(params)
-include DYNAMIC_ANALYSIS from './modules/reg_analysis'    params(params)
-include POOL_ANALYSIS from './modules/reg_analysis'       params(params)
+include {TREE_GENERATION} from './modules/treeGeneration'        params(params)
+include {REG_ANALYSIS} from './modules/reg_analysis'        params(params)
+include {PROG_ANALYSIS} from './modules/prog_analysis'      params(params)
+include {DYNAMIC_ANALYSIS} from './modules/reg_analysis'    params(params)
 
 // Channels containing sequences
 seqs_ch = Channel.fromPath( params.seqs, checkIfExists: true ).map { item -> [ item.baseName, item] }
@@ -162,8 +137,6 @@ if ( params.trees ) {
 tree_method = params.tree_methods.tokenize(',')
 align_method = params.align_methods.tokenize(',')
 bucket_list = params.buckets.toString().tokenize(',') //int to string
-slave_method = params.slave_tree_methods.tokenize(',')
-dynamicX = params.dynamicX.toString().tokenize(',') //int to string
 
 /* 
  * main script flow
@@ -188,15 +161,6 @@ workflow pipeline {
     }
     if (params.progressive_align){
       PROG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method)
-    }
-    if (params.slave_align){
-      SLAVE_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list, slave_method)
-    }
-    if (params.dynamic_align){
-      DYNAMIC_ANALYSIS(seqs_and_trees, refs_ch, tree_method, bucket_list, dynamicX)
-    }
-    if (params.pool_align){
-      POOL_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
     }
 }
 

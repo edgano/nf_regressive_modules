@@ -5,14 +5,14 @@ include set_templates_path from './functions.nf'
 path_templates = set_templates_path()
 
 process REG_ALIGNER {
-    container '03/18e7a2'//'edgano/tcoffee:pdb'
+    container 'edgano/tcoffee:pdb'
     tag "$align_method - $tree_method - $bucket_size on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
-    publishDir "${params.outdir}/templates", pattern: '*.template_list'
-    publishDir "${params.outdir}/templates", pattern: '*.prf'
+    //publishDir "${params.outdir}/templates", pattern: '*.template_list'
+    //publishDir "${params.outdir}/templates", pattern: '*.prf'
 
     input:
-    tuple val(id), val(tree_method), path(seqs), path(guide_tree)
+    tuple val(id), val(tree_method), file(seqs), file(guide_tree), file(template), file(library)
     each align_method
     each bucket_size
 
@@ -20,11 +20,11 @@ process REG_ALIGNER {
     val align_method, emit: alignMethod
     val tree_method, emit: treeMethod
     val bucket_size, emit: bucketSize
-    tuple val (id), path ("${id}.reg_${bucket_size}.${align_method}.with.${tree_method}.tree.aln"), emit: alignmentFile
+    tuple val (id), path ("${id}.*.aln"), emit: alignmentFile
     path "${id}.homoplasy", emit: homoplasyFile
     path ".command.trace", emit: metricFile
-    path "*.template_list", emit: templateFile
-    path "*.prf", emit: templateProfile
+    //path "*.template_list", emit: templateFile
+    //path "*.prf", emit: templateProfile
     
 
     script:
@@ -123,3 +123,22 @@ process POOL_ALIGNER {
     template "${path_templates}/pool_align/pool_${align_method}.sh"
 }
 
+process TCOFFEE_ALIGNER {
+    container 'edgano/tcoffee:protocols'
+    tag "$tc_mode  on $id"
+    publishDir "${params.outdir}/alignments", pattern: '*.aln'
+    //publishDir "${params.cache_path}", pattern: '*.aln'
+
+    input:
+    tuple val(id), val(tree_method), file(seqs), file(guide_tree), file(template), file(library)
+    each tc_mode         
+
+    output:
+    tuple val (id), path ("*.aln"), emit: alignmentFile
+    path ".command.trace", emit: metricFile
+    path "*.aln" optional true          //TCOFFEE.out[2].view()
+
+
+    script:
+    template "${path_templates}/tcoffee_align/tcoffee_${tc_mode}.sh"
+}

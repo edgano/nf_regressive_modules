@@ -40,19 +40,20 @@ nextflow.preview.dsl = 2
 //    ## subdatsets
 seq2improve="cryst,blmb,rrm,subt,ghf5,sdr,tRNA-synt_2b,zf-CCHH,egf,Acetyltransf,ghf13,p450,Rhodanese,aat,az,cytb,proteasome,GEL"
 top20fam="gluts,myb_DNA-binding,tRNA-synt_2b,biotin_lipoyl,hom,ghf13,aldosered,hla,Rhodanese,PDZ,blmb,rhv,p450,adh,aat,rrm,Acetyltransf,sdr,zf-CCHH,rvp"
-//params.seqs ="/users/cn/egarriga/datasets/homfam/combinedSeqs/{${seq2improve}}.fa"
+smallTest="seatoxin,hip,scorptoxin,cyt3,rnasemam,bowman,toxin,ghf11,TNF,sti"
+
+
+params.seqs ="/users/cn/egarriga/datasets/homfam/combinedSeqs/{${smallTest}}.fa"
 
 // input sequences to align in fasta format
-//params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/{seatoxin,hip,scorptoxin,cyt3,rnasemam,bowman,toxin,ghf11,TNF,sti}.fa"
-
-params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/{cyt3,ghf11,sti}.fa"
+//params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/*.fa"
 
 params.refs = "/users/cn/egarriga/datasets/homfam/refs/*.ref"
 
-params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.FAMSA.dnd"
+params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.CLUSTALO.dnd"
 //params.trees = false
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1
-params.align_methods = "CLUSTALO"//,FAMSA,MAFFT-FFTNS1" 
+params.align_methods = "PSI,PSI_FLAG"//,FAMSA,MAFFT-FFTNS1" 
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE
 params.tree_methods = "MBED"      //TODO -> reuse trees for multiple methods.
 
@@ -70,25 +71,26 @@ params.dynamicMasterAln="psicoffee_msa"
 params.dynamicMasterSize="50"
 params.dynamicSlaveAln="famsa_msa"
 params.dynamicSlaveSize="100000000"
-params.dynamicConfig=true
+params.dynamicConfig=false
 
           //uniref50, pdb or path
 params.db = "uniref50"        
+params.blastOutdir = "$baseDir/Blast"
 
 params.progressive_align = false
-params.regressive_align = false           //done
-params.pool_align=false                   //done
-params.slave_align=false    // ERROR _ child=parttree
-params.dynamic_align=true                //done
+params.regressive_align = false          
+params.pool_align=false                  
+params.slave_align=false    
+params.dynamic_align=true                
 
 params.evaluate=true
 params.homoplasy=true
 params.gapCount=false
 params.metrics=true
-params.easel=true
+params.easel=false
 
 // output directory
-params.outdir = "$baseDir/results"
+params.outdir = "$baseDir/resultsPRIORITY"
 
 // define database path
 uniref_path = "/users/cn/egarriga/datasets/db/uniref50.fasta"   // cluster path
@@ -182,22 +184,12 @@ workflow pipeline {
         .map { it -> [ it[1][0], it[1][1], it[0][1], it[1][2] ] }
         .set { seqs_and_trees }
     }
+    // REGRESSIVE psicoffee & psicoffee_flag
+        REG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
 
-    if (params.regressive_align){
-      REG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
-    }
-    if (params.progressive_align){
-      PROG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method)
-    }
-    if (params.slave_align){
-      SLAVE_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list, slave_method)
-    }
-    if (params.dynamic_align){
-      DYNAMIC_ANALYSIS(seqs_and_trees, refs_ch, tree_method, bucket_list, dynamicX)
-    }
-    if (params.pool_align){
-      POOL_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
-    }
+    // PROGRESSIVE tcoffee
+        PROG_ANALYSIS(seqs_and_trees, refs_ch, "TCOFFEE", tree_method)
+
 }
 
 workflow {

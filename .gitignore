@@ -1,12 +1,11 @@
 *.nfs*
 work/
-results/
+result*/
 test/
 .nextflow*
 report*
 trace*
 .ipynb_checkpoints
 metainfo/
-results_test/
-resultTrees/
 blast/
+Blast/
