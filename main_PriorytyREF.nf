@@ -44,7 +44,8 @@ smallTest="hip,scorptoxin,cyt3,rnasemam,bowman,toxin,ghf11,TNF,sti"
 
 // input sequences to align in fasta format
 //params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/*.fa"
-params.seqs ="/users/cn/egarriga/datasets/homfam/refs_fasta/{${smallTest}}.ref"
+//params.seqs ="/users/cn/egarriga/datasets/homfam/refs_fasta/{${smallTest}}.ref"
+params.seqs ="/users/cn/egarriga/datasets/homfam/refs_fasta/*.ref"
 
 params.refs = "/users/cn/egarriga/datasets/homfam/refs/*.ref"
 
