@@ -7,4 +7,4 @@ t_coffee -reg -reg_method mafftginsi_msa \
          -seq ${seqs} \
          -reg_nseq ${bucket_size} \
          -reg_homoplasy \
-         -outfile ${id}.slave_${bucket_size}.${align_method}.with.${tree_method}.tree.aln
+         -outfile ${id}.slave_${bucket_size}.${align_method}.with.${tree_method}_${slave_method}.tree.aln
