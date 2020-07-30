@@ -12,15 +12,26 @@ pipeline:
         documentation: TODO
         edam_topic: topic_0091
         edam_operation: operation_0492
+
 input:
     -
-        - fasta:
+        - seqs: # this should be the name of the param or channel
             type: path
             edam_data: data_1233
             edam_format: format_1929
             format: fasta
+            description: Input fasta file with a set of sequences to be aligned
+            pattern: '*.{fasta,fa,tfa}'
+            input_nfb: true # might be rethink
+        - refs:
+            type: path
+            edam_data: data_1233 #
+            edam_format: format_1929 #
+            format: fasta
             description: Input fasta file with a set of alignments
             pattern: '*.{fasta,fa,tfa}'
+            reference: true
+            default: false # if set to true the info should be read from here
 output:
     -
         - alignment:
