@@ -3,10 +3,10 @@
 
 include {COMBINE_SEQS}      from './preprocess.nf'    
 include {REG_ALIGNER}       from './generateAlignment.nf'   
-include {EVAL_ALIGNMENT}    from './evaluateAlignment.nf'  
-include {EASEL_INFO}        from './evaluateAlignment.nf'  
-include {HOMOPLASY}         from './evaluateAlignment.nf'  
-include {METRICS}           from './evaluateAlignment.nf'  
+include {EVAL_ALIGNMENT}    from './modules_evaluateAlignment.nf'
+include {EASEL_INFO}        from './modules_evaluateAlignment.nf'
+include {HOMOPLASY}         from './modules_evaluateAlignment.nf'
+include {METRICS}           from './modules_evaluateAlignment.nf'
 
 workflow REG_ANALYSIS {
   take:

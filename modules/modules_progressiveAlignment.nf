@@ -1,6 +1,6 @@
 #!/bin/bash nextflow
 
-include set_templates_path from './functions.nf'
+include { set_templates_path } from './functions.nf'
 path_templates = set_templates_path()
 
 process PROG_CLUSTALO {
