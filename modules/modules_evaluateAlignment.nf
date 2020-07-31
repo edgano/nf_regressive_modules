@@ -210,7 +210,7 @@ process GAPS_PROGRESSIVE {
     val(tree_method), \
     path("*.totGap"), \
     path("*.numSeq"), \
-    path("*.alnLen"), emit: metricFiles
+    path("*.alnLen"), emit: gapFiles
 
     script:
     """    
@@ -246,25 +246,28 @@ numSeqFile.close()
 
 process IRMSD{
     container 'edgano/tcoffee:protocols'
-    tag "iRMSD on $id - $mode"
+    tag "$align_type on $id "
     publishDir "${params.outdir}/iRMSD/${id}"
     
     input:
-    set val(id), path(alignment), path(template)
-    val(mode)
+        val align_type
+        set val(id), path(alignment), path(template)
+        val align_method
+        val tree_method
+        val bucket_size
     
     output:
-    path("*.irmsd")
+        path "*.irmsd", emit: irmsd
     
     script:
     """
-    t_coffee -other_pg irmsd ${alignment} -template_file ${template} -io_format s
+    t_coffee -other_pg irmsd ${alignment} -template_file ${template} -io_format s > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.irmsd
     """
 }
 
 process SACKIN_INDEX {
     container 'edgano/r_base:latest'
-    tag "sackin on $id - $tree_method"
+    tag " on $id - $tree_method"
     publishDir "${params.outdir}/sackin"
     
     input:

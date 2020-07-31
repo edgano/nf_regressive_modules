@@ -150,14 +150,14 @@ tree_method = params.tree_methods.tokenize(',')
 bucket_list = params.buckets.toString().tokenize(',')     //int to string
 
 // import analysis pipelines 
-include   LIBRARY_GENERATION                           from './modules/preprocess.nf'
-include   TREE_GENERATION                              from './modules/treeGeneration'   
+include { LIBRARY_GENERATION }                         from './modules/preprocess.nf'
+include { TREE_GENERATION }                            from './modules/treeGeneration'
 include { TCOFFEE_ALIGNER as TCOFFEE_3DALIGN ; 
           TCOFFEE_ALIGNER as TCOFFEE_3DMALIGN }        from './modules/generateAlignment.nf'
 include { REG_ALIGNER as REG_3DALIGN ; 
           REG_ALIGNER as REG_3DMALIGN }                from './modules/generateAlignment.nf'
 include { IRMSD as IRMSD_3DALIGN ;
-          IRMSD as IRMSD_3DMALIGN }                      from './modules/evaluateAlignment.nf'
+          IRMSD as IRMSD_3DMALIGN }                    from './modules/evaluateAlignment.nf'
 
 /*    main script flow    */
 workflow pipeline {
