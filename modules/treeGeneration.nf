@@ -10,7 +10,7 @@ process TREE_GENERATION {
     publishDir "${params.outdir}/trees", mode: 'copy', overwrite: true
 
     input:
-    tuple id, path(seqs)
+    tuple val(id), path(seqs)
     each tree_method
 
     output:
