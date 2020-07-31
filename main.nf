@@ -165,12 +165,16 @@ if ( params.refs ) {
 }
 
 // Channels for user provided trees or empty channel if trees are to be generated [OPTIONAL]
+
 if ( params.trees ) {
-  trees = Channel.fromPath(params.trees)
+  trees_ch = Channel.fromPath(params.trees)
     .map { item -> [ item.baseName.tokenize('.')[0], item.baseName.tokenize('.')[1], item] }
-}else { 
+}
+/*
+else {
   Channel.empty().set { trees }
 }
+*/
 
 // tokenize params 
 tree_method = params.tree_methods.tokenize(',')
@@ -184,8 +188,15 @@ dynamicX = params.dynamicX.toString().tokenize(',')       //int to string
  */
 workflow pipeline {
 
+    def trees = params.trees? trees_ch : TREE_GENERATION (seqs_ch, tree_method)
+
+    seqs_ch
+        .cross(TREE_GENERATION.out)
+        .map { it -> [ it[1][0], it[1][1], it[0][1], it[1][2] ] }
+        .set { seqs_and_trees }
+    /*
     if (!params.trees){
-      TREE_GENERATION (seqs_ch, tree_method) 
+      TREE_GENERATION (seqs_ch, tree_method)
       seqs_ch
         .cross(TREE_GENERATION.out)
         .map { it -> [ it[1][0], it[1][1], it[0][1], it[1][2] ] }
@@ -196,22 +207,36 @@ workflow pipeline {
         .map { it -> [ it[1][0], it[1][1], it[0][1], it[1][2] ] }
         .set { seqs_and_trees }
     }
+    */
 
-    if (params.regressive_align){
-      REG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
-    }
-    if (params.progressive_align){
-      PROG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method)
-    }
-    if (params.slave_align){
-      SLAVE_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list, slave_method)
-    }
-    if (params.dynamic_align){
-      DYNAMIC_ANALYSIS(seqs_and_trees, refs_ch, tree_method, bucket_list, dynamicX)
-    }
-    if (params.pool_align){
-      POOL_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
-    }
+    def result_regressive = params.regressive_align? REG_ANALYSIS(seqs_and_trees,refs_ch, align_method, tree_method, bucket_list) : Channel.empty()
+
+    //if (params.regressive_align){
+    //  REG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
+    //}
+    def result_progressive = params.progressive_align? PROG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method) : Channel.empty()
+
+    //if (params.progressive_align){
+    //  PROG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method)
+    //}
+    def result_slave = params.slave_align? SLAVE_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list, slave_method) : Channel.empty()
+
+    //if (params.slave_align){
+    //  SLAVE_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list, slave_method)
+    //}
+    def result_dynamic = params.dynamic_align? DYNAMIC_ANALYSIS(seqs_and_trees, refs_ch, tree_method, bucket_list, dynamicX) : Channel.empty()
+
+    //if (params.dynamic_align){
+    //  DYNAMIC_ANALYSIS(seqs_and_trees, refs_ch, tree_method, bucket_list, dynamicX)
+    //}
+    def result_pool = params.pool_align? POOL_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list) : Channel.empty()
+
+    //if (params.pool_align){
+    //  def alignment = POOL_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
+    //}
+
+    emit:
+    alignment = result_progressive
 }
 
 workflow {
