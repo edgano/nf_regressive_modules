@@ -34,15 +34,17 @@ workflow PROG_ANALYSIS {
                     .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text}" }
                     .collectFile(name: "${workflow.runName}.progressive.colScore.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
     }
-    if (params.gapCount){
-      GAPS_PROGRESSIVE("progressive", PROG_ALIGNER.out.alignmentFile, PROG_ALIGNER.out.alignMethod, PROG_ALIGNER.out.treeMethod,"NA")
-    }
-    if (params.metrics){
-      METRICS("progressive", PROG_ALIGNER.out.alignmentFile, PROG_ALIGNER.out.alignMethod, PROG_ALIGNER.out.treeMethod,"NA", PROG_ALIGNER.out.metricFile)
-    }
-    if (params.easel){
-      EASEL_INFO ("progressive", PROG_ALIGNER.out.alignmentFile, PROG_ALIGNER.out.alignMethod, PROG_ALIGNER.out.treeMethod,"NA")
-    }
+
+    def gaps_progressive = params.gapCount? GAPS_PROGRESSIVE("progressive", PROG_ALIGNER.out.alignmentFile, PROG_ALIGNER.out.alignMethod, PROG_ALIGNER.out.treeMethod,"NA") : Channel.empty()
+    def metrics_progressive = params.metrics? METRICS("progressive", PROG_ALIGNER.out.alignmentFile, PROG_ALIGNER.out.alignMethod, PROG_ALIGNER.out.treeMethod,"NA", PROG_ALIGNER.out.metricFile) : Channel.empty()
+    def easel_info = params.easel? EASEL_INFO ("progressive", PROG_ALIGNER.out.alignmentFile, PROG_ALIGNER.out.alignMethod, PROG_ALIGNER.out.treeMethod,"NA") : Channel.empty()
+
+    emit:
+    alignment = PROG_ALIGNER.out.alignmentFile
+    gaps = gaps_progressive
+    metrics = metrics_progressive
+    easel = easel_info
+
 }
 
 include {INTRAMOL_MATRIX_GENERATION}          from './preprocess.nf'
