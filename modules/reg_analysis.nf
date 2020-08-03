@@ -56,6 +56,10 @@ workflow REG_ANALYSIS {
                     .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[6].text};${it[7].text}" }
                     .collectFile(name: "${workflow.runName}.regressive.easel.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
     }
+
+    emit:
+    alignment = REG_ALIGNER.out.alignmentFile
+
 }
 
 include {SLAVE_ALIGNER}   from './generateAlignment.nf'   
