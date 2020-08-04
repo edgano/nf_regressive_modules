@@ -56,7 +56,7 @@ process SLAVE_ALIGNER {
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
     input:
-    tuple val(id), val(tree_method), path(seqs), path(guide_tree)
+    tuple val(id), val(tree_method), path(seqs), path(guide_tree), emit: alignmentFile
     each align_method
     each bucket_size
     each slave_method   

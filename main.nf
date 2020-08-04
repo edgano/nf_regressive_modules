@@ -181,7 +181,7 @@ dynamicX = params.dynamicX.toString().tokenize(',')       //int to string
  * main script flow
  */
 workflow pipeline {
-   /*
+    /*
     def trees = Channel.empty()
 
     if (!params.trees){
@@ -199,19 +199,17 @@ workflow pipeline {
         .map { it -> [ it[1][0], it[1][1], it[0][1], it[1][2] ] }
         .set { seqs_and_trees }
 
-    def result_regressive = params.regressive_align? REG_ANALYSIS(seqs_and_trees,refs_ch, align_method, tree_method, bucket_list) : Channel.empty()
-
-    //result['regressive'] = params.regressive_align? REG_ANALYSIS(seqs_and_trees,refs_ch, align_method, tree_method, bucket_list) : Channel.empty()
-    /*
+    alignment_regressive = Channel.empty()
     if (params.regressive_align){
         REG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
+        alignment_regressive = REG_ANALYSIS.out.alignment
     }
-    */
+    //def result_regressive = params.regressive_align? REG_ANALYSIS(seqs_and_trees,refs_ch, align_method, tree_method, bucket_list) : Channel.empty()
+
     alignment_progressive = Channel.empty()
     gaps_progressive = Channel.empty()
 
     //def result_progressive = params.progressive_align? PROG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method): Channel.empty()
-    // result['progressive'] = params.progressive_align? PROG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method) : Channel.empty()
     if (params.progressive_align){
         PROG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method)
         alignment_progressive = PROG_ANALYSIS.out.alignment
@@ -220,25 +218,23 @@ workflow pipeline {
         }
     }
 
-    def result_slave = params.slave_align? SLAVE_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list, slave_method) : Channel.empty()
-    // result['slave'] = params.slave_align? SLAVE_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list, slave_method) : Channel.empty()
-    //if (params.slave_align){
-    //  SLAVE_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list, slave_method)
-    //
+    alignment_slave = Channel.empty()
+    if (params.slave_align){
+        SLAVE_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list, slave_method)
+        alignment_slave = SLAVE_ANALYSIS.out.alignment
+    }
 
-    def result_dynamic = params.dynamic_align? DYNAMIC_ANALYSIS(seqs_and_trees, refs_ch, tree_method, bucket_list, dynamicX) : Channel.empty()
-    // result['dynamic'] = params.dynamic_align? DYNAMIC_ANALYSIS(seqs_and_trees, refs_ch, tree_method, bucket_list, dynamicX) : Channel.empty()
+    //def result_slave = params.slave_align? SLAVE_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list, slave_method) : Channel.empty()
+
+    //def result_dynamic = params.dynamic_align? DYNAMIC_ANALYSIS(seqs_and_trees, refs_ch, tree_method, bucket_list, dynamicX) : Channel.empty()
     //if (params.dynamic_align){
     //  DYNAMIC_ANALYSIS(seqs_and_trees, refs_ch, tree_method, bucket_list, dynamicX)
     //}
 
-    def result_pool = params.pool_align? POOL_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list) : Channel.empty()
-    // result['pool'] = params.pool_align? POOL_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list) : Channel.empty()
+    //def result_pool = params.pool_align? POOL_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list) : Channel.empty()
     //if (params.pool_align){
     //  def alignment = POOL_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
     //}
-    //result['progressive'].view()
-    //result['regressive'].view()
 
     emit:
     alignment_prog = alignment_progressive
@@ -247,16 +243,11 @@ workflow pipeline {
     //alignment_prog = params.progressive_align? result_progressive.alignment:Channel.empty()
 
 
-    alignment_reg = params.regressive_align? result_regressive.alignment:Channel.empty()
-    alignment_slave = result_slave
+    ////alignment_reg = params.regressive_align? result_regressive.alignment:Channel.empty()
+    //alignment_reg = alignment_regressive
 
-    /*
-    alignment['progressive'] = result_progressive
-    alignment['regressive'] = result_regressive
-    alignment['slave'] = result_slave
-    alignment['dynaymic'] = result_dynamic
-    alignment['pool'] = result_pool
-    */
+    alignment_sla = alignment_slave
+
 }
 
 workflow {

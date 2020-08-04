@@ -44,21 +44,25 @@ workflow REG_ANALYSIS {
                     .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text};${it[6].text};${it[7].text};${it[8].text};${it[9].text};${it[10].text}" }
                     .collectFile(name: "${workflow.runName}.regressive.homo.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")  
     }
-    if (params.metrics){
-      METRICS("regressive", REG_ALIGNER.out.alignmentFile, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize, REG_ALIGNER.out.metricFile)
-      METRICS.out.metricFiles
-                    .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text};${it[6].text};${it[7].text};${it[8].text};${it[9].text}" }
-                    .collectFile(name: "${workflow.runName}.regressive.metrics.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
+
+    def metrics_regressive = params.metrics? METRICS("regressive", REG_ALIGNER.out.alignmentFile, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize, REG_ALIGNER.out.metricFile) : Channel.empty()
+    if (params.metrics) {
+        metrics_regressive.metricFiles
+                          .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text};${it[6].text};${it[7].text};${it[8].text};${it[9].text}" }
+                          .collectFile(name: "${workflow.runName}.regressive.metrics.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
     }
-    if (params.easel){ 
-      EASEL_INFO ("regressive", REG_ALIGNER.out.alignmentFile, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize)
-      EASEL_INFO.out.easelFiles
-                    .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[6].text};${it[7].text}" }
-                    .collectFile(name: "${workflow.runName}.regressive.easel.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
+
+    def easel_info = params.easel? EASEL_INFO ("regressive", REG_ALIGNER.out.alignmentFile, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize) : Channel.empty()
+    if (params.easel) {
+        easel_info.easelFiles
+                  .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[6].text};${it[7].text}" }
+                  .collectFile(name: "${workflow.runName}.regressive.easel.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
     }
 
     emit:
     alignment = REG_ALIGNER.out.alignmentFile
+    metrics = metrics_regressive
+    easel = easel_info
 
 }
 
@@ -110,6 +114,9 @@ workflow SLAVE_ANALYSIS {
                     .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[6].text};${it[7].text}" }
                     .collectFile(name: "${workflow.runName}.slave.easel.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
     }
+
+  emit:
+  alignment = SLAVE_ALIGNER.out.alignmentFile
 }
 
 include {GENERATE_DYNAMIC_CONFIG}      from './preprocess.nf'    
