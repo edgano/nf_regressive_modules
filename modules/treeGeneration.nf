@@ -14,7 +14,7 @@ process TREE_GENERATION {
     each tree_method
 
     output:
-    tuple val (id), val(tree_method), path ("${id}.${tree_method}.dnd")
+    tuple val (id), val(tree_method), path ("${id}.${tree_method}.dnd"), emit: trees
 
     script:
     template "${path_templates}/tree/tree_${tree_method}.sh"

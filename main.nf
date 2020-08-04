@@ -165,16 +165,10 @@ if ( params.refs ) {
 }
 
 // Channels for user provided trees or empty channel if trees are to be generated [OPTIONAL]
-
 if ( params.trees ) {
-  trees_ch = Channel.fromPath(params.trees)
+  in_trees = Channel.fromPath(params.trees)
     .map { item -> [ item.baseName.tokenize('.')[0], item.baseName.tokenize('.')[1], item] }
 }
-/*
-else {
-  Channel.empty().set { trees }
-}
-*/
 
 // tokenize params 
 tree_method = params.tree_methods.tokenize(',')
@@ -187,13 +181,24 @@ dynamicX = params.dynamicX.toString().tokenize(',')       //int to string
  * main script flow
  */
 workflow pipeline {
+   /*
+    def trees = Channel.empty()
 
-    def trees = params.trees? trees_ch : TREE_GENERATION (seqs_ch, tree_method)
+    if (!params.trees){
+        TREE_GENERATION (seqs_ch, tree_method)
+        trees = TREE_GENERATION.out.trees
+    }
+    else {
+        trees = in_trees
+    }
+    */
+    def trees = params.trees? in_trees : TREE_GENERATION (seqs_ch, tree_method).trees
 
     seqs_ch
-        .cross(TREE_GENERATION.out)
+        .cross(trees)
         .map { it -> [ it[1][0], it[1][1], it[0][1], it[1][2] ] }
         .set { seqs_and_trees }
+
     /*
     if (!params.trees){
       TREE_GENERATION (seqs_ch, tree_method)
@@ -211,32 +216,62 @@ workflow pipeline {
 
     def result_regressive = params.regressive_align? REG_ANALYSIS(seqs_and_trees,refs_ch, align_method, tree_method, bucket_list) : Channel.empty()
 
-    //if (params.regressive_align){
-    //  REG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
-    //}
-    def result_progressive = params.progressive_align? PROG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method) : Channel.empty()
+    //result['regressive'] = params.regressive_align? REG_ANALYSIS(seqs_and_trees,refs_ch, align_method, tree_method, bucket_list) : Channel.empty()
+    /*
+    if (params.regressive_align){
+        REG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
+    }
+    */
+    alignment_progressive = Channel.empty()
+    gaps_progressive = Channel.empty()
 
-    //if (params.progressive_align){
-    //  PROG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method)
-    //}
+    //def result_progressive = params.progressive_align? PROG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method): Channel.empty()
+    // result['progressive'] = params.progressive_align? PROG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method) : Channel.empty()
+    if (params.progressive_align){
+        PROG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method)
+        alignment_progressive = PROG_ANALYSIS.out.alignment
+        if (params.gapCount){
+            gaps_progressive = PROG_ANALYSIS.out.gaps
+        }
+    }
+
     def result_slave = params.slave_align? SLAVE_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list, slave_method) : Channel.empty()
-
+    // result['slave'] = params.slave_align? SLAVE_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list, slave_method) : Channel.empty()
     //if (params.slave_align){
     //  SLAVE_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list, slave_method)
-    //}
-    def result_dynamic = params.dynamic_align? DYNAMIC_ANALYSIS(seqs_and_trees, refs_ch, tree_method, bucket_list, dynamicX) : Channel.empty()
+    //
 
+    def result_dynamic = params.dynamic_align? DYNAMIC_ANALYSIS(seqs_and_trees, refs_ch, tree_method, bucket_list, dynamicX) : Channel.empty()
+    // result['dynamic'] = params.dynamic_align? DYNAMIC_ANALYSIS(seqs_and_trees, refs_ch, tree_method, bucket_list, dynamicX) : Channel.empty()
     //if (params.dynamic_align){
     //  DYNAMIC_ANALYSIS(seqs_and_trees, refs_ch, tree_method, bucket_list, dynamicX)
     //}
-    def result_pool = params.pool_align? POOL_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list) : Channel.empty()
 
+    def result_pool = params.pool_align? POOL_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list) : Channel.empty()
+    // result['pool'] = params.pool_align? POOL_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list) : Channel.empty()
     //if (params.pool_align){
     //  def alignment = POOL_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
     //}
+    //result['progressive'].view()
+    //result['regressive'].view()
 
     emit:
-    alignment = result_progressive
+    alignment_prog = alignment_progressive
+    gaps_prog = gaps_progressive
+
+    //alignment_prog = params.progressive_align? result_progressive.alignment:Channel.empty()
+
+
+    alignment_reg = params.regressive_align? result_regressive.alignment:Channel.empty()
+    alignment_slave = result_slave
+
+    /*
+    alignment['progressive'] = result_progressive
+    alignment['regressive'] = result_regressive
+    alignment['slave'] = result_slave
+    alignment['dynaymic'] = result_dynamic
+    alignment['pool'] = result_pool
+    */
 }
 
 workflow {
