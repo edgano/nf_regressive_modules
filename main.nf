@@ -199,21 +199,6 @@ workflow pipeline {
         .map { it -> [ it[1][0], it[1][1], it[0][1], it[1][2] ] }
         .set { seqs_and_trees }
 
-    /*
-    if (!params.trees){
-      TREE_GENERATION (seqs_ch, tree_method)
-      seqs_ch
-        .cross(TREE_GENERATION.out)
-        .map { it -> [ it[1][0], it[1][1], it[0][1], it[1][2] ] }
-        .set { seqs_and_trees }
-    }else{
-      seqs_ch
-        .cross(trees)
-        .map { it -> [ it[1][0], it[1][1], it[0][1], it[1][2] ] }
-        .set { seqs_and_trees }
-    }
-    */
-
     def result_regressive = params.regressive_align? REG_ANALYSIS(seqs_and_trees,refs_ch, align_method, tree_method, bucket_list) : Channel.empty()
 
     //result['regressive'] = params.regressive_align? REG_ANALYSIS(seqs_and_trees,refs_ch, align_method, tree_method, bucket_list) : Channel.empty()
