@@ -235,4 +235,7 @@ workflow POOL_ANALYSIS {
                     .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[6].text};${it[7].text}" }
                     .collectFile(name: "${workflow.runName}.pool.easel.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")    
     }
+
+  emit:
+  alignment = POOL_ALIGNER.out.alignmentFile
 }

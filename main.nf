@@ -225,18 +225,19 @@ workflow pipeline {
     }
     //def result_slave = params.slave_align? SLAVE_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list, slave_method) : Channel.empty()
 
-    //def result_dynamic = params.dynamic_align? DYNAMIC_ANALYSIS(seqs_and_trees, refs_ch, tree_method, bucket_list, dynamicX) : Channel.empty()
-
     alignment_dyn = Channel.empty()
     if (params.dynamic_align){
       DYNAMIC_ANALYSIS(seqs_and_trees, refs_ch, tree_method, bucket_list, dynamicX)
       alignment_dyn = DYNAMIC_ANALYSIS.out.alignment
     }
+    //def result_dynamic = params.dynamic_align? DYNAMIC_ANALYSIS(seqs_and_trees, refs_ch, tree_method, bucket_list, dynamicX) : Channel.empty()
 
+    alignment_pool_r = Channel.empty()
+    if (params.pool_align){
+      POOL_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
+      alignment_pool_r = POOL_ANALYSIS.out.alignment
+    }
     //def result_pool = params.pool_align? POOL_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list) : Channel.empty()
-    //if (params.pool_align){
-    //  def alignment = POOL_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
-    //}
 
     emit:
     alignment_prog = alignment_progressive
@@ -249,6 +250,7 @@ workflow pipeline {
 
     alignment_slave = alignment_sla
     alignment_dynamic = alignment_dyn
+    alignment_pool = alignment_pool_r
 }
 
 workflow {

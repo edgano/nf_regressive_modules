@@ -14,7 +14,7 @@ workflow PROG_ANALYSIS {
     align_method
     tree_method
      
-  main: 
+  main:
     PROG_ALIGNER (seqs_and_trees, align_method)
    
     if (params.evaluate){
