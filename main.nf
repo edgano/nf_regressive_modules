@@ -197,15 +197,12 @@ workflow pipeline {
     }
 
     alignment_progressive_r = Channel.empty()
-    gaps_progressive = Channel.empty()
+
     if (params.progressive_align){
         PROG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method)
         alignment_progressive_r = PROG_ANALYSIS.out.alignment
-        if (params.gapCount){
-            gaps_progressive = PROG_ANALYSIS.out.gaps
-        }
     }
-
+    eval_progressive.view()
     alignment_slave_r = Channel.empty()
     if (params.slave_align){
         SLAVE_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list, slave_method)
@@ -227,7 +224,6 @@ workflow pipeline {
     emit:
     alignment_regressive = alignment_regressive_r
     alignment_progressive = alignment_progressive_r
-    gaps_prog = gaps_progressive
     alignment_slave = alignment_slave_r
     alignment_dynamic = alignment_dynamic_r
     alignment_pool = alignment_pool_r
