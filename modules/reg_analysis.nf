@@ -183,6 +183,9 @@ workflow DYNAMIC_ANALYSIS {
                     .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[6].text};${it[7].text}" }
                     .collectFile(name: "${workflow.runName}.dynamic.easel.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")    
     }
+
+  emit:
+  alignment = DYNAMIC_ALIGNER.out.alignmentFile
 }
 
 include {POOL_ALIGNER}   from './generateAlignment.nf'   
