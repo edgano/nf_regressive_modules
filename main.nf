@@ -167,8 +167,8 @@ if ( params.refs ) {
 
 // Channels for user provided trees or empty channel if trees are to be generated [OPTIONAL]
 if ( params.trees ) {
-  in_trees = Channel.fromPath(params.trees)
-    .map { item -> [ item.baseName.tokenize('.')[0], item.baseName.tokenize('.')[1], item] }
+  input_trees = Channel.fromPath(params.trees)
+                       .map { item -> [ item.baseName.tokenize('.')[0], item.baseName.tokenize('.')[1], item] }
 }
 
 // tokenize params
@@ -182,18 +182,8 @@ dynamicX = params.dynamicX.toString().tokenize(',')       //int to string
  * main script flow
  */
 workflow pipeline {
-    /*
-    def trees = Channel.empty()
 
-    if (!params.trees){
-        TREE_GENERATION (seqs_ch, tree_method)
-        trees = TREE_GENERATION.out.trees
-    }
-    else {
-        trees = in_trees
-    }
-    */
-    def trees = params.trees? in_trees : TREE_GENERATION (seqs_ch, tree_method).trees
+    def trees = params.trees? input_trees : TREE_GENERATION (seqs_ch, tree_method).trees
 
     seqs_ch
         .cross(trees)
