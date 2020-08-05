@@ -6,7 +6,7 @@ on: [push, pull_request]
 jobs:
   test_Tcoffee_Modes:
     env:
-      NXF_VER: '20.04.1'
+      NXF_VER: '20.07.1'
       NXF_ANSI_LOG: false
     runs-on: ubuntu-latest
     if: "contains(github.event.head_commit.message, '[tcoffee test]')"
