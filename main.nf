@@ -202,7 +202,7 @@ workflow pipeline {
         PROG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method)
         alignment_progressive_r = PROG_ANALYSIS.out.alignment
     }
-    eval_progressive.view()
+
     alignment_slave_r = Channel.empty()
     if (params.slave_align){
         SLAVE_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list, slave_method)
