@@ -43,11 +43,12 @@ top20fam="gluts,myb_DNA-binding,tRNA-synt_2b,biotin_lipoyl,hom,ghf13,aldosered,h
 //params.seqs ="/users/cn/egarriga/datasets/homfam/combinedSeqs/{${seq2improve}}.fa"
 
 // input sequences to align in fasta format
-params.seqs = "/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/sh3.fasta"
+params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/*.fa"
+//params.seqs = "/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/sh3.fasta"
 
 params.refs = "/users/cn/egarriga/datasets/homfam/refs/*.ref"
 
-params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.{FAMSA,CLUSTALO,MAFFT_PARTTREE}.dnd"
+params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.{FAMSA,CLUSTALO}.dnd"
 //params.trees = false
                       //TODO FIX -> reg_UPP
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE,MAFFT,MSAPROBS,PROBCONS,TCOFFEE,UPP,MUSCLE
@@ -80,7 +81,7 @@ params.params4tcoffee = ''
 params.cache_path = ''
 
           //uniref50, pdb or path
-params.db = "pdb"        
+params.db = "uniref50"        
           // define default database path
 uniref_path = "/users/cn/egarriga/datasets/db/uniref50.fasta"   // cluster path
 pdb_path = "/database/pdb/pdb_seqres.txt"                       // docker path
@@ -99,7 +100,7 @@ params.metrics=false
 params.easel=false
 
 // output directory
-params.outdir = "$baseDir/results"
+params.outdir = "$baseDir/resultsReg_Psi"
 
 //blast call cached
 params.generateBlast=false
