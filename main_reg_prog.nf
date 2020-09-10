@@ -51,13 +51,8 @@ params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.{FAMSA,CLUSTALO,MAFFT_
 //params.trees = false
                       //TODO FIX -> reg_UPP
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE,MAFFT,MSAPROBS,PROBCONS,TCOFFEE,UPP,MUSCLE
-<<<<<<< HEAD
-params.align_methods = "CLUSTALO"
-                      
-=======
-params.align_methods = "CLUSTALO,FAMSA,MAFFT-FFTNS1"   
 
->>>>>>> bebf4fa34f11a60205ccf1ebaf050708dfebd9de
+params.align_methods = "PSI_FLAG"
 //CLUSTALW-QUICK,CLUSTALW                    
 //FAMSA-SLINK,FAMSA-SLINKmedoid,FAMSA-SLINKparttree,FAMSA-UPGMA,FAMSA-UPGMAmedoid,FAMSA-UPGMAparttree   
 //MAFFT-DPPARTTREE0,MAFFT-DPPARTTREE1,MAFFT-DPPARTTREE2,MAFFT-DPPARTTREE2size
@@ -69,27 +64,9 @@ params.align_methods = "CLUSTALO,FAMSA,MAFFT-FFTNS1"
 //TODO -> test tcoffee trees
 //                    CLUSTALW-QUICK,CLUSTALW  -> not working on PROG bc they are not rooted
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE0
-<<<<<<< HEAD
 params.tree_methods = "MBED"      
-=======
-params.tree_methods = "FAMSA-SLINK"      
->>>>>>> bebf4fa34f11a60205ccf1ebaf050708dfebd9de
 
-params.buckets = "1000"
-
-//  ## SLAVE parameters               //need to be lowercase -> direct to tcoffee
-                          //mbed,parttree,famsadnd,cwdnd,dpparttree,fastparttree,mafftdnd,fftns1dnd,fftns2dnd,nj 
-                          //mbed,parttree,famsadnd
-params.slave_tree_methods="mbed,parttree,famsadnd" 
-
-//  ## DYNAMIC parameters
-params.dynamicX = "10000"                 //TODO -> make 2 list? one with aligners and the other with sizes? (to have more than 2 aligners)
-params.dynamicMasterAln="psicoffee_msa"
-params.dynamicMasterSize="50"
-params.dynamicSlaveAln="famsa_msa"
-params.dynamicSlaveSize="100000000"
-params.dynamicConfig=true
-
+params.buckets = "50"
 
 // ## TCOFFEE
                   //3DALIGN,3DCOFFEE,3DMALIGN,ACCURATE,DEFAULT,EXPRESSO,FMCOFFEE,MCOFFEE,PROCOFFEE,PSICOFFEE,QUICKALN,RCOFFEE_CONSAN,RCOFFEE,TRMSD"
@@ -110,24 +87,16 @@ pdb_path = "/database/pdb/pdb_seqres.txt"                       // docker path
 
 
 params.progressive_align = false
-<<<<<<< HEAD
 params.regressive_align = true           
 params.pool_align=false                  
 params.slave_align=false   
 params.dynamic_align=false               
-=======
-params.regressive_align = false           
-params.pool_align=false                  
-params.slave_align=false   
-params.dynamic_align=false   
-params.tcoffee_align = true            
->>>>>>> bebf4fa34f11a60205ccf1ebaf050708dfebd9de
 
 params.evaluate=true
-params.homoplasy=true
-params.gapCount=true
-params.metrics=true
-params.easel=true
+params.homoplasy=false
+params.gapCount=false
+params.metrics=false
+params.easel=false
 
 // output directory
 params.outdir = "$baseDir/results"
@@ -181,8 +150,8 @@ log.info """\
 
 // import analysis pipelines
 include TREE_GENERATION from './modules/treeGeneration'        params(params)
-//include REG_ANALYSIS from './modules/reg_analysis'        params(params)
-include REG_ANALYSIS from './modules/regressiveAnalysis'        params(params)
+include REG_ANALYSIS from './modules/reg_analysis'        params(params)
+//include REG_ANALYSIS from './modules/regressiveAnalysis'        params(params)
 include PROG_ANALYSIS from './modules/prog_analysis'      params(params)
 include SLAVE_ANALYSIS from './modules/reg_analysis'      params(params)
 include DYNAMIC_ANALYSIS from './modules/reg_analysis'    params(params)
@@ -246,8 +215,6 @@ if ( params.trees ) {
 tree_method = params.tree_methods.tokenize(',')
 align_method = params.align_methods.tokenize(',')
 bucket_list = params.buckets.toString().tokenize(',')     //int to string
-slave_method = params.slave_tree_methods.tokenize(',')
-dynamicX = params.dynamicX.toString().tokenize(',')       //int to string
 
 tc_mode = params.tc_modes.tokenize(',')
 
@@ -273,15 +240,6 @@ workflow pipeline {
     }
     if (params.progressive_align){
       PROG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method)
-    }
-    if (params.slave_align){
-      SLAVE_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list, slave_method)
-    }
-    if (params.dynamic_align){
-      DYNAMIC_ANALYSIS(seqs_and_trees, refs_ch, tree_method, bucket_list, dynamicX)
-    }
-    if (params.pool_align){
-      POOL_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
     }
     if (params.tcoffee_align){
 
