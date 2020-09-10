@@ -47,11 +47,11 @@ params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/*.fa"
 
 params.refs = "/users/cn/egarriga/datasets/homfam/refs/*.ref"
 
-params.trees ="/Users/edgargarriga/CBCRG/nf_regressive_modules/results/trees/*.{CLUSTALO,CLUSTALO-RANDOM,FAMSA,MAFFT_PARTTREE}.dnd"
+params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.{CLUSTALO,CLUSTALO-RANDOM,FAMSA,MAFFT_PARTTREE}.dnd"
 //params.trees = false
                       //TODO FIX -> reg_UPP
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE,MAFFT,MSAPROBS,PROBCONS,TCOFFEE,UPP,MUSCLE
-params.align_methods = "CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI"
+params.align_methods = "CLUSTALO,FAMSA,MAFFT-FFTNS1"
                       
 //CLUSTALW-QUICK,CLUSTALW                    
 //FAMSA-SLINK,FAMSA-SLINKmedoid,FAMSA-SLINKparttree,FAMSA-UPGMA,FAMSA-UPGMAmedoid,FAMSA-UPGMAparttree   
@@ -73,7 +73,7 @@ params.buckets = "1000"
                           //need to be lowercase -> direct to tcoffee
                           //mbed,parttree,famsadnd,cwdnd,dpparttree,fastparttree,mafftdnd,fftns1dnd,fftns2dnd,nj 
                           //mbed,parttree,famsadnd
-params.slave_tree_methods="mbed,parttree,famsadnd,fftns1dnd" 
+params.slave_tree_methods="mbed,parttree,famsadnd" 
 
 
           //uniref50, pdb or path
@@ -88,10 +88,10 @@ params.regressive_align = false
 params.slave_align=true   
               
 params.evaluate=true
-params.homoplasy=false
+params.homoplasy=true
 params.gapCount=false
 params.metrics=false
-params.easel=false
+params.easel=true
 
 // output directory
 params.outdir = "$baseDir/results_SLAVE"

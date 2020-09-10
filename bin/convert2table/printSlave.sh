@@ -1,5 +1,6 @@
 #!/bin/bash
 
+declare -a path="/users/cn/egarriga/nf_regressive_modules/resultsREF/"
 #################
 ## FAMILY NAME ##
 #################
@@ -127,7 +128,7 @@ do
             do
                 for nSeq in ${bucket[@]}  ## loop all the buckets
                 do
-                    cat ../results/score/tc/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}_${slaveTree}.tree.tc | tr '' ';'| tr -d "[:space:]"
+                    cat ${path}/score/tc/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}_${slaveTree}.tree.tc | tr '' ';'| tr -d "[:space:]"
                     printf ";" 
                 done
             done
@@ -216,19 +217,19 @@ do
         do
           for nSeq in ${bucket[@]}  ## loop all the buckets
           do
-            cat ../results/easel/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.avgId | tr '' ';'| tr -d "[:space:]"
+            cat ${path}/easel/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.avgId | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.len | tr '' ';'| tr -d "[:space:]"
+            cat ${path}/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.len | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.ngap | tr '' ';'| tr -d "[:space:]"
+            cat ${path}/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.ngap | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.ngap2 | tr '' ';'| tr -d "[:space:]"
+            cat ${path}/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.ngap2 | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.homo | tr '' ';'| tr -d "[:space:]"
+            cat ${path}/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.homo | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.w_homo | tr '' ';'| tr -d "[:space:]"
+            cat ${path}/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.w_homo | tr '' ';'| tr -d "[:space:]"
             printf ";" 
-            cat ../results/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.w_homo2 | tr '' ';'| tr -d "[:space:]"
+            cat ${path}/homoplasy/${family}.${flavour}.${nSeq}.${align_method}.with.${tree_method}.tree.w_homo2 | tr '' ';'| tr -d "[:space:]"
             printf ";" 
           done
        	done

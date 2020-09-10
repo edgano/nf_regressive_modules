@@ -53,7 +53,7 @@ params.refs = "/users/cn/egarriga/datasets/homfam/refs/*.ref"
 params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.CLUSTALO.dnd"
 //params.trees = false
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1
-params.align_methods = "PSI,PSI_FLAG"//,FAMSA,MAFFT-FFTNS1" 
+params.align_methods = "PSI_FLAG"//,PSI_FLAG,FAMSA,MAFFT-FFTNS1" 
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE
 params.tree_methods = "MBED"      //TODO -> reuse trees for multiple methods.
 
