@@ -1,7 +1,7 @@
 #!/bin/bash nextflow
 //params.outdir = 'results'
 
-include set_templates_path from './functions.nf'
+include { set_templates_path } from './functions.nf'
 path_templates = set_templates_path()
 
 process TCOFFEE_DEFAULT{
@@ -111,7 +111,6 @@ process TCOFFEE_PSICOFFEE {
 
     input:
     tuple val(id), file(seqs), file(template), file(library)
-    val(fakeId)             //to ensure the process before when precompute Blast
 
     output:
     tuple val (id), path ("*.aln"), emit: alignmentFile

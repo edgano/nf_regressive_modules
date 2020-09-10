@@ -1,7 +1,7 @@
 #!/bin/bash nextflow
 params.outdir = 'results'
 
-include set_templates_path from './functions.nf'
+include { set_templates_path } from './functions.nf'
 path_templates = set_templates_path()
 
 process TREE_GENERATION {
@@ -10,11 +10,11 @@ process TREE_GENERATION {
     publishDir "${params.outdir}/trees", mode: 'copy', overwrite: true
 
     input:
-    tuple id, path(seqs)
+    tuple val(id), path(seqs)
     each tree_method
 
     output:
-    tuple val (id), val(tree_method), path ("${id}.${tree_method}.dnd")
+    tuple val (id), val(tree_method), path ("${id}.${tree_method}.dnd"), emit: trees
 
     script:
     template "${path_templates}/tree/tree_${tree_method}.sh"

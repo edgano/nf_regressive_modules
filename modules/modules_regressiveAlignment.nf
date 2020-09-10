@@ -1,11 +1,10 @@
 #!/bin/bash nextflow
-//params.outdir = 'results'
 
-include set_templates_path from './functions.nf'
+include { set_templates_path } from './functions.nf'
 path_templates = set_templates_path()
 
 process REG_CLUSTALO {
-    container 'e2a670731db7'//'edgano/tcoffee:pdb'
+    container 'edgano/tcoffee:pdb'
     tag "Regressive clustalo - $tree_method - $bucket_size on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
@@ -33,7 +32,7 @@ process REG_CLUSTALO {
 }
 
 process REG_FAMSA{
-    container 'e2a670731db7'//'edgano/tcoffee:protocols'
+    container 'edgano/tcoffee:pdb'
     tag "Regressive famsa - $tree_method - $bucket_size on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
@@ -45,7 +44,7 @@ process REG_FAMSA{
     val "famsa", emit: alignMethod
     val tree_method, emit: treeMethod
     val bucket_size, emit: bucketSize
-    tuple val (id), path ("${id}.reg_${bucket_size}.clustalo.with.${tree_method}.tree.aln"), emit: alignmentFile
+    tuple val (id), path ("${id}.reg_${bucket_size}.famsa.with.${tree_method}.tree.aln"), emit: alignmentFile
     path "${id}.homoplasy", emit: homoplasyFile
     path ".command.trace", emit: metricFile
 
@@ -61,7 +60,7 @@ process REG_FAMSA{
 }
 
 process REG_MAFFT_FFTNS1 {
-    container 'e2a670731db7'//'edgano/tcoffee:protocols'
+    container 'edgano/tcoffee:pdb'
     tag "Regressive fftns1 - $tree_method - $bucket_size on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
 
@@ -91,7 +90,7 @@ process REG_MAFFT_FFTNS1 {
     """
 }
 
-process 'REG_MAFFT-GINSI' {
+process REG_MAFFT_GINSI {
     container 'edgano/tcoffee:protocols'
     tag "Regressive ginsi - $tree_method - $bucket_size on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
@@ -122,7 +121,7 @@ process 'REG_MAFFT-GINSI' {
     """
 }
 
-process 'REG_MAFFT-SPARSECORE' {
+process REG_MAFFT_SPARSECORE {
     container 'edgano/tcoffee:protocols'
     tag "Regressive sparsecore - $tree_method - $bucket_size on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
