@@ -43,17 +43,17 @@ top20fam="gluts,myb_DNA-binding,tRNA-synt_2b,biotin_lipoyl,hom,ghf13,aldosered,h
 //params.seqs ="/users/cn/egarriga/datasets/homfam/combinedSeqs/{${seq2improve}}.fa"
 
 // input sequences to align in fasta format
-params.seqs = "/users/cn/egarriga/datasets/homfam/combinedSeqs/*.fa"
-//params.seqs = "/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/sh3.fasta"
+params.seqs = "/users/cn/egarriga/datasets/new_extHomfam/{huge,large,medium,small,xlarge}/*.fa"
+//huge  large  medium  ref  small  trees  xlarge
+params.refs = "/users/cn/egarriga/datasets/new_extHomfam/ref/*.ref"
 
-params.refs = "/users/cn/egarriga/datasets/homfam/refs/*.ref"
-
-params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.CLUSTALO.dnd"
+params.trees ="/users/cn/egarriga/nf_regressive_modules/results_extHomfam/trees/*.MAFFT-PARTTREE0.dnd"
+//params.trees ="/users/cn/egarriga/nf_regressive_modules/results_extHomfam/trees/*.{FAMSA-SLINK,MAFFT-PARTTREE0,MBED}.dnd"
 //params.trees = false
                       //TODO FIX -> reg_UPP
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE,MAFFT,MSAPROBS,PROBCONS,TCOFFEE,UPP,MUSCLE
-
-params.align_methods = "PSI"
+params.align_methods ="CLUSTALO" //"CLUSTALO,FAMSA,MAFFT-FFTNS1"
+                      
 //CLUSTALW-QUICK,CLUSTALW                    
 //FAMSA-SLINK,FAMSA-SLINKmedoid,FAMSA-SLINKparttree,FAMSA-UPGMA,FAMSA-UPGMAmedoid,FAMSA-UPGMAparttree   
 //MAFFT-DPPARTTREE0,MAFFT-DPPARTTREE1,MAFFT-DPPARTTREE2,MAFFT-DPPARTTREE2size
@@ -63,48 +63,32 @@ params.align_methods = "PSI"
 //TCOFFEE-BLENGTH,TCOFFEE-ISWLCAT,TCOFFEE-KM,TCOFFEE-LONGCAT,TCOFFEE-NJ,TCOFFEE-REG,TCOFFEE-SHORTCAT,TCOFFEE-SWL,TCOFFEE-SWLcat,TCOFFEE-UPGMA
 
 //TODO -> test tcoffee trees
-//                    CLUSTALW-QUICK,CLUSTALW  -> not working on PROG bc they are not rooted
+//     CLUSTALW-QUICK,CLUSTALW  -> not working on PROG bc they are not rooted
+
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE0
 params.tree_methods = "MBED"      
 
-params.buckets = "50"
-
-// ## TCOFFEE
-                  //3DALIGN,3DCOFFEE,3DMALIGN,ACCURATE,DEFAULT,EXPRESSO,FMCOFFEE,MCOFFEE,PROCOFFEE,PSICOFFEE,QUICKALN,RCOFFEE_CONSAN,RCOFFEE,TRMSD"
-  //need template -> 3DMALIGN
-params.tc_modes = "DEFAULT"
-//params.templates = '/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/sh3.template_file'
-//params.pdb = '/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/PDBs/*.pdb'
-params.libs = ''
-params.pairFile = ''
-params.params4tcoffee = ''   
-params.cache_path = ''
+params.buckets = "1000"
 
           //uniref50, pdb or path
-params.db = "uniref50"        
+params.db = "pdb"        
           // define default database path
 uniref_path = "/users/cn/egarriga/datasets/db/uniref50.fasta"   // cluster path
 pdb_path = "/database/pdb/pdb_seqres.txt"                       // docker path
 
 
 params.progressive_align = false
-params.regressive_align = true           
-params.pool_align=false                  
-params.slave_align=false   
-params.dynamic_align=false               
-
+params.regressive_align = true                          
+params.slave_align = false
+              
 params.evaluate=true
-params.homoplasy=false
+params.homoplasy=true
 params.gapCount=false
 params.metrics=false
-params.easel=false
+params.easel=true
 
 // output directory
-params.outdir = "$baseDir/resultsReg_Psi"
-
-//blast call cached
-params.generateBlast=false
-params.blastOutdir="$baseDir/blast"
+params.outdir = "$baseDir/results_extHomfam"
 
 if (params.db=='uniref50'){
   params.database_path = uniref_path
@@ -128,16 +112,9 @@ log.info """\
          Generate Regressive alignments                 : ${params.regressive_align}
          Generate Slave tree alignments                 : ${params.slave_align}
                   Slave tree methods                    : ${params.slave_tree_methods}
-         Generate Dynamic alignments                    : ${params.dynamic_align}
-                  Dynamic size                          : ${params.dynamicX}
-                  Dynamic config file                   : ${params.dynamicConfig}
-                          master align - boundary       : ${params.dynamicMasterAln} - ${params.dynamicMasterSize}
-                          slave align  - boundary       : ${params.dynamicSlaveAln} - ${params.dynamicSlaveSize}
+
                   Dynamic DDBB                          : ${params.db}
                   DDBB path                             : ${params.database_path}
-         Generate Pool alignments                       : ${params.pool_align}
-         Generate TCoffee alignments                    : ${params.tcoffee_align}
-                  TCoffee modes                         : ${params.tc_modes}
          --##--
          Perform evaluation? Requires reference         : ${params.evaluate}
          Check homoplasy? Only for regressive           : ${params.homoplasy}
@@ -150,74 +127,30 @@ log.info """\
          .stripIndent()
 
 // import analysis pipelines
-include TREE_GENERATION from './modules/treeGeneration'        params(params)
-include REG_ANALYSIS from './modules/reg_analysis'        params(params)
-//include REG_ANALYSIS from './modules/regressiveAnalysis'        params(params)
-include PROG_ANALYSIS from './modules/prog_analysis'      params(params)
-include SLAVE_ANALYSIS from './modules/reg_analysis'      params(params)
-include DYNAMIC_ANALYSIS from './modules/reg_analysis'    params(params)
-include POOL_ANALYSIS from './modules/reg_analysis'       params(params)
-include TCOFFEE_CI from './modules/prog_analysis'      params(params)
+include {TREE_GENERATION} from './modules/treeGeneration'        params(params)
+include {REG_ANALYSIS} from './modules/reg_analysis'        params(params)
+include {PROG_ANALYSIS} from './modules/prog_analysis'      params(params)
+include {SLAVE_ANALYSIS} from './modules/reg_analysis'      params(params)
 
+// Channels containing sequences
 seqs_ch = Channel.fromPath( params.seqs, checkIfExists: true ).map { item -> [ item.baseName, item] }
 
 if ( params.refs ) {
   refs_ch = Channel.fromPath( params.refs ).map { item -> [ item.baseName, item] }
 }
 
-if ( params.templates ) {
-  Channel
-  .fromPath(params.templates, checkIfExists: true)
-  .map { item -> [ item.simpleName, item] }
-  .set { templates_ch}
-}else { 
-  Channel.empty()
-  .set { templates_ch }
-}
-if ( params.pdb ) {
-  Channel
-  .fromPath(params.pdb)
-  .map { item -> [ item.simpleName , item] }
-  .groupTuple()
-  .set { pdbFiles}
-}else { 
-  Channel.empty()
-    .set { pdbFiles }
-}
-if ( params.pairFile ) {
-  Channel
-  .fromPath(params.pairFile)
-  .map { item -> [ item.simpleName , item] }
-  .groupTuple()
-  .set { pair_file}
-}else { 
-  Channel.empty()
-    .set { pair_file }
-}
-if ( params.libs ) {
-  Channel
-  .fromPath(params.libs)
-  .map { item -> [ item.simpleName , item] }
-  .groupTuple()
-  .set { libs_ch }
-}else { 
-  Channel.empty()
-    .set { libs_ch }
-}
-
+// Channels for user provided trees or empty channel if trees are to be generated [OPTIONAL]
 if ( params.trees ) {
-  trees_ch = Channel.fromPath(params.trees)
+  trees = Channel.fromPath(params.trees)
     .map { item -> [ item.baseName.tokenize('.')[0], item.baseName.tokenize('.')[1], item] }
 }else { 
-  Channel.empty().set { trees_ch }
+  Channel.empty().set { trees }
 }
 
 // tokenize params 
 tree_method = params.tree_methods.tokenize(',')
 align_method = params.align_methods.tokenize(',')
 bucket_list = params.buckets.toString().tokenize(',')     //int to string
-
-tc_mode = params.tc_modes.tokenize(',')
 
 /* 
  * main script flow
@@ -232,30 +165,20 @@ workflow pipeline {
         .set { seqs_and_trees }
     }else{
       seqs_ch
-        .cross(trees_ch)
+        .cross(trees)
         .map { it -> [ it[1][0], it[1][1], it[0][1], it[1][2] ] }
         .set { seqs_and_trees }
     }
+
     if (params.regressive_align){
       REG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list)
     }
     if (params.progressive_align){
       PROG_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method)
     }
-    if (params.tcoffee_align){
-
-      seqs_and_trees
-        .join(templates_ch, remainder: true)
-        .set { seqs_trees_templates }
-
-      seqs_trees_templates
-        .join(libs_ch, remainder: true)
-        .set { seqs_trees_templates_libs }
-
-      //seqs_trees_templates_libs.view()
-      TCOFFEE_CI(seqs_trees_templates_libs, refs_ch, tc_mode)
+    if (params.slave_align){
+      SLAVE_ANALYSIS(seqs_and_trees, refs_ch, align_method, tree_method, bucket_list, slave_method)
     }
-    
 }
 
 workflow {
