@@ -5,14 +5,14 @@ include { set_templates_path } from './functions.nf'
 path_templates = set_templates_path()
 
 process REG_ALIGNER {
-    container 'edgano/tcoffee:pdb'
+    container '3d289d5ca683'//'edgano/tcoffee:pdb'
     tag "$align_method - $tree_method - $bucket_size on $id"
     publishDir "${params.outdir}/alignments", pattern: '*.aln'
     //publishDir "${params.outdir}/templates", pattern: '*.template_list'
     //publishDir "${params.outdir}/templates", pattern: '*.prf'
 
     input:
-    tuple val(id), val(tree_method), file(seqs), file(guide_tree), file(template), file(library)
+    tuple val(id), val(tree_method), file(seqs), file(guide_tree)
     each align_method
     each bucket_size
 
