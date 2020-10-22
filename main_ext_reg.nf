@@ -53,7 +53,7 @@ params.trees ="/users/cn/egarriga/datasets/homfam/trees/*.CLUSTALO.dnd"
                       //TODO FIX -> reg_UPP
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE,MAFFT,MSAPROBS,PROBCONS,TCOFFEE,UPP,MUSCLE
 
-params.align_methods = "PSI"
+params.align_methods = "CLUSTALO"
 //CLUSTALW-QUICK,CLUSTALW                    
 //FAMSA-SLINK,FAMSA-SLINKmedoid,FAMSA-SLINKparttree,FAMSA-UPGMA,FAMSA-UPGMAmedoid,FAMSA-UPGMAparttree   
 //MAFFT-DPPARTTREE0,MAFFT-DPPARTTREE1,MAFFT-DPPARTTREE2,MAFFT-DPPARTTREE2size
@@ -67,7 +67,7 @@ params.align_methods = "PSI"
                       //MAFFT-DPPARTTREE0,FAMSA-SLINK,MBED,MAFFT-PARTTREE0
 params.tree_methods = "MBED"      
 
-params.buckets = "50"
+params.buckets = "1000"
 
 // ## TCOFFEE
                   //3DALIGN,3DCOFFEE,3DMALIGN,ACCURATE,DEFAULT,EXPRESSO,FMCOFFEE,MCOFFEE,PROCOFFEE,PSICOFFEE,QUICKALN,RCOFFEE_CONSAN,RCOFFEE,TRMSD"
@@ -150,14 +150,14 @@ log.info """\
          .stripIndent()
 
 // import analysis pipelines
-include TREE_GENERATION from './modules/treeGeneration'        params(params)
-include REG_ANALYSIS from './modules/reg_analysis'        params(params)
+include { TREE_GENERATION } from './modules/treeGeneration'   params(params)
+include { REG_ANALYSIS } from './modules/reg_analysis'        params(params)
 //include REG_ANALYSIS from './modules/regressiveAnalysis'        params(params)
-include PROG_ANALYSIS from './modules/prog_analysis'      params(params)
-include SLAVE_ANALYSIS from './modules/reg_analysis'      params(params)
-include DYNAMIC_ANALYSIS from './modules/reg_analysis'    params(params)
-include POOL_ANALYSIS from './modules/reg_analysis'       params(params)
-include TCOFFEE_CI from './modules/prog_analysis'      params(params)
+include { PROG_ANALYSIS } from './modules/prog_analysis'      params(params)
+include { SLAVE_ANALYSIS } from './modules/reg_analysis'      params(params)
+include { DYNAMIC_ANALYSIS } from './modules/reg_analysis'    params(params)
+include { POOL_ANALYSIS } from './modules/reg_analysis'       params(params)
+include { TCOFFEE_CI } from './modules/prog_analysis'         params(params)
 
 seqs_ch = Channel.fromPath( params.seqs, checkIfExists: true ).map { item -> [ item.baseName, item] }
 
