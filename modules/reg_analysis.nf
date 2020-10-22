@@ -18,6 +18,7 @@ workflow REG_ANALYSIS {
     
      
   main: 
+    seqs_and_trees.view()
     REG_ALIGNER (seqs_and_trees, align_method, bucket_size)
    
     if (params.evaluate){
@@ -26,6 +27,7 @@ workflow REG_ANALYSIS {
         .map { it -> [ it[1][0], it[1][1], it[0][1] ] }
         .set { alignment_and_ref }
 
+      alignment_and_ref.view()
       EVAL_ALIGNMENT ("regressive", alignment_and_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize)
       EVAL_ALIGNMENT.out.tcScore
                     .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text}" }

@@ -43,12 +43,15 @@ top20fam="gluts,myb_DNA-binding,tRNA-synt_2b,biotin_lipoyl,hom,ghf13,aldosered,h
 //params.seqs ="/users/cn/egarriga/datasets/homfam/combinedSeqs/{${seq2improve}}.fa"
 
 // input sequences to align in fasta format
-params.seqs = "/users/cn/egarriga/datasets/new_extHomfam/{huge,large,medium,small,xlarge}/*.fa"
+params.seqs="/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/sh3.fasta"
+//params.seqs = "/users/cn/egarriga/datasets/new_extHomfam/{huge,large,medium,small,xlarge}/*.fa"
 //huge  large  medium  ref  small  trees  xlarge
-params.refs = "/users/cn/egarriga/datasets/new_extHomfam/ref/*.ref"
 
-params.trees ="/users/cn/egarriga/nf_regressive_modules/results_extHomfam/trees/*.MAFFT-PARTTREE0.dnd"
+params.refs="/Users/edgargarriga/CBCRG/NatureProtocolDataset/Proteins/sh3.ref"
+//params.refs = "/users/cn/egarriga/datasets/new_extHomfam/ref/*.ref"
+
 //params.trees ="/users/cn/egarriga/nf_regressive_modules/results_extHomfam/trees/*.{FAMSA-SLINK,MAFFT-PARTTREE0,MBED}.dnd"
+params.trees ="/Users/edgargarriga/CBCRG/nf_regressive_modules/results_extHomfam/trees/sh3.MBED.dnd"
 //params.trees = false
                       //TODO FIX -> reg_UPP
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE,MAFFT,MSAPROBS,PROBCONS,TCOFFEE,UPP,MUSCLE
