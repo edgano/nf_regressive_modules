@@ -7,5 +7,6 @@ t_coffee -reg -reg_method psicoffee_msa \
          -seq ${seqs} \
          -reg_nseq ${bucket_size} \
          -reg_homoplasy \
+         -output fastaz_aln \
          -cache ${params.blastOutdir} \
          -outfile ${id}.reg_${bucket_size}.${align_method}.with.${tree_method}.tree.aln

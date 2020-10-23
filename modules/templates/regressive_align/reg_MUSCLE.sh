@@ -3,4 +3,5 @@ t_coffee -reg -reg_method muscle_msa \
          -seq ${seqs} \
          -reg_nseq ${bucket_size} \
          -reg_homoplasy \
+         -output fastaz_aln \
          -outfile ${id}.reg_${bucket_size}.${align_method}.with.${tree_method}.tree.aln

@@ -27,4 +27,5 @@ t_coffee -reg -reg_method 3dcoffee_msa \
         -reg_nseq ${bucket_size} \
         -reg_homoplasy \
         \$template_filter \
+        -output fastaz_aln \
         -outfile ${id}.reg_${bucket_size}.${align_method}.with.NO_TREE.tree.aln
