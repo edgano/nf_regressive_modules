@@ -2,8 +2,8 @@
 //params.outdir = 'results_REG'
 
 include {COMBINE_SEQS}      from './preprocess.nf'    
-include {REG_ALIGNER}       from './generateAlignment.nf'   
-include {EVAL_ALIGNMENT}    from './modules_evaluateAlignment.nf'
+include {REG_ALIGNER}       from './generateAlignment.nf' 
+include {EVAL_ALIGNMENT;EVAL_COMPRESS}    from './modules_evaluateAlignment.nf'
 include {EASEL_INFO}        from './modules_evaluateAlignment.nf'
 include {HOMOPLASY}         from './modules_evaluateAlignment.nf'
 include {METRICS}           from './modules_evaluateAlignment.nf'
@@ -28,14 +28,14 @@ workflow REG_ANALYSIS {
         .set { alignment_and_ref }
 
       alignment_and_ref.view()
-      EVAL_ALIGNMENT ("regressive", alignment_and_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize)
-      EVAL_ALIGNMENT.out.tcScore
+      EVAL_COMPRESS ("regressive", alignment_and_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize)
+      EVAL_COMPRESS.out.tcScore
                     .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text}" }
                     .collectFile(name: "${workflow.runName}.regressive.tcScore.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
-      EVAL_ALIGNMENT.out.spScore
+      EVAL_COMPRESS.out.spScore
                     .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text}" }
                     .collectFile(name: "${workflow.runName}.regressive.spScore.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
-      EVAL_ALIGNMENT.out.colScore
+      EVAL_COMPRESS.out.colScore
                     .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text}" }
                     .collectFile(name: "${workflow.runName}.regressive.colScore.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
                     

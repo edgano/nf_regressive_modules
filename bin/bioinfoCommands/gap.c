@@ -4,6 +4,12 @@
 #include <stdbool.h>
 #include <ctype.h>
 
+/*
+    Compile: gcc -Wall gap.c -o gap
+    gap <input_file> <boolean>
+                        true: fasta -> gap
+                        false: gap -> fasta
+*/
 char* inputFasta; //= "test.fa";
 char* outputFileFA2Gap = "resultF2G.gap";
 char* outputFileGap2FA = "resultG2F.fa";
