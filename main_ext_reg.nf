@@ -157,7 +157,6 @@ log.info """\
 // import analysis pipelines
 include { TREE_GENERATION } from './modules/treeGeneration'   params(params)
 include { REG_ANALYSIS } from './modules/reg_analysis'        params(params)
-//include REG_ANALYSIS from './modules/regressiveAnalysis'        params(params)
 include { PROG_ANALYSIS } from './modules/prog_analysis'      params(params)
 include { SLAVE_ANALYSIS } from './modules/reg_analysis'      params(params)
 include { DYNAMIC_ANALYSIS } from './modules/reg_analysis'    params(params)
