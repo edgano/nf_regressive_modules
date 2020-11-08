@@ -1,5 +1,13 @@
+#! /bin/bash 
+
 export NO_MAFFT_BINARIES=1
 export MAFFT_BINARIES=''
+
+declare compressFlag=" "
+
+if $params.compressAZ ; then
+    compressFlag=" -output fastaz_aln"
+fi
 
 replace_U.pl ${seqs} 
 t_coffee -reg -reg_method mafftsparsecore_msa \
@@ -7,5 +15,5 @@ t_coffee -reg -reg_method mafftsparsecore_msa \
          -seq ${seqs} \
          -reg_nseq ${bucket_size} \
          -reg_homoplasy \
-         -output fastaz_aln \
+         \$compressFlag \
          -outfile ${id}.reg_${bucket_size}.${align_method}.with.${tree_method}.tree.aln

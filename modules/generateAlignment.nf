@@ -26,7 +26,6 @@ process REG_ALIGNER {
     //path "*.template_list", emit: templateFile
     //path "*.prf", emit: templateProfile
     
-
     script:
     template "${path_templates}/regressive_align/reg_${align_method}.sh"   
 }

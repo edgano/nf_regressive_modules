@@ -89,7 +89,10 @@ pdb_path = "/database/pdb/pdb_seqres.txt"                       // docker path
 
 
 params.progressive_align = false
-params.regressive_align = true           
+params.regressive_align = true 
+
+params.compressAZ = false       //"-output fastaz_aln" 
+
 params.pool_align=false                  
 params.slave_align=false   
 params.dynamic_align=false               
@@ -101,7 +104,7 @@ params.metrics=false
 params.easel=false
 
 // output directory
-params.outdir = "$baseDir/resultsReg_Psi"
+params.outdir = "$baseDir/result_test"
 
 //blast call cached
 params.generateBlast=false
@@ -127,6 +130,7 @@ log.info """\
          --##--
          Generate Progressive alignments                : ${params.progressive_align}
          Generate Regressive alignments                 : ${params.regressive_align}
+                  CompressAZ alignments                 : ${params.compressAZ}
          Generate Slave tree alignments                 : ${params.slave_align}
                   Slave tree methods                    : ${params.slave_tree_methods}
          Generate Dynamic alignments                    : ${params.dynamic_align}

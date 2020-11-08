@@ -19,6 +19,9 @@ else
     \$libs_filter=" -lib $library"
 fi
 
+if $params.compressAZ ; then
+    compressFlag=" -output fastaz_aln"
+fi
 ## -- ## -- ## -- ## -- ## -- ## -- ## -- ## -- ## -- ## -- ##              https://nextflow-io.github.io/patterns/index.html#_optional_input
 
 echo $template
@@ -28,5 +31,5 @@ t_coffee -reg -reg_method 3dmcoffee_msa \
          -reg_nseq ${bucket_size} \
          -reg_homoplasy \
          \$template_filter \
-         -output fastaz_aln \
+         \$compressFlag \
          -outfile ${id}.reg_${bucket_size}.${align_method}.with.NO_TREE.tree.aln

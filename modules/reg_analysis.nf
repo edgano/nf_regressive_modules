@@ -16,9 +16,8 @@ workflow REG_ANALYSIS {
     tree_method
     bucket_size
     
-     
   main: 
-    seqs_and_trees.view()
+    //seqs_and_trees.view()
     REG_ALIGNER (seqs_and_trees, align_method, bucket_size)
    
     if (params.evaluate){
@@ -27,7 +26,7 @@ workflow REG_ANALYSIS {
         .map { it -> [ it[1][0], it[1][1], it[0][1] ] }
         .set { alignment_and_ref }
 
-      alignment_and_ref.view()
+      if (params.compressAZ){
       EVAL_COMPRESS ("regressive", alignment_and_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize)
       EVAL_COMPRESS.out.tcScore
                     .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text}" }
@@ -38,7 +37,19 @@ workflow REG_ANALYSIS {
       EVAL_COMPRESS.out.colScore
                     .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text}" }
                     .collectFile(name: "${workflow.runName}.regressive.colScore.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
-                    
+      }else{
+      EVAL_ALIGNMENT ("regressive", alignment_and_ref, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize)
+      EVAL_ALIGNMENT.out.tcScore
+                    .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text}" }
+                    .collectFile(name: "${workflow.runName}.regressive.tcScore.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
+      EVAL_ALIGNMENT.out.spScore
+                    .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text}" }
+                    .collectFile(name: "${workflow.runName}.regressive.spScore.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
+      EVAL_ALIGNMENT.out.colScore
+                    .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text}" }
+                    .collectFile(name: "${workflow.runName}.regressive.colScore.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")
+      }
+             
     }
     if (params.homoplasy){
       HOMOPLASY("regressive", REG_ALIGNER.out.alignmentFile, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize, REG_ALIGNER.out.homoplasyFile)
