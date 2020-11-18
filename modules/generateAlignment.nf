@@ -23,6 +23,7 @@ process REG_ALIGNER {
     tuple val (id), path ("${id}.*.aln"), emit: alignmentFile
     path "${id}.homoplasy", emit: homoplasyFile
     path ".command.trace", emit: metricFile
+    path "time.txt", emit: timeFile
     //path "*.template_list", emit: templateFile
     //path "*.prf", emit: templateProfile
     

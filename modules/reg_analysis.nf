@@ -58,7 +58,7 @@ workflow REG_ANALYSIS {
                     .collectFile(name: "${workflow.runName}.regressive.homo.csv", newLine: true, storeDir:"${params.outdir}/CSV/${workflow.runName}/")  
     }
 
-    def metrics_regressive = params.metrics? METRICS("regressive", REG_ALIGNER.out.alignmentFile, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize, REG_ALIGNER.out.metricFile) : Channel.empty()
+    def metrics_regressive = params.metrics? METRICS("regressive", REG_ALIGNER.out.alignmentFile, REG_ALIGNER.out.alignMethod, REG_ALIGNER.out.treeMethod, REG_ALIGNER.out.bucketSize, REG_ALIGNER.out.metricFile, REG_ALIGNER.out.timeFile) : Channel.empty()
     if (params.metrics) {
         metrics_regressive.metricFiles
                           .map{ it ->  "${it[0]};${it[1]};${it[2]};${it[3]};${it[4]};${it[5].text};${it[6].text};${it[7].text};${it[8].text};${it[9].text}" }

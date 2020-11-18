@@ -64,7 +64,7 @@ params.tree_methods = "MAFFT-PARTTREE0"
 
 //TODO FIX -> reg_UPP
                       //CLUSTALO,FAMSA,MAFFT-FFTNS1,MAFFT-GINSI,MAFFT-SPARSECORE,MAFFT,MSAPROBS,PROBCONS,TCOFFEE,UPP,MUSCLE
-params.align_methods = "CLUSTALO,FAMSA,MAFFT-FFTNS1"
+params.align_methods = "CLUSTALO" //,FAMSA,MAFFT-FFTNS1"
 
 params.buckets = "1000"
 
@@ -96,10 +96,10 @@ params.slave_align=false
 params.dynamic_align=false               
 
 params.evaluate=true
-params.homoplasy=true
+params.homoplasy=false
 params.gapCount=false
 params.metrics=true
-params.easel=true
+params.easel=false
 
 // output directory
 params.outdir = "$baseDir/result_CompressTrue"

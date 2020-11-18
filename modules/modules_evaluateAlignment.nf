@@ -238,6 +238,7 @@ process METRICS {
     val tree_method
     val bucket_size
     file metricsFile
+    file timeFile
 
     output:
     tuple val(id), \
@@ -249,7 +250,10 @@ process METRICS {
     path("*.rss"), \
     path("*.peakRss"), \
     path("*.vmem"), \
-    path("*.peakVmem"), emit: metricFiles
+    path("*.peakVmem"), \
+    path("*.timeReal"), \
+    path("*.timeUser"), \
+    path("*.timeSys"), emit: metricFiles
 
     script:
     """    
@@ -267,6 +271,10 @@ process METRICS {
     awk -F = '{ if (\$1=="peak_vmem") printf "%s", \$2}' aux.txt  > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.peakVmem
     
     ## mv ${metricsFile} ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.metrics
+
+    awk '{ if (\$1=="real") printf "%s", \$2}' time.txt > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.timeReal
+    awk '{ if (\$1=="user") printf "%s", \$2}' time.txt > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.timeUser
+    awk '{ if (\$1=="sys") printf "%s", \$2}' time.txt > ${id}.${align_type}.${bucket_size}.${align_method}.with.${tree_method}.tree.timeSys
     """
 }
 
