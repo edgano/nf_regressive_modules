@@ -26,10 +26,10 @@ fi
 ## -- ## -- ## -- ## -- ## -- ## -- ## -- ## -- ## -- ## -- ##              https://nextflow-io.github.io/patterns/index.html#_optional_input
 ##         \$template_filter \$libs_filter \
 
-t_coffee -reg -reg_method 3dcoffee_msa \
+{ time -p t_coffee -reg -reg_method 3dcoffee_msa \
         -seq ${seqs} \
         -reg_nseq ${bucket_size} \
         -reg_homoplasy \
         \$template_filter \
         \$compressFlag \
-        -outfile ${id}.reg_${bucket_size}.${align_method}.with.NO_TREE.tree.aln
+        -outfile ${id}.reg_${bucket_size}.${align_method}.with.NO_TREE.tree.aln 2> tcoffee.stderr ; } 2> time.txt
